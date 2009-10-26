@@ -6,7 +6,7 @@ CFLAGS=-I.
 #####################################################################
 
 TARGETS = myprog
-SRC = EventStream.cpp EventStream.hpp RandomGeneration.cpp RandomGeneration.hpp test.cpp
+SRC = EventStream.cpp RandomGeneration.cpp CategoricalAttribute.cpp test.cpp
 OBJS = $(SRC:.cpp=.o)
 
 # Default target

@@ -10,7 +10,7 @@ namespace TRADEMGEN {
   RandomGeneration::RandomGeneration (const RandomSeed_T& iSeed)
     : _seed (iSeed), _generator (iSeed),
       _uniformGenerator (_generator, boost::uniform_real<> (0, 1)) {
-	init ();
+		init ();
   }
 
   // //////////////////////////////////////////////////////////////////////

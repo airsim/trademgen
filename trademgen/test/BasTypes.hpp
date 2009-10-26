@@ -35,6 +35,9 @@ namespace TRADEMGEN {
 
   /** Random number generator. */
   typedef boost::minstd_rand BaseGenerator_T;
+	
+	/** Probability */
+	typedef float Probability_T;
 }
 #endif // __TRADEMGEN_BAS_BASTYPES_HPP
 
