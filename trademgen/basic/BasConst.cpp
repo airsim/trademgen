@@ -1,0 +1,11 @@
+// //////////////////////////////////////////////////////////////////////
+// Import section
+// //////////////////////////////////////////////////////////////////////
+#include <forecast/basic/BasConst_FORECAST_Service.hpp>
+
+namespace FORECAST {
+
+  /** Default name for the FORECAST_Service. */
+  // const std::string DEFAULT_FORECAST_SERVICE_NAME = "myname";
+
+}
