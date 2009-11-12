@@ -3,11 +3,11 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
-// Forecast
-#include <forecast/basic/BasChronometer.hpp>
-#include <forecast/service/Logger.hpp>
+// Trademgen
+#include <trademgen/basic/BasChronometer.hpp>
+#include <trademgen/service/Logger.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   BasChronometer::BasChronometer () : _startTimeLaunched (false) {
@@ -39,7 +39,7 @@ namespace FORECAST {
     const double lElapsedTimeInMicroSeconds =
       static_cast<const double> (lElapsedTime.total_microseconds());
     
-    /*FORECAST_LOG_DEBUG ("Elapsed: " << lElapsedTime
+    /*TRADEMGEN_LOG_DEBUG ("Elapsed: " << lElapsedTime
       << "; (micros): "
       << lElapsedTimeInMicroSeconds / 1e6);*/
     

@@ -1,5 +1,5 @@
-#ifndef __FORECAST_SVC_SERVICEABSTRACT_HPP
-#define __FORECAST_SVC_SERVICEABSTRACT_HPP
+#ifndef __TRADEMGEN_SVC_SERVICEABSTRACT_HPP
+#define __TRADEMGEN_SVC_SERVICEABSTRACT_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -7,7 +7,7 @@
 // STL
 #include <iosfwd>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   /** Base class for the Service layer. */
   class ServiceAbstract {
@@ -39,7 +39,7 @@ template <class charT, class traits>
 inline
 std::basic_ostream<charT, traits>&
 operator<< (std::basic_ostream<charT, traits>& ioOut,
-            const FORECAST::ServiceAbstract& iService) {
+            const TRADEMGEN::ServiceAbstract& iService) {
   /**
      string stream:
      - with same format
@@ -67,10 +67,10 @@ template <class charT, class traits>
 inline
 std::basic_istream<charT, traits>&
 operator>> (std::basic_istream<charT, traits>& ioIn,
-            FORECAST::ServiceAbstract& ioService) {
+            TRADEMGEN::ServiceAbstract& ioService) {
   // Fill Service object with input stream
   ioService.fromStream (ioIn);
   return ioIn;
 }
 
-#endif // __FORECAST_SVC_SERVICEABSTRACT_HPP
+#endif // __TRADEMGEN_SVC_SERVICEABSTRACT_HPP

@@ -1,5 +1,5 @@
-#ifndef __FORECAST_FAC_FACSERVICEABSTRACT_HPP
-#define __FORECAST_FAC_FACSERVICEABSTRACT_HPP
+#ifndef __TRADEMGEN_FAC_FACSERVICEABSTRACT_HPP
+#define __TRADEMGEN_FAC_FACSERVICEABSTRACT_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -7,7 +7,7 @@
 // STL
 #include <vector>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // Forward declarations
   class ServiceAbstract;
@@ -35,4 +35,4 @@ namespace FORECAST {
   };
     
 }
-#endif // __FORECAST_FAC_FACSERVICEABSTRACT_HPP
+#endif // __TRADEMGEN_FAC_FACSERVICEABSTRACT_HPP

@@ -7,10 +7,10 @@ MAINTAINERCLEANFILES = Makefile.in
 
 
 # Binaries (batches)
-bin_PROGRAMS = forecast
+bin_PROGRAMS = trademgen
 
-forecast_SOURCES = $(batches_fct_h_sources) $(batches_fct_cc_sources)
-forecast_CXXFLAGS = $(BOOST_CFLAGS) ${PYTHON_CFLAGS}
-#forecast_LDADD =
-forecast_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LIB) $(SOCI_LIBS) \
-	$(top_builddir)/forecast/core/libforecast.la
+trademgen_SOURCES = $(batches_fct_h_sources) $(batches_fct_cc_sources)
+trademgen_CXXFLAGS = $(BOOST_CFLAGS) ${PYTHON_CFLAGS}
+#trademgen_LDADD =
+trademgen_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LIB) $(SOCI_LIBS) \
+	$(top_builddir)/trademgen/core/libtrademgen.la

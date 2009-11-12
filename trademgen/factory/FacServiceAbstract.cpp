@@ -3,11 +3,11 @@
 // //////////////////////////////////////////////////////////////////////
 // C
 #include <cassert>
-// FORECAST
-#include <forecast/service/ServiceAbstract.hpp>
-#include <forecast/factory/FacServiceAbstract.hpp>
+// TRADEMGEN
+#include <trademgen/service/ServiceAbstract.hpp>
+#include <trademgen/factory/FacServiceAbstract.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
   
   // //////////////////////////////////////////////////////////////////////
   FacServiceAbstract::~FacServiceAbstract() {

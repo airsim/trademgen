@@ -1,5 +1,5 @@
-#ifndef __FORECAST_CMD_SOCISESSIONMANAGER_HPP
-#define __FORECAST_CMD_SOCISESSIONMANAGER_HPP
+#ifndef __TRADEMGEN_CMD_SOCISESSIONMANAGER_HPP
+#define __TRADEMGEN_CMD_SOCISESSIONMANAGER_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -10,14 +10,14 @@ namespace soci {
   class session;
 }
 
-namespace FORECAST {
+namespace TRADEMGEN {
   
   // Forward declarations
   struct DBParams;
 
   /** Class handling the SOCI session. */
   class SociSessionManager {
-    friend class FORECAST_Service;
+    friend class TRADEMGEN_Service;
   private:
     /** Initialise (MySQL) database connection. */
     static void init (soci::session*&, const DBParams&);
@@ -34,4 +34,4 @@ namespace FORECAST {
   };
 
 }
-#endif // __FORECAST_CMD_SOCISESSIONMANAGER_HPP
+#endif // __TRADEMGEN_CMD_SOCISESSIONMANAGER_HPP

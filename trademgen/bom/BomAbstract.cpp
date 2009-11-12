@@ -1,11 +1,9 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-#include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
+// TRADEMGEN
+#include <trademgen/bom/BomAbstract.hpp>
 
 namespace TRADEMGEN {
-
-  /** Default name for the TRADEMGEN_Service. */
-  // const std::string DEFAULT_TRADEMGEN_SERVICE_NAME = "myname";
 
 }

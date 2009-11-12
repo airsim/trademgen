@@ -12,10 +12,10 @@
 #include <boost/tokenizer.hpp>
 #include <boost/program_options.hpp>
 #include <boost/python.hpp>
-// Forecast
-#include <forecast/FORECAST_Service.hpp>
-#include <forecast/DBParams.hpp>
-#include <forecast/config/forecast-paths.hpp>
+// Trademgen
+#include <trademgen/TRADEMGEN_Service.hpp>
+#include <trademgen/DBParams.hpp>
+#include <trademgen/config/trademgen-paths.hpp>
 
 
 // //////// Type definitions ///////
@@ -24,17 +24,17 @@ typedef std::vector<std::string> WordList_T;
 
 // //////// Constants //////
 /** Default name and location for the log file. */
-const std::string K_FORECAST_DEFAULT_LOG_FILENAME ("forecast.log");
+const std::string K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
 
 /** Default query string. */
-const std::string K_FORECAST_DEFAULT_QUERY_STRING ("my good old query");
+const std::string K_TRADEMGEN_DEFAULT_QUERY_STRING ("my good old query");
 
 /** Default name and location for the Xapian database. */
-const std::string K_FORECAST_DEFAULT_DB_USER ("forecast");
-const std::string K_FORECAST_DEFAULT_DB_PASSWD ("forecast");
-const std::string K_FORECAST_DEFAULT_DB_DBNAME ("forecast");
-const std::string K_FORECAST_DEFAULT_DB_HOST ("localhost");
-const std::string K_FORECAST_DEFAULT_DB_PORT ("3306");
+const std::string K_TRADEMGEN_DEFAULT_DB_USER ("trademgen");
+const std::string K_TRADEMGEN_DEFAULT_DB_PASSWD ("trademgen");
+const std::string K_TRADEMGEN_DEFAULT_DB_DBNAME ("trademgen");
+const std::string K_TRADEMGEN_DEFAULT_DB_HOST ("localhost");
+const std::string K_TRADEMGEN_DEFAULT_DB_PORT ("3306");
 
 
 // //////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ template<class T> std::ostream& operator<< (std::ostream& os,
 }
 
 /** Early return status (so that it can be differentiated from an error). */
-const int K_FORECAST_EARLY_RETURN_STATUS = 99;
+const int K_TRADEMGEN_EARLY_RETURN_STATUS = 99;
 
 /** Read and parse the command line options. */
 int readConfiguration (int argc, char* argv[], 
@@ -98,7 +98,7 @@ int readConfiguration (int argc, char* argv[],
 
   // Initialise the travel query string, if that one is empty
   if (ioQueryString.empty() == true) {
-    ioQueryString = K_FORECAST_DEFAULT_QUERY_STRING;
+    ioQueryString = K_TRADEMGEN_DEFAULT_QUERY_STRING;
   }
   
   // Transform the query string into a list of words (STL strings)
@@ -117,23 +117,23 @@ int readConfiguration (int argc, char* argv[],
   boost::program_options::options_description config ("Configuration");
   config.add_options()
     ("log,l",
-     boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_FORECAST_DEFAULT_LOG_FILENAME),
+     boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_TRADEMGEN_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
     ("user,u",
-     boost::program_options::value< std::string >(&ioDBUser)->default_value(K_FORECAST_DEFAULT_DB_USER),
-     "SQL database hostname (e.g., forecast)")
+     boost::program_options::value< std::string >(&ioDBUser)->default_value(K_TRADEMGEN_DEFAULT_DB_USER),
+     "SQL database hostname (e.g., trademgen)")
     ("passwd,p",
-     boost::program_options::value< std::string >(&ioDBPasswd)->default_value(K_FORECAST_DEFAULT_DB_PASSWD),
-     "SQL database hostname (e.g., forecast)")
+     boost::program_options::value< std::string >(&ioDBPasswd)->default_value(K_TRADEMGEN_DEFAULT_DB_PASSWD),
+     "SQL database hostname (e.g., trademgen)")
     ("host,H",
-     boost::program_options::value< std::string >(&ioDBHost)->default_value(K_FORECAST_DEFAULT_DB_HOST),
+     boost::program_options::value< std::string >(&ioDBHost)->default_value(K_TRADEMGEN_DEFAULT_DB_HOST),
      "SQL database hostname (e.g., localhost)")
     ("port,P",
-     boost::program_options::value< std::string >(&ioDBPort)->default_value(K_FORECAST_DEFAULT_DB_PORT),
+     boost::program_options::value< std::string >(&ioDBPort)->default_value(K_TRADEMGEN_DEFAULT_DB_PORT),
      "SQL database port (e.g., 3306)")
     ("dbname,m",
-     boost::program_options::value< std::string >(&ioDBDBName)->default_value(K_FORECAST_DEFAULT_DB_DBNAME),
-     "SQL database name (e.g., forecast)")
+     boost::program_options::value< std::string >(&ioDBDBName)->default_value(K_TRADEMGEN_DEFAULT_DB_DBNAME),
+     "SQL database name (e.g., trademgen)")
     ("query,q",
      boost::program_options::value< WordList_T >(&lWordList)->multitoken(),
      "Query word list")
@@ -164,24 +164,24 @@ int readConfiguration (int argc, char* argv[],
     store (boost::program_options::command_line_parser (argc, argv).
 	   options (cmdline_options).positional(p).run(), vm);
 
-  std::ifstream ifs ("forecast.cfg");
+  std::ifstream ifs ("trademgen.cfg");
   boost::program_options::store (parse_config_file (ifs, config_file_options),
                                  vm);
   boost::program_options::notify (vm);
     
   if (vm.count ("help")) {
     std::cout << visible << std::endl;
-    return K_FORECAST_EARLY_RETURN_STATUS;
+    return K_TRADEMGEN_EARLY_RETURN_STATUS;
   }
 
   if (vm.count ("version")) {
     std::cout << PACKAGE_NAME << ", version " << PACKAGE_VERSION << std::endl;
-    return K_FORECAST_EARLY_RETURN_STATUS;
+    return K_TRADEMGEN_EARLY_RETURN_STATUS;
   }
 
   if (vm.count ("prefix")) {
     std::cout << "Installation prefix: " << PREFIXDIR << std::endl;
-    return K_FORECAST_EARLY_RETURN_STATUS;
+    return K_TRADEMGEN_EARLY_RETURN_STATUS;
   }
 
   if (vm.count ("log")) {
@@ -243,12 +243,12 @@ int main (int argc, char* argv[]) {
       readConfiguration (argc, argv, lQuery, lLogFilename,
                          lDBUser, lDBPasswd, lDBHost, lDBPort, lDBDBName);
 
-    if (lOptionParserStatus == K_FORECAST_EARLY_RETURN_STATUS) {
+    if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
       return 0;
     }
     
     // Set the database parameters
-    FORECAST::DBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
+    TRADEMGEN::DBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
                                   lDBDBName);
     
     // Set the log parameters
@@ -258,18 +258,18 @@ int main (int argc, char* argv[]) {
     logOutputFile.clear();
 
     // Initialise the context
-    FORECAST::FORECAST_Service forecastService (logOutputFile, lDBParams);
+    TRADEMGEN::TRADEMGEN_Service trademgenService (logOutputFile, lDBParams);
 
     // Query the Xapian database (index)
-    //const std::string& lForecastOutput = forecastService.calculateForecast ();
+    //const std::string& lTrademgenOutput = trademgenService.calculateTrademgen ();
 
-    //std::cout << "Forecast output: '" << lForecastOutput << "'."
+    //std::cout << "Trademgen output: '" << lTrademgenOutput << "'."
     //         << std::endl;
       
     // Close the Log outputFile
     logOutputFile.close();
 
-  } catch (const FORECAST::RootException& otexp) {
+  } catch (const TRADEMGEN::RootException& otexp) {
     std::cerr << "Standard exception: " << otexp.what() << std::endl;
     return -1;
     

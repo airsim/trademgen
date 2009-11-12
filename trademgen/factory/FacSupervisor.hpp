@@ -1,5 +1,5 @@
-#ifndef __FORECAST_FAC_FACSUPERVISOR_HPP
-#define __FORECAST_FAC_FACSUPERVISOR_HPP
+#ifndef __TRADEMGEN_FAC_FACSUPERVISOR_HPP
+#define __TRADEMGEN_FAC_FACSUPERVISOR_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -7,7 +7,7 @@
 // STL
 #include <vector>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // Forward declarations
   class FacBomAbstract;
@@ -94,4 +94,4 @@ namespace FORECAST {
     ServiceFactoryPool_T _svcPool;
   };
 }  
-#endif // __FORECAST_FAC_FACSUPERVISOR_HPP
+#endif // __TRADEMGEN_FAC_FACSUPERVISOR_HPP

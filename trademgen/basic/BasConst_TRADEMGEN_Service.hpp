@@ -1,15 +1,15 @@
-#ifndef __FORECAST_BAS_BASCONST_FORECAST_SERVICE_HPP
-#define __FORECAST_BAS_BASCONST_FORECAST_SERVICE_HPP
+#ifndef __TRADEMGEN_BAS_BASCONST_TRADEMGEN_SERVICE_HPP
+#define __TRADEMGEN_BAS_BASCONST_TRADEMGEN_SERVICE_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
 #include <string>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
-  /** Default name for the FORECAST_Service. */
-  // extern const std::string DEFAULT_FORECAST_SERVICE_NAME;
+  /** Default name for the TRADEMGEN_Service. */
+  // extern const std::string DEFAULT_TRADEMGEN_SERVICE_NAME;
   
 }
-#endif // __FORECAST_BAS_BASCONST_FORECAST_SERVICE_HPP
+#endif // __TRADEMGEN_BAS_BASCONST_TRADEMGEN_SERVICE_HPP

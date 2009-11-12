@@ -1,11 +1,11 @@
-#ifndef __FORECAST_CMD_DBMANAGER_HPP
-#define __FORECAST_CMD_DBMANAGER_HPP
+#ifndef __TRADEMGEN_CMD_DBMANAGER_HPP
+#define __TRADEMGEN_CMD_DBMANAGER_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// Forecast
-#include <forecast/FORECAST_Types.hpp>
+// Trademgen
+#include <trademgen/TRADEMGEN_Types.hpp>
 
 // Forward declarations
 namespace soci {
@@ -13,7 +13,7 @@ namespace soci {
   class statement;
 }
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // Forward declarations
   struct Place;
@@ -62,4 +62,4 @@ namespace FORECAST {
   };
   
 }
-#endif // __FORECAST_CMD_DBMANAGER_HPP
+#endif // __TRADEMGEN_CMD_DBMANAGER_HPP

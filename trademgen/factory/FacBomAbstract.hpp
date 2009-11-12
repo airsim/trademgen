@@ -1,5 +1,5 @@
-#ifndef __FORECAST_FAC_FACBOMABSTRACT_HPP
-#define __FORECAST_FAC_FACBOMABSTRACT_HPP
+#ifndef __TRADEMGEN_FAC_FACBOMABSTRACT_HPP
+#define __TRADEMGEN_FAC_FACBOMABSTRACT_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // Forward declarations
   class BomAbstract;
@@ -53,4 +53,4 @@ namespace FORECAST {
     BomPool_T _pool;
   };
 }
-#endif // __FORECAST_FAC_FACBOMABSTRACT_HPP
+#endif // __TRADEMGEN_FAC_FACBOMABSTRACT_HPP

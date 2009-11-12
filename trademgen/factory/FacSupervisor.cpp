@@ -3,13 +3,13 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
-// FORECAST
-#include <forecast/factory/FacBomAbstract.hpp>
-#include <forecast/factory/FacServiceAbstract.hpp>
-#include <forecast/factory/FacSupervisor.hpp>
-#include <forecast/service/Logger.hpp>
+// TRADEMGEN
+#include <trademgen/factory/FacBomAbstract.hpp>
+#include <trademgen/factory/FacServiceAbstract.hpp>
+#include <trademgen/factory/FacSupervisor.hpp>
+#include <trademgen/service/Logger.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   FacSupervisor* FacSupervisor::_instance = NULL;
 

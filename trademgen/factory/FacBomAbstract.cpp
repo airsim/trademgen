@@ -7,11 +7,11 @@
 #include <sstream>
 // Boost (STL Extension)
 #include <boost/functional/hash/hash.hpp>
-// Forecast
-#include <forecast/bom/BomAbstract.hpp>
-#include <forecast/factory/FacBomAbstract.hpp>
+// Trademgen
+#include <trademgen/bom/BomAbstract.hpp>
+#include <trademgen/factory/FacBomAbstract.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
   
   // //////////////////////////////////////////////////////////////////////
   FacBomAbstract::~FacBomAbstract() {

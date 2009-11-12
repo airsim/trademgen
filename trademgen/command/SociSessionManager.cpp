@@ -9,12 +9,12 @@
 // SOCI
 #include <soci/core/soci.h>
 #include <soci/backends/mysql/soci-mysql.h>
-// Forecast
-#include <forecast/DBParams.hpp>
-#include <forecast/command/SociSessionManager.hpp>
-#include <forecast/service/Logger.hpp>
+// Trademgen
+#include <trademgen/DBParams.hpp>
+#include <trademgen/command/SociSessionManager.hpp>
+#include <trademgen/service/Logger.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   void SociSessionManager::init (soci::session*& ioSociSession_ptr,
@@ -36,9 +36,9 @@ namespace FORECAST {
       ioSociSession_ptr->open (soci::mysql, lSociSessionConnectionString);
       
     } catch (std::exception const& lException) {
-      FORECAST_LOG_ERROR ("Error while opening a connection to database: "
+      TRADEMGEN_LOG_ERROR ("Error while opening a connection to database: "
                           << lException.what());
-      FORECAST_LOG_ERROR ("Database parameters used:"
+      TRADEMGEN_LOG_ERROR ("Database parameters used:"
                           << " db=" << iDBParams.getDBName()
                           << " user=" << iDBParams.getUser()
                           << " port=" << iDBParams.getPort()

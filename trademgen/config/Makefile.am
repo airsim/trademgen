@@ -2,19 +2,19 @@ include $(top_srcdir)/Makefile.common
 
 ## Source directory
 
-DISTCLEANFILES = forecast-paths.hpp
+DISTCLEANFILES = trademgen-paths.hpp
 
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = forecast-paths.hpp
+EXTRA_DIST = trademgen-paths.hpp
 
 # Targets
-all-local: forecast-paths.hpp
+all-local: trademgen-paths.hpp
 
-forecast-paths.hpp: Makefile
+trademgen-paths.hpp: Makefile
 	@echo '#ifndef __@PACKAGE_NAME@_PATHS_HPP' > $@
 	@echo '#define __@PACKAGE_NAME@_PATHS_HPP' >> $@
-	@echo '#define PACKAGE "forecast"' >> $@
+	@echo '#define PACKAGE "trademgen"' >> $@
 	@echo '#define PACKAGE_NAME "@PACKAGE_NAME@"' >> $@
 	@echo '#define PACKAGE_VERSION "@VERSION@"' >> $@
 	@echo '#define PREFIXDIR "$(prefix)"' >> $@

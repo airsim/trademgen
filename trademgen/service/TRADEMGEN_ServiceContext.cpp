@@ -4,42 +4,42 @@
 // STL
 #include <cassert>
 #include <sstream>
-// Forecast
-#include <forecast/service/FORECAST_ServiceContext.hpp>
+// Trademgen
+#include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
-  FORECAST_ServiceContext::FORECAST_ServiceContext ()
+  TRADEMGEN_ServiceContext::TRADEMGEN_ServiceContext ()
     : _sociSession (NULL) {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  FORECAST_ServiceContext::
-  FORECAST_ServiceContext (const std::string& iServiceName)
+  TRADEMGEN_ServiceContext::
+  TRADEMGEN_ServiceContext (const std::string& iServiceName)
     : _sociSession (NULL) {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  FORECAST_ServiceContext::~FORECAST_ServiceContext() {
+  TRADEMGEN_ServiceContext::~TRADEMGEN_ServiceContext() {
   }
   
   // //////////////////////////////////////////////////////////////////////
-  soci::session& FORECAST_ServiceContext::getSociSessionHandler() const {
+  soci::session& TRADEMGEN_ServiceContext::getSociSessionHandler() const {
     assert (_sociSession != NULL);
     return *_sociSession;
   }
 
   // //////////////////////////////////////////////////////////////////////
-  const std::string FORECAST_ServiceContext::shortDisplay() const {
+  const std::string TRADEMGEN_ServiceContext::shortDisplay() const {
     std::ostringstream oStr;
-    oStr << "FORECAST_ServiceContext: " << std::endl
+    oStr << "TRADEMGEN_ServiceContext: " << std::endl
          << std::endl;
     return oStr.str();
   }
 
   // //////////////////////////////////////////////////////////////////////
-  const std::string FORECAST_ServiceContext::display() const {
+  const std::string TRADEMGEN_ServiceContext::display() const {
     std::ostringstream oStr;
     oStr << shortDisplay();
     return oStr.str();

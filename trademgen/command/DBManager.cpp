@@ -6,11 +6,11 @@
 // SOCI
 #include <soci/core/soci.h>
 #include <soci/backends/mysql/soci-mysql.h>
-// Forecast
-#include <forecast/command/DBManager.hpp>
-#include <forecast/service/Logger.hpp>
+// Trademgen
+#include <trademgen/command/DBManager.hpp>
+#include <trademgen/service/Logger.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   //
   struct Place {
@@ -52,7 +52,7 @@ namespace FORECAST {
       */
 
     } catch (std::exception const& lException) {
-      FORECAST_LOG_ERROR ("Error: " << lException.what());
+      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
   }
@@ -98,7 +98,7 @@ namespace FORECAST {
       */
 
     } catch (std::exception const& lException) {
-      FORECAST_LOG_ERROR ("Error: " << lException.what());
+      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
   }
@@ -120,7 +120,7 @@ namespace FORECAST {
       hasStillData = ioStatement.fetch();
       
     } catch (std::exception const& lException) {
-      FORECAST_LOG_ERROR ("Error: " << lException.what());
+      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
 
@@ -155,10 +155,10 @@ namespace FORECAST {
       ioSociSession.commit();
         
       // Debug
-      // FORECAST_LOG_DEBUG ("[" << lDocID << "] " << iPlace);
+      // TRADEMGEN_LOG_DEBUG ("[" << lDocID << "] " << iPlace);
       
     } catch (std::exception const& lException) {
-      FORECAST_LOG_ERROR ("Error: " << lException.what());
+      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
   }
@@ -188,10 +188,10 @@ namespace FORECAST {
       hasStillData = iterateOnStatement (lSelectStatement, ioPlace,
                                          shouldNotDoReset);
       // Debug
-      // FORECAST_LOG_DEBUG ("[" << iDocID << "] " << ioPlace);
+      // TRADEMGEN_LOG_DEBUG ("[" << iDocID << "] " << ioPlace);
       
     } catch (std::exception const& lException) {
-      FORECAST_LOG_ERROR ("Error: " << lException.what());
+      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
 

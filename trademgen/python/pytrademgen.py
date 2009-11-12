@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import sys, getopt
-sys.path.append('/remote/projteams/projects/ori-data/deliveries/forecast-99.99.99/lib')
 sys.path.append('.libs')
 
 # Default search string
@@ -44,10 +43,10 @@ def handle_opt():
 
 searchString = handle_opt()
 
-# Initialise the Forecast C++ library
-import libpyforecast
-forecastLibrary = libpyforecast.Forecaster()
-forecastLibrary.init('pyforecast.log', 'forecast', 'forecast', 'localhost', '3306', 'forecast')
+# Initialise the Trademgen C++ library
+import libpytrademgen
+trademgenLibrary = libpytrademgen.Trademgener()
+trademgenLibrary.init('pytrademgen.log', 'trademgen', 'trademgen', 'localhost', '3306', 'trademgen')
 
 # If no search string was supplied as arguments of the command-line,
 # ask the user for some
@@ -59,11 +58,11 @@ if searchString == '' : searchString = defaultSearchString
 # DEBUG
 print "searchString: " + searchString
 
-# Call the Forecast C++ library
+# Call the Trademgen C++ library
 TestDataCollectionPoints=[-262,-154,-110,-92,-82,-77,-65,-60,-50]
 TestUnconstrainedDemand=[3,14,22,28,41,86,100,112,123]
-#result = forecastLibrary.forecast (searchString)
-result = forecastLibrary.forecast(searchString, TestUnconstrainedDemand, TestDataCollectionPoints)
+result = trademgenLibrary.trademgen (searchString)
+#result = trademgenLibrary.trademgen(searchString, TestUnconstrainedDemand, TestDataCollectionPoints)
 
-print 'Raw result from the Forecast library:'
+print 'Raw result from the Trademgen library:'
 print result

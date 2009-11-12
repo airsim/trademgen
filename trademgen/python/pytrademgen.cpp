@@ -8,25 +8,15 @@
 #include <vector>
 // Boost String
 #include <boost/python.hpp>
-// Forecast
-#include <forecast/FORECAST_Service.hpp>
-// Flood Utilities
-#include <Flood/Utilities/Vector.h>
-#include <Flood/Utilities/Matrix.h>
-#include <Flood/Utilities/InputTargetDataSet.h>
-// Flood Network architecture
-#include <Flood/MultilayerPerceptron/MultilayerPerceptron.h>
-// Flood Objective functional includes
-#include <Flood/ObjectiveFunctional/MeanSquaredError.h>
-// Flood Training algorithm includes
-#include <Flood/TrainingAlgorithm/QuasiNewtonMethod.h>
+// Trademgen
+#include <trademgen/TRADEMGEN_Service.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
-  struct Forecaster {
+  struct Trademgener {
   public:
     /** Wrapper around the search use case. */
-    std::string forecast (const std::string& iQuery, const boost::python::list& iTestUnconstrainedDemand, const boost::python::list& iTestDataCollectionPoints) {
+    std::string trademgen (const std::string& iQuery) {
       std::ostringstream oStream;
 
       // Sanity check
@@ -42,34 +32,34 @@ namespace FORECAST {
         *_logOutputStream << "Python search for '" << iQuery << "'"
                           << std::endl;
       
-        if (_forecastService == NULL) {
-          oStream << "The Forecast service has not been initialised, "
+        if (_trademgenService == NULL) {
+          oStream << "The Trademgen service has not been initialised, "
                          << "i.e., the init() method has not been called "
-                         << "correctly on the Forecaster object. Please "
+                         << "correctly on the Trademgener object. Please "
                          << "check that all the parameters are not empty and "
                          << "point to actual files.";
           *_logOutputStream << oStream.str();
           return oStream.str();
         }
-        assert (_forecastService != NULL);
+        assert (_trademgenService != NULL);
         
-        // Do the forecast
-        const double& lForecastOutput =
-          _forecastService->calculateForecast (iTestUnconstrainedDemand, iTestDataCollectionPoints);
+        // Do the trademgen
+        const std::string& lTrademgenOutput =
+          _trademgenService->calculateTrademgen();
 
         //
-        oStream << lForecastOutput;
+        oStream << lTrademgenOutput;
       
         // DEBUG
         *_logOutputStream << "Python search for '" << iQuery
-                          << "' returned '" << lForecastOutput << std::endl;
+                          << "' returned '" << lTrademgenOutput << std::endl;
 
         // DEBUG
-        *_logOutputStream << "Forecast output: "
+        *_logOutputStream << "Trademgen output: "
                           << oStream.str() << std::endl;
 
-      } catch (const RootException& eForecastError) {
-        *_logOutputStream << "Forecast error: "  << eForecastError.what()
+      } catch (const RootException& eTrademgenError) {
+        *_logOutputStream << "Trademgen error: "  << eTrademgenError.what()
                           << std::endl;
         
       } catch (const std::exception& eStdError) {
@@ -84,18 +74,18 @@ namespace FORECAST {
 
   public:
     /** Default constructor. */
-    Forecaster() : _forecastService (NULL), _logOutputStream (NULL) {
+    Trademgener() : _trademgenService (NULL), _logOutputStream (NULL) {
     }
     
     /** Default copy constructor. */
-    Forecaster (const Forecaster& iForecaster)
-      : _forecastService (iForecaster._forecastService),
-        _logOutputStream (iForecaster._logOutputStream) {
+    Trademgener (const Trademgener& iTrademgener)
+      : _trademgenService (iTrademgener._trademgenService),
+        _logOutputStream (iTrademgener._logOutputStream) {
     }
 
     /** Default constructor. */
-    ~Forecaster() {
-      _forecastService = NULL;
+    ~Trademgener() {
+      _trademgenService = NULL;
       _logOutputStream = NULL;
     }
     
@@ -127,13 +117,13 @@ namespace FORECAST {
         
         // Initialise the context
         DBParams lDBParams (iDBUser, iDBPasswd, iDBHost, iDBPort, iDBDBName);
-        _forecastService = new FORECAST_Service (*_logOutputStream, lDBParams);
+        _trademgenService = new TRADEMGEN_Service (*_logOutputStream, lDBParams);
         
         // DEBUG
         *_logOutputStream << "Python wrapper initialised" << std::endl;
         
-      } catch (const RootException& eForecastError) {
-        *_logOutputStream << "Forecast error: "  << eForecastError.what()
+      } catch (const RootException& eTrademgenError) {
+        *_logOutputStream << "Trademgen error: "  << eTrademgenError.what()
                           << std::endl;
         
       } catch (const std::exception& eStdError) {
@@ -147,16 +137,16 @@ namespace FORECAST {
     }
 
   private:
-    /** Handle on the Forecast services (API). */
-    FORECAST_Service* _forecastService;
+    /** Handle on the Trademgen services (API). */
+    TRADEMGEN_Service* _trademgenService;
     std::ofstream* _logOutputStream;
   };
 
 }
 
 // /////////////////////////////////////////////////////////////
-BOOST_PYTHON_MODULE(libpyforecast) {
-  boost::python::class_<FORECAST::Forecaster> ("Forecaster")
-    .def ("forecast", &FORECAST::Forecaster::forecast)
-    .def ("init", &FORECAST::Forecaster::init);
+BOOST_PYTHON_MODULE(libpytrademgen) {
+  boost::python::class_<TRADEMGEN::Trademgener> ("Trademgener")
+    .def ("trademgen", &TRADEMGEN::Trademgener::trademgen)
+    .def ("init", &TRADEMGEN::Trademgener::init);
 }

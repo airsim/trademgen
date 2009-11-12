@@ -1,5 +1,5 @@
-#ifndef __FORECAST_BAS_BASCHRONOMETER_HPP
-#define __FORECAST_BAS_BASCHRONOMETER_HPP
+#ifndef __TRADEMGEN_BAS_BASCHRONOMETER_HPP
+#define __TRADEMGEN_BAS_BASCHRONOMETER_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -7,7 +7,7 @@
 // Boost Date-Time (http://boost.org/doc/html/date_time/posix_time.html)
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-namespace FORECAST {
+namespace TRADEMGEN {
 
   /** Structure allowing measuring the time elapsed between two events. */
   struct BasChronometer {
@@ -37,4 +37,4 @@ namespace FORECAST {
   };
 
 }
-#endif // __FORECAST_BAS_BASCHRONOMETER_HPP
+#endif // __TRADEMGEN_BAS_BASCHRONOMETER_HPP
