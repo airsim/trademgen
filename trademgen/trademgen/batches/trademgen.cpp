@@ -11,7 +11,6 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/program_options.hpp>
-#include <boost/python.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Service.hpp>
 #include <trademgen/DBParams.hpp>

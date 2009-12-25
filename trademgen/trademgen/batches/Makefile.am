@@ -10,7 +10,7 @@ MAINTAINERCLEANFILES = Makefile.in
 bin_PROGRAMS = trademgen
 
 trademgen_SOURCES = $(batches_fct_h_sources) $(batches_fct_cc_sources)
-trademgen_CXXFLAGS = $(BOOST_CFLAGS) ${PYTHON_CFLAGS}
+trademgen_CXXFLAGS = $(BOOST_CFLAGS)
 #trademgen_LDADD =
-trademgen_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LIB) $(SOCI_LIBS) \
+trademgen_LDFLAGS = $(BOOST_PROGRAM_OPTIONS_LIB) \
 	$(top_builddir)/trademgen/core/libtrademgen.la

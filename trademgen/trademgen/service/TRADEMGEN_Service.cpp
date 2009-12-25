@@ -16,16 +16,6 @@
 #include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
 #include <trademgen/service/Logger.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
-// Flood Utilities
-#include <Flood/Utilities/Vector.h>
-#include <Flood/Utilities/Matrix.h>
-#include <Flood/Utilities/InputTargetDataSet.h>
-// Flood Network architecture
-#include <Flood/MultilayerPerceptron/MultilayerPerceptron.h>
-// Flood Objective functional includes
-#include <Flood/ObjectiveFunctional/MeanSquaredError.h>
-// Flood Training algorithm includes
-#include <Flood/TrainingAlgorithm/QuasiNewtonMethod.h>
 
 namespace TRADEMGEN {
 

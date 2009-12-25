@@ -6,13 +6,10 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
-#include <ostream>
+#include <iosfwd>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/DBParams.hpp>
-// Boost
-#include <boost/python.hpp>
-
 
 namespace TRADEMGEN {
 
