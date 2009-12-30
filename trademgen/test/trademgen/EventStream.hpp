@@ -5,11 +5,11 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // STL
+#include <iosfwd>
 #include <list>
-#include <ostream>
 // TraDemGen
-#include <BasTypes.hpp>
-#include <RandomGeneration.hpp>
+#include "BasTypes.hpp"
+#include "RandomGeneration.hpp"
 
 namespace TRADEMGEN {
 

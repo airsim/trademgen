@@ -24,7 +24,7 @@ int main (int argc, char* const argv[]) {
   e.setRate(2.0);
 	
   // get rate
-  double r = e.getRate();
+  // const double r = e.getRate();
   std::cout << "Seed: " << seed << std::endl << std::endl;
 	
   // create instances

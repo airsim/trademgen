@@ -5,36 +5,35 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // STL
-#include <map>
-#include <ostream>
+#include <iosfwd>
 // TraDemGen
-#include <BasTypes.hpp>
-//#include <RandomGeneration.hpp>
+#include "BasTypes.hpp"
 
 namespace TRADEMGEN {
 
-  /** Class modeling the distribution of values that can be taken by a categorical attribute. */
+  /** Class modeling the distribution of values that can be taken by a
+      categorical attribute. */
   class CategoricalAttribute {
   public:
     // ///////////// Getters ///////////
     /** Get the probability mass function. */
-		const std::map<int,Probability_T>& getProbabilityMassFunction() const {
-			return _probability_mass_function;
-		}
+    const ProbabilityMassFunction_T& getProbabilityMassFunction() const {
+      return _probability_mass_function;
+    }
 	
     /** Get the inverse cumulative distribution. */
-		const std::map<Probability_T, int>& getInverseCumulativeDistribution () const {
-			return _inverse_cumulative_distribution;
-		}
+    const InverseCumulativeDistribution_T& getInverseCumulativeDistribution () const {
+      return _inverse_cumulative_distribution;
+    }
 
     // ///////////// Setters ///////////
     /** Set the probability mass function */
-    void setProbabilityMassFunction (const std::map<int, Probability_T>&);
+    void setProbabilityMassFunction (const ProbabilityMassFunction_T&);
 
   public:
     // /////////////// Business Methods //////////
     /** Get value from inverse cumulative distribution. */
-    int getValue(Probability_T);
+    int getValue (Probability_T) const;
     
   public:
     // ////////////// Display Support Methods //////////
@@ -44,7 +43,7 @@ namespace TRADEMGEN {
   public:
     // ////////// Constructors and destructors /////////
     /** Constructor by default */
-    CategoricalAttribute (const std::map<int, Probability_T>&);
+    CategoricalAttribute (const ProbabilityMassFunction_T&);
 
     /** Destructor */
     virtual ~CategoricalAttribute ();
@@ -54,17 +53,18 @@ namespace TRADEMGEN {
     CategoricalAttribute ();
     CategoricalAttribute (const CategoricalAttribute&);
 
-    /** Determine inverse cumulative distribution from probability mass function (initialisation). */
+    /** Determine inverse cumulative distribution from probability
+        mass function (initialisation). */
     void determineInverseCumulativeDistributionFromProbabilityMassFunction ();
   
   private:
     // ////////// Attributes //////////
 		
-		/** Probability mass function */
-		std::map<int, Probability_T> _probability_mass_function;
+    /** Probability mass function */
+    ProbabilityMassFunction_T _probability_mass_function;
 		
-		/** Inverse cumulative distribution */
-    std::map<Probability_T, int> _inverse_cumulative_distribution;
+    /** Inverse cumulative distribution */
+    InverseCumulativeDistribution_T _inverse_cumulative_distribution;
 		
   };
 

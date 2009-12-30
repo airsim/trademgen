@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 // TraDemGen
-#include <RandomGeneration.hpp>
+#include "RandomGeneration.hpp"
 
 namespace TRADEMGEN {
   
@@ -10,7 +10,7 @@ namespace TRADEMGEN {
   RandomGeneration::RandomGeneration (const RandomSeed_T& iSeed)
     : _seed (iSeed), _generator (iSeed),
       _uniformGenerator (_generator, boost::uniform_real<> (0, 1)) {
-		init ();
+    init ();
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   double RandomGeneration::generateInstance (const Rate_T& iRate) {
-	double lMean = 1.0 / static_cast<double> (iRate);
+	// double lMean = 1.0 / static_cast<double> (iRate);
 	double lVariateExp = _uniformGenerator();
 	return lVariateExp;
   }

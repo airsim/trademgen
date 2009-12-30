@@ -3,8 +3,9 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
+#include <ostream>
 // TraDemGen
-#include <EventStream.hpp>
+#include "EventStream.hpp"
 
 namespace TRADEMGEN {
 

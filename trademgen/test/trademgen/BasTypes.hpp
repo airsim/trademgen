@@ -7,6 +7,7 @@
 // STL
 #include <string>
 #include <list>
+#include <map>
 // Boost Random
 #include <boost/random/linear_congruential.hpp>
 
@@ -36,8 +37,14 @@ namespace TRADEMGEN {
   /** Random number generator. */
   typedef boost::minstd_rand BaseGenerator_T;
 	
-	/** Probability */
-	typedef float Probability_T;
+  /** Probability */
+  typedef float Probability_T;
+
+  /** Probability Mass Function. */
+  typedef std::map<int, Probability_T> ProbabilityMassFunction_T;
+
+  /** Inverse Cumulative Distribution Function. */
+  typedef std::map<Probability_T, int> InverseCumulativeDistribution_T;
 }
 #endif // __TRADEMGEN_BAS_BASTYPES_HPP
 
