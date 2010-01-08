@@ -5,8 +5,8 @@
 #include <iostream>
 #include <sstream>
 // TraDemGen
-#include <EventStream.hpp>
-#include <CategoricalAttribute.hpp>
+#include <test/trademgen/EventStream.hpp>
+#include <test/trademgen/CategoricalAttribute.hpp>
 
 // ///////////// M A I N //////////////////
 int main (int argc, char* const argv[]) {
@@ -36,13 +36,13 @@ int main (int argc, char* const argv[]) {
   e.displayAllEvents(std::cout);
 	
 	
-	// /////////////////////////////////////////////////////
-	// attributes
-	std::map<int, float> M;
-	M[1] = 0.1;
-	M[17] = 0.7;
-	M[77] = 0.2;
-	TRADEMGEN::CategoricalAttribute C (M);
+  // /////////////////////////////////////////////////////
+  // attributes
+  std::map<int, float> M;
+  M[1] = 0.1;
+  M[17] = 0.7;
+  M[77] = 0.2;
+  TRADEMGEN::CategoricalAttribute C (M);
 	
   return 0;
 }
