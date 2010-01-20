@@ -7,9 +7,10 @@
 // Boost
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
-// TRADEMGEN
+// StdAir
+#include <stdair/basic/BasChronometer.hpp>
+// TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
-#include <trademgen/basic/BasChronometer.hpp>
 #include <trademgen/command/SociSessionManager.hpp>
 #include <trademgen/command/DBManager.hpp>
 #include <trademgen/factory/FacTrademgenServiceContext.hpp>
@@ -108,7 +109,7 @@ namespace TRADEMGEN {
         lTRADEMGEN_ServiceContext.getSociSessionHandler();
       
       // Delegate the query execution to the dedicated command
-      BasChronometer lTrademgenChronometer;
+      stdair::BasChronometer lTrademgenChronometer;
       lTrademgenChronometer.start();
 
       //
