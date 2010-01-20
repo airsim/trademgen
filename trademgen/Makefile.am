@@ -24,7 +24,7 @@ MAINTAINERCLEANFILES = Makefile.in aclocal.m4 configure \
 EXTRA_DIST = @PACKAGE@.spec @PACKAGE@.m4 @PACKAGE@.pc Makefile.common 
 
 # Build in these directories:
-SUBDIRS = trademgen extracppunit $(TEST_DIR)
+SUBDIRS = stdair trademgen extracppunit $(TEST_DIR)
 
 
 # Configuration helpers

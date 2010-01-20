@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script
 #-------------------------------------------------------------------
 AC_PREREQ(2.59)
-AC_COPYRIGHT([Copyright (C) 2007-2009  Denis Arnaud <denis_arnaud@users.sourceforge.net>])
+AC_COPYRIGHT([Copyright (C) 2007-2010 Denis Arnaud <denis_arnaud@users.sourceforge.net>])
 AC_INIT([TRADEMGEN],[99.99.99],[denis_arnaud@users.sourceforge.net],[trademgen])
 AC_CONFIG_HEADER([trademgen/config.h])
 AC_CONFIG_SRCDIR([trademgen/basic/BasConst.cpp])
@@ -325,6 +325,12 @@ AC_CONFIG_FILES(
 	trademgen.pc
 	trademgen.spec
 	trademgen.m4
+	stdair/Makefile
+	stdair/basic/Makefile
+	stdair/bom/Makefile
+	stdair/factory/Makefile
+	stdair/config/Makefile
+	stdair/core/Makefile
 	trademgen/Makefile
 	trademgen/basic/Makefile
 	trademgen/bom/Makefile
@@ -338,9 +344,31 @@ AC_CONFIG_FILES(
 	trademgen/python/Makefile
 	extracppunit/Makefile
 	test/Makefile
+	test/samples/Makefile
+	test/stdair/Makefile
 	test/trademgen/Makefile
 )
 AC_OUTPUT
+
+# OpenMPI
+if test "x$HAVE_OPENMPI" = "x1"; then
+   OPENMPI_OUTPUT="  - OPENMPI ........... :
+    o OPENMPI_VERSION . : ${MPIGEN_VERSION}
+    o OPENMPI_CFLAGS .. : ${MPIGEN_CFLAGS}
+    o OPENMPI_LIBS .... : ${MPIGEN_LIBS}"
+else
+   OPENMPI_OUTPUT="  - OPENMPI ........... : No"
+fi
+
+# MPICH2
+if test "x$HAVE_MPICH2" = "x1"; then
+   MPICH2_OUTPUT="  - MPICH2 ............ :
+    o MPICH2_VERSION .. : ${MPIGEN_VERSION}
+    o MPICH2_CFLAGS ... : ${MPIGEN_CFLAGS}
+    o MPICH2_LIBS ..... : ${MPIGEN_LIBS}"
+else
+   MPICH2_OUTPUT="  - MPICH2 ............ : No"
+fi
 
 echo "
 ------------------------------------------------------------------------------
@@ -385,15 +413,10 @@ Compiler/linker flags/libs/defs:
   - LIBS .............. : ${LIBS}
 
 External libraries:
-  - OPENMPI ........... :
-    o OPENMPI_VERSION . : ${OPENMPI_VERSION}
-    o OPENMPI_CFLAGS .. : ${OPENMPI_CFLAGS}
-    o OPENMPI_LIBS .... : ${OPENMPI_LIBS}
 
-  - MPICH2 ............ :
-    o MPICH2_VERSION .. : ${MPICH2_VERSION}
-    o MPICH2_CFLAGS ... : ${MPICH2_CFLAGS}
-    o MPICH2_LIBS ..... : ${MPICH2_LIBS}
+${OPENMPI_OUTPUT}
+
+${MPICH2_OUTPUT}
 
   - Python ............. :
     o PYTHON_version ... : ${PYTHON_VERSION}

@@ -4,7 +4,7 @@ include $(top_srcdir)/Makefile.common
 MAINTAINERCLEANFILES = Makefile.in
 
 ##
-SUBDIRS = trademgen
+SUBDIRS = samples stdair trademgen
 
 EXTRA_DIST =
 ##
