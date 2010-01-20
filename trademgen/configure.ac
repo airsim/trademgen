@@ -330,6 +330,7 @@ AC_CONFIG_FILES(
 	stdair/bom/Makefile
 	stdair/factory/Makefile
 	stdair/config/Makefile
+	stdair/service/Makefile
 	stdair/core/Makefile
 	trademgen/Makefile
 	trademgen/basic/Makefile
