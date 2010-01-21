@@ -1,6 +1,5 @@
-// C
-#include <assert.h>
 // STL
+#include <cassert>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -248,7 +247,7 @@ int main (int argc, char* argv[]) {
     
     // Set the database parameters
     TRADEMGEN::DBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
-                                  lDBDBName);
+                                   lDBDBName);
     
     // Set the log parameters
     std::ofstream logOutputFile;
@@ -257,7 +256,8 @@ int main (int argc, char* argv[]) {
     logOutputFile.clear();
 
     // Initialise the context
-    TRADEMGEN::TRADEMGEN_Service trademgenService (logOutputFile, lDBParams);
+    const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
+    TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lDBParams);
 
     // Query the Xapian database (index)
     //const std::string& lTrademgenOutput = trademgenService.calculateTrademgen ();

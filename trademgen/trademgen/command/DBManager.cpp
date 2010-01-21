@@ -6,9 +6,10 @@
 // SOCI
 #include <soci/core/soci.h>
 #include <soci/backends/mysql/soci-mysql.h>
-// Trademgen
+// StdAir
+#include <stdair/service/Logger.hpp>
+// TraDemGen
 #include <trademgen/command/DBManager.hpp>
-#include <trademgen/service/Logger.hpp>
 
 namespace TRADEMGEN {
 
@@ -52,7 +53,7 @@ namespace TRADEMGEN {
       */
 
     } catch (std::exception const& lException) {
-      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
+      STDAIR_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
   }
@@ -98,7 +99,7 @@ namespace TRADEMGEN {
       */
 
     } catch (std::exception const& lException) {
-      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
+      STDAIR_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
   }
@@ -120,7 +121,7 @@ namespace TRADEMGEN {
       hasStillData = ioStatement.fetch();
       
     } catch (std::exception const& lException) {
-      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
+      STDAIR_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
 
@@ -158,7 +159,7 @@ namespace TRADEMGEN {
       // TRADEMGEN_LOG_DEBUG ("[" << lDocID << "] " << iPlace);
       
     } catch (std::exception const& lException) {
-      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
+      STDAIR_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
   }
@@ -188,10 +189,10 @@ namespace TRADEMGEN {
       hasStillData = iterateOnStatement (lSelectStatement, ioPlace,
                                          shouldNotDoReset);
       // Debug
-      // TRADEMGEN_LOG_DEBUG ("[" << iDocID << "] " << ioPlace);
+      // STDAIR_LOG_DEBUG ("[" << iDocID << "] " << ioPlace);
       
     } catch (std::exception const& lException) {
-      TRADEMGEN_LOG_ERROR ("Error: " << lException.what());
+      STDAIR_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
 

@@ -4,28 +4,19 @@
 // STL
 #include <cassert>
 #include <sstream>
-// Boost
-#include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/date_time/posix_time/ptime.hpp>
 // StdAir
 #include <stdair/basic/BasChronometer.hpp>
+#include <stdair/bom/BomManager.hpp> // for display()
+#include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/command/SociSessionManager.hpp>
 #include <trademgen/command/DBManager.hpp>
 #include <trademgen/factory/FacTrademgenServiceContext.hpp>
 #include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
-#include <trademgen/service/Logger.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
 
 namespace TRADEMGEN {
-
-  // //////////////////////////////////////////////////////////////////////
-  TRADEMGEN_Service::
-  TRADEMGEN_Service (std::ostream& ioLogStream, const DBParams& iDBParams)
-    : _trademgenServiceContext (NULL) {
-    init (ioLogStream, iDBParams);
-  }
 
   // //////////////////////////////////////////////////////////////////////
   TRADEMGEN_Service::TRADEMGEN_Service ()
@@ -34,8 +25,29 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  TRADEMGEN_Service::TRADEMGEN_Service (const TRADEMGEN_Service& iService) {
+  TRADEMGEN_Service::TRADEMGEN_Service (const TRADEMGEN_Service& iService) 
+    : _trademgenServiceContext (NULL) {
     assert (false);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  TRADEMGEN_Service::TRADEMGEN_Service (const DBParams& iDBParams)
+    : _trademgenServiceContext (NULL) {
+
+    // Initialise the context
+    init (iDBParams);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  TRADEMGEN_Service::TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
+                                        const DBParams& iDBParams)
+    : _trademgenServiceContext (NULL) {
+    
+    // Set the log file
+    logInit (iLogParams);
+
+    // Initialise the (remaining of the) context
+    init (iDBParams);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -45,16 +57,12 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void logInit (const LOG::EN_LogLevel iLogLevel,
-                std::ostream& ioLogOutputFile) {
-    Logger::instance().setLogParameters (iLogLevel, ioLogOutputFile);
+  void TRADEMGEN_Service::logInit (const stdair::BasLogParams& iLogParams) {
+    stdair::Logger::init (iLogParams);
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void TRADEMGEN_Service::init (std::ostream& ioLogStream,
-                               const DBParams& iDBParams) {
-    // Set the log file
-    logInit (LOG::DEBUG, ioLogStream);
+  void TRADEMGEN_Service::init (const DBParams& iDBParams) {
 
     // Initialise the context
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext = 
@@ -89,7 +97,8 @@ namespace TRADEMGEN {
       throw NonInitialisedServiceException();
     }
     assert (_trademgenServiceContext != NULL);
-    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext= *_trademgenServiceContext;
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
 
     // Get the date-time for the present time
     boost::posix_time::ptime lNowDateTime =
@@ -97,10 +106,10 @@ namespace TRADEMGEN {
     boost::gregorian::date lNowDate = lNowDateTime.date();
 
     // DEBUG
-    TRADEMGEN_LOG_DEBUG (std::endl
-                        << "==================================================="
-                        << std::endl
-                        << lNowDateTime);
+    STDAIR_LOG_DEBUG (std::endl
+                      << "==================================================="
+                      << std::endl
+                      << lNowDateTime);
 
     try {
       
@@ -118,11 +127,11 @@ namespace TRADEMGEN {
       const double lTrademgenMeasure = lTrademgenChronometer.elapsed();
 
       // DEBUG
-      TRADEMGEN_LOG_DEBUG ("Match query on Xapian database (index): "
-                           << lTrademgenMeasure);
+      STDAIR_LOG_DEBUG ("Match query on Xapian database (index): "
+                        << lTrademgenMeasure);
       
     } catch (const std::exception& error) {
-      TRADEMGEN_LOG_ERROR ("Exception: "  << error.what());
+      STDAIR_LOG_ERROR ("Exception: "  << error.what());
       throw TrademgenCalculationException();
     }
   

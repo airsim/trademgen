@@ -8,14 +8,16 @@
 #include <vector>
 // Boost String
 #include <boost/python.hpp>
-// Trademgen
+// StdAir
+#include <stdair/basic/BasFileMgr.hpp>
+// TraDemGen
 #include <trademgen/TRADEMGEN_Service.hpp>
 
 namespace TRADEMGEN {
 
   struct Trademgener {
   public:
-    /** Wrapper around the search use case. */
+    /** Wrapper around the travel demand generation use case. */
     std::string trademgen (const std::string& iQuery) {
       std::ostringstream oStream;
 
@@ -98,8 +100,10 @@ namespace TRADEMGEN {
 
       try {
         
-        // TODO: use Boost Filesystem to check the filepaths
-        if (iLogFilepath.empty() == true) {
+        // Check that the file path given as input corresponds to an actual file
+        const bool isWriteable = (iLogFilepath.empty() == false);
+        // stdair::BasFileMgr::isWriteable (iLogFilepath);
+        if (isWriteable == false) {
           isEverythingOK = false;
           return isEverythingOK;
         }
@@ -114,10 +118,12 @@ namespace TRADEMGEN {
         
         // DEBUG
         *_logOutputStream << "Python wrapper initialisation" << std::endl;
+        const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG,
+                                               *_logOutputStream);
         
         // Initialise the context
         DBParams lDBParams (iDBUser, iDBPasswd, iDBHost, iDBPort, iDBDBName);
-        _trademgenService = new TRADEMGEN_Service (*_logOutputStream, lDBParams);
+        _trademgenService = new TRADEMGEN_Service (lLogParams, lDBParams);
         
         // DEBUG
         *_logOutputStream << "Python wrapper initialised" << std::endl;

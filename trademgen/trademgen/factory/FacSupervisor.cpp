@@ -7,15 +7,13 @@
 #include <trademgen/factory/FacBomAbstract.hpp>
 #include <trademgen/factory/FacServiceAbstract.hpp>
 #include <trademgen/factory/FacSupervisor.hpp>
-#include <trademgen/service/Logger.hpp>
 
 namespace TRADEMGEN {
 
   FacSupervisor* FacSupervisor::_instance = NULL;
 
   // //////////////////////////////////////////////////////////////////////
-  FacSupervisor::FacSupervisor () :
-    _logger (NULL) {
+  FacSupervisor::FacSupervisor () {
   }
     
   // //////////////////////////////////////////////////////////////////////
@@ -40,15 +38,9 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void FacSupervisor::registerLoggerService (Logger* ioLogger_ptr) {
-    _logger = ioLogger_ptr;
-  }
-
-  // //////////////////////////////////////////////////////////////////////
   FacSupervisor::~FacSupervisor() {
     cleanBomLayer();
     cleanServiceLayer();
-    cleanLoggerService();
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -80,16 +72,10 @@ namespace TRADEMGEN {
   }
   
   // //////////////////////////////////////////////////////////////////////
-  void FacSupervisor::cleanLoggerService() {
-    delete _logger; _logger = NULL;
-  }
-  
-  // //////////////////////////////////////////////////////////////////////
   void FacSupervisor::cleanFactory () {
 	if (_instance != NULL) {
 		_instance->cleanBomLayer();
 		_instance->cleanServiceLayer();
-		_instance->cleanLoggerService();
 	}
     delete (_instance); _instance = NULL;
   }

@@ -66,3 +66,4 @@ result = trademgenLibrary.trademgen (searchString)
 
 print 'Raw result from the Trademgen library:'
 print result
+

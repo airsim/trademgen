@@ -1,18 +1,18 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// C
-#include <cassert>
 // STL
+#include <cassert>
 #include <string>
 #include <sstream>
 // SOCI
 #include <soci/core/soci.h>
 #include <soci/backends/mysql/soci-mysql.h>
-// Trademgen
+// StdAir
+#include <stdair/service/Logger.hpp>
+// TraDemGen
 #include <trademgen/DBParams.hpp>
 #include <trademgen/command/SociSessionManager.hpp>
-#include <trademgen/service/Logger.hpp>
 
 namespace TRADEMGEN {
 
@@ -36,13 +36,13 @@ namespace TRADEMGEN {
       ioSociSession_ptr->open (soci::mysql, lSociSessionConnectionString);
       
     } catch (std::exception const& lException) {
-      TRADEMGEN_LOG_ERROR ("Error while opening a connection to database: "
-                          << lException.what());
-      TRADEMGEN_LOG_ERROR ("Database parameters used:"
-                          << " db=" << iDBParams.getDBName()
-                          << " user=" << iDBParams.getUser()
-                          << " port=" << iDBParams.getPort()
-                          << " host=" << iDBParams.getHost());
+      STDAIR_LOG_ERROR ("Error while opening a connection to database: "
+                        << lException.what());
+      STDAIR_LOG_ERROR ("Database parameters used:"
+                        << " db=" << iDBParams.getDBName()
+                        << " user=" << iDBParams.getUser()
+                        << " port=" << iDBParams.getPort()
+                        << " host=" << iDBParams.getHost());
       throw SQLDatabaseConnectionImpossibleException();
     }
   }

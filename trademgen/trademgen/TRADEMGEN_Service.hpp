@@ -4,9 +4,9 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// STL
-#include <string>
-#include <iosfwd>
+// StdAir
+#include <stdair/STDAIR_Types.hpp>
+#include <stdair/basic/BasLogParams.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/DBParams.hpp>
@@ -27,9 +27,25 @@ namespace TRADEMGEN {
     
     // ////////// Constructors and destructors //////////
     /** Constructor.
-        @param std::ostream& Output log stream (for instance, std::cout).
+        <br>The init() method is called; see the corresponding documentation
+        for more details.
+        <br>Moreover, a reference on an output stream is given, so
+        that log outputs can be directed onto that stream.       
+        @param const stdair::BasLogParams& Parameters for the output log stream.
         @param const DBParams& The SQL database parameters. */
-    TRADEMGEN_Service (std::ostream& ioLogStream, const DBParams&);
+    TRADEMGEN_Service (const stdair::BasLogParams&, const DBParams&);
+
+    /** Constructor.
+        <br>The init() method is called; see the corresponding documentation
+        for more details.
+        <br>Moreover, as no reference on any output stream is given,
+        it is assumed that the StdAir log service has already been
+        initialised with the proper log output stream by some other
+        methods in the calling chain (for instance, when the AIRINV_Service
+        is itself being initialised by another library service such as
+        DSIM_Service).
+        @param const DBParams& The SQL database parameters. */
+    TRADEMGEN_Service (const DBParams&);
 
     /** Destructor. */
     ~TRADEMGEN_Service();
@@ -41,8 +57,12 @@ namespace TRADEMGEN {
     /** Default copy constructor. */
     TRADEMGEN_Service (const TRADEMGEN_Service&);
 
-    /** Initialise. */
-    void init (std::ostream& ioLogStream, const DBParams&);
+    /** Initialise the log. */
+    void logInit (const stdair::BasLogParams&);
+
+    /** Initialise.
+        @param const DBParams& The SQL database parameters. */
+    void init (const DBParams&);
 
     /** Finalise. */
     void finalise ();
