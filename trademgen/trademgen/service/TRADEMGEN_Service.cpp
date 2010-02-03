@@ -7,6 +7,7 @@
 // StdAir
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
+#include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
@@ -136,6 +137,28 @@ namespace TRADEMGEN {
     }
   
     return oStr.str();
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  stdair::BookingRequestStruct TRADEMGEN_Service::
+  generateBookingRequest () const {
+    
+      // TODO: remove this hardcoded section
+      // Hardcode a booking request in order to simulate a sale.
+      // Departure airport code
+      stdair::AirportCode_T lOrigin ("LHR");
+      // Arrival airport code
+      stdair::AirportCode_T lDestination ("JFK");
+      // Departure date
+      stdair::Date_T lDepartureDate (2010, 01, 19);
+      // Passenger type
+      stdair::PassengerType_T lPaxType ("L");
+      // Number of passengers in the travelling group
+      stdair::NbOfSeats_T lPartySize = 5;
+
+      // Booking request
+      return stdair::BookingRequestStruct (lOrigin, lDestination,
+                                           lDepartureDate, lPaxType, lPartySize);
   }
 
 }

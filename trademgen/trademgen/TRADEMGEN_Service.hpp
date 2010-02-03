@@ -11,6 +11,11 @@
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/DBParams.hpp>
 
+// Forward declarations.
+namespace stdair {
+  struct BookingRequestStruct;
+}
+
 namespace TRADEMGEN {
 
   // Forward declaration
@@ -23,6 +28,10 @@ namespace TRADEMGEN {
     // ////////// Use Cases //////////
     /** Calculate the trademgens. */
     std::string calculateTrademgen ();
+
+    // ////////// Business methods //////////
+    /** Generate a hardcoded booking request. */
+    stdair::BookingRequestStruct generateBookingRequest () const;
 
     
     // ////////// Constructors and destructors //////////
