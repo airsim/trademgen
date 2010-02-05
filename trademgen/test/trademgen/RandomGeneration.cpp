@@ -1,8 +1,11 @@
 // STL
 #include <cassert>
 #include <iostream>
+// Boost
+#include <boost/math/distributions/normal.hpp>
 // TraDemGen
-#include "RandomGeneration.hpp"
+#include <BasTypes.hpp>
+#include <RandomGeneration.hpp>
 
 namespace TRADEMGEN {
   
@@ -22,10 +25,23 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  double RandomGeneration::generateInstance (const Rate_T& iRate) {
-	// double lMean = 1.0 / static_cast<double> (iRate);
-	double lVariateExp = _uniformGenerator();
-	return lVariateExp;
+  RealNumber_T RandomGeneration::generateUniform01 () {
+    const RealNumber_T lVariateUnif = _uniformGenerator();
+    return lVariateUnif;
+  }
+  
+  // //////////////////////////////////////////////////////////////////////
+  RealNumber_T RandomGeneration::generateUniform (const RealNumber_T& iMinValue, const RealNumber_T& iMaxValue) {
+    const RealNumber_T lVariateUnif = iMinValue + _uniformGenerator() * (iMaxValue - iMinValue);
+    return lVariateUnif;
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  RealNumber_T RandomGeneration::generateNormal (const RealNumber_T& mu, const RealNumber_T& sigma) {
+    const Probability_T lVariateUnif = generateUniform01 ();
+    const boost::math::normal lNormal (mu, sigma);
+    const RealNumber_T lRealNumberOfRequestsToBeGenerated = boost::math::quantile(lNormal, lVariateUnif);
+
+    return lRealNumberOfRequestsToBeGenerated;
+  }
 }
