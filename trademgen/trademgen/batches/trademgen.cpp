@@ -10,9 +10,14 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/program_options.hpp>
+// StdAir
+#include <stdair/STDAIR_Types.hpp>
+#include <stdair/STDAIR_Service.hpp>
+#include <stdair/factory/FacBomContent.hpp>
+#include <stdair/bom/AirlineFeatureSet.hpp>
+#include <stdair/bom/AirlineFeature.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Service.hpp>
-#include <trademgen/DBParams.hpp>
 #include <trademgen/config/trademgen-paths.hpp>
 
 
@@ -24,13 +29,16 @@ typedef std::vector<std::string> WordList_T;
 /** Default name and location for the log file. */
 const std::string K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
 
+/** Default name and location for the (CSV) input file. */
+const std::string K_TRADEMGEN_DEFAULT_INPUT_FILENAME ("../../test/samples/demand01.csv");
+
 /** Default query string. */
 const std::string K_TRADEMGEN_DEFAULT_QUERY_STRING ("my good old query");
 
 /** Default name and location for the Xapian database. */
-const std::string K_TRADEMGEN_DEFAULT_DB_USER ("trademgen");
-const std::string K_TRADEMGEN_DEFAULT_DB_PASSWD ("trademgen");
-const std::string K_TRADEMGEN_DEFAULT_DB_DBNAME ("trademgen");
+const std::string K_TRADEMGEN_DEFAULT_DB_USER ("dsim");
+const std::string K_TRADEMGEN_DEFAULT_DB_PASSWD ("dsim");
+const std::string K_TRADEMGEN_DEFAULT_DB_DBNAME ("dsim");
 const std::string K_TRADEMGEN_DEFAULT_DB_HOST ("localhost");
 const std::string K_TRADEMGEN_DEFAULT_DB_PORT ("3306");
 
@@ -89,6 +97,7 @@ const int K_TRADEMGEN_EARLY_RETURN_STATUS = 99;
 /** Read and parse the command line options. */
 int readConfiguration (int argc, char* argv[], 
                        std::string& ioQueryString,
+                       stdair::Filename_T& ioInputFilename,
                        std::string& ioLogFilename,
                        std::string& ioDBUser, std::string& ioDBPasswd,
                        std::string& ioDBHost, std::string& ioDBPort,
@@ -114,15 +123,18 @@ int readConfiguration (int argc, char* argv[],
   // line and in config file
   boost::program_options::options_description config ("Configuration");
   config.add_options()
+    ("input,i",
+     boost::program_options::value< std::string >(&ioInputFilename)->default_value(K_TRADEMGEN_DEFAULT_INPUT_FILENAME),
+     "(CVS) input file for the demand distributions")
     ("log,l",
      boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_TRADEMGEN_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
     ("user,u",
      boost::program_options::value< std::string >(&ioDBUser)->default_value(K_TRADEMGEN_DEFAULT_DB_USER),
-     "SQL database hostname (e.g., trademgen)")
+     "SQL database hostname (e.g., dsim)")
     ("passwd,p",
      boost::program_options::value< std::string >(&ioDBPasswd)->default_value(K_TRADEMGEN_DEFAULT_DB_PASSWD),
-     "SQL database hostname (e.g., trademgen)")
+     "SQL database hostname (e.g., dsim)")
     ("host,H",
      boost::program_options::value< std::string >(&ioDBHost)->default_value(K_TRADEMGEN_DEFAULT_DB_HOST),
      "SQL database hostname (e.g., localhost)")
@@ -131,7 +143,7 @@ int readConfiguration (int argc, char* argv[],
      "SQL database port (e.g., 3306)")
     ("dbname,m",
      boost::program_options::value< std::string >(&ioDBDBName)->default_value(K_TRADEMGEN_DEFAULT_DB_DBNAME),
-     "SQL database name (e.g., trademgen)")
+     "SQL database name (e.g., dsim)")
     ("query,q",
      boost::program_options::value< WordList_T >(&lWordList)->multitoken(),
      "Query word list")
@@ -182,6 +194,11 @@ int readConfiguration (int argc, char* argv[],
     return K_TRADEMGEN_EARLY_RETURN_STATUS;
   }
 
+  if (vm.count ("input")) {
+    ioInputFilename = vm["input"].as< std::string >();
+    std::cout << "Input filename is: " << ioInputFilename << std::endl;
+  }
+
   if (vm.count ("log")) {
     ioLogFilename = vm["log"].as< std::string >();
     std::cout << "Log filename is: " << ioLogFilename << std::endl;
@@ -226,6 +243,9 @@ int main (int argc, char* argv[]) {
     // Query
     std::string lQuery;
 
+    // Input file name
+    stdair::Filename_T lInputFilename;
+
     // Output log File
     std::string lLogFilename;
 
@@ -236,9 +256,12 @@ int main (int argc, char* argv[]) {
     std::string lDBPort;
     std::string lDBDBName;
                        
+    // Airline code
+    stdair::AirlineCode_T lAirlineCode ("BA");
+    
     // Call the command-line option parser
     const int lOptionParserStatus = 
-      readConfiguration (argc, argv, lQuery, lLogFilename,
+      readConfiguration (argc, argv, lQuery, lInputFilename, lLogFilename,
                          lDBUser, lDBPasswd, lDBHost, lDBPort, lDBDBName);
 
     if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
@@ -246,7 +269,7 @@ int main (int argc, char* argv[]) {
     }
     
     // Set the database parameters
-    TRADEMGEN::DBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
+    stdair::BasDBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
                                    lDBDBName);
     
     // Set the log parameters
@@ -255,15 +278,29 @@ int main (int argc, char* argv[]) {
     logOutputFile.open (lLogFilename.c_str());
     logOutputFile.clear();
 
-    // Initialise the context
+    // Initialise the set of required airline features
+    stdair::AirlineFeatureSet& lAirlineFeatureSet =
+      stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
+
+    // Initialise an AirlineFeature object
+    stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
+    stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
+      instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
+    stdair::FacBomContent::
+      linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
+                                              lAirlineFeatureSet);
+    
+    // Initialise the TraDemGen service object
     const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
-    TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lDBParams);
+    TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lDBParams,
+                                                   lAirlineFeatureSet,
+                                                   lInputFilename);
 
-    // Query the Xapian database (index)
-    //const std::string& lTrademgenOutput = trademgenService.calculateTrademgen ();
+    // Query the database
+    const std::string& lTrademgenOutput = trademgenService.calculateTrademgen();
 
-    //std::cout << "Trademgen output: '" << lTrademgenOutput << "'."
-    //         << std::endl;
+    std::cout << "Trademgen output: '" << lTrademgenOutput << "'."
+              << std::endl;
       
     // Close the Log outputFile
     logOutputFile.close();

@@ -4,9 +4,8 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// STL
-#include <string>
 // Trademgen
+#include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/factory/FacServiceAbstract.hpp>
 
 namespace TRADEMGEN {
@@ -15,35 +14,35 @@ namespace TRADEMGEN {
   class TRADEMGEN_ServiceContext;
 
   /** Factory for Bucket. */
-  class FacTrademgenServiceContext : public FacServiceAbstract {
+  class FacTRADEMGENServiceContext : public FacServiceAbstract {
   public:
 
     /** Provide the unique instance.
         <br> The singleton is instantiated when first used
-        @return FacTrademgenServiceContext& */
-    static FacTrademgenServiceContext& instance();
+        @return FacTRADEMGENServiceContext& */
+    static FacTRADEMGENServiceContext& instance();
 
     /** Destructor.
         <br> The Destruction put the _instance to NULL
         in order to be clean for the next
-        FacTrademgenServiceContext::instance() */
-    ~FacTrademgenServiceContext();
+        FacTRADEMGENServiceContext::instance(). */
+    ~FacTRADEMGENServiceContext();
 
     /** Create a new TRADEMGEN_ServiceContext object.
         <br>This new object is added to the list of instantiated objects.
         @return TRADEMGEN_ServiceContext& The newly created object. */
-    TRADEMGEN_ServiceContext& create (const std::string& iServiceName);
+    TRADEMGEN_ServiceContext& create ();
 
     
   protected:
     /** Default Constructor.
         <br>This constructor is protected in order to ensure the singleton
         pattern.*/
-    FacTrademgenServiceContext () {}
+    FacTRADEMGENServiceContext () {}
 
   private:
     /** The unique instance.*/
-    static FacTrademgenServiceContext* _instance;
+    static FacTRADEMGENServiceContext* _instance;
   };
 
 }

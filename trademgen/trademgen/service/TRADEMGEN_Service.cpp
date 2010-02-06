@@ -4,16 +4,26 @@
 // STL
 #include <cassert>
 #include <sstream>
+// Boost
+#include <boost/make_shared.hpp>
+// SOCI
+#include <soci/core/soci.h>
+#include <soci/backends/mysql/soci-mysql.h>
 // StdAir
 #include <stdair/basic/BasChronometer.hpp>
+#include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
+#include <stdair/bom/BomRoot.hpp>
+#include <stdair/bom/AirlineFeature.hpp>
+#include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
+#include <stdair/service/DBSessionManager.hpp>
+#include <stdair/STDAIR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
-#include <trademgen/command/SociSessionManager.hpp>
-#include <trademgen/command/DBManager.hpp>
-#include <trademgen/factory/FacTrademgenServiceContext.hpp>
+#include <airsched/bom/BomRoot.hpp>
+#include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
 #include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
 
@@ -31,65 +41,122 @@ namespace TRADEMGEN {
     assert (false);
   }
 
-  // //////////////////////////////////////////////////////////////////////
-  TRADEMGEN_Service::TRADEMGEN_Service (const DBParams& iDBParams)
+  // ////////////////////////////////////////////////////////////////////
+  TRADEMGEN_Service::
+  TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
+                     const stdair::Filename_T& iDemandInputFilename)
     : _trademgenServiceContext (NULL) {
 
+    // Initialise the service context
+    initServiceContext ();
+    
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+    
+    // Store the STDAIR service object within the (TRADEMGEN) service context
+    lTRADEMGEN_ServiceContext.setSTDAIR_Service (ioSTDAIR_ServicePtr);
+    
     // Initialise the context
-    init (iDBParams);
+    init (iDemandInputFilename);
   }
 
   // //////////////////////////////////////////////////////////////////////
-  TRADEMGEN_Service::TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
-                                        const DBParams& iDBParams)
+  TRADEMGEN_Service::
+  TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
+                     const stdair::BasDBParams& iDBParams,
+                     const stdair::AirlineFeatureSet& iAirlineFeatureSet,
+                     const stdair::Filename_T& iDemandInputFilename)
     : _trademgenServiceContext (NULL) {
     
-    // Set the log file
-    logInit (iLogParams);
-
+    // Initialise the service context
+    initServiceContext ();
+    
+    // Initialise the STDAIR service handler
+    initStdAirService (iLogParams, iDBParams, iAirlineFeatureSet);
+    
     // Initialise the (remaining of the) context
-    init (iDBParams);
+    init (iDemandInputFilename);
   }
 
   // //////////////////////////////////////////////////////////////////////
   TRADEMGEN_Service::~TRADEMGEN_Service () {
-    // Delete/Clean all the objects from memory
-    finalise();
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void TRADEMGEN_Service::logInit (const stdair::BasLogParams& iLogParams) {
-    stdair::Logger::init (iLogParams);
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  void TRADEMGEN_Service::init (const DBParams& iDBParams) {
-
-    // Initialise the context
+  void TRADEMGEN_Service::initServiceContext () {
+    // Initialise the service context
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext = 
-      FacTrademgenServiceContext::instance().create ("DEBUG_TO_BE_REMOVED");
+      FacTRADEMGENServiceContext::instance().create ();
     _trademgenServiceContext = &lTRADEMGEN_ServiceContext;
+  }
 
-    // Initialise the SOCI Session
-    soci::session* lSociSession_ptr = lTRADEMGEN_ServiceContext.getSociSession();
-    SociSessionManager::init (lSociSession_ptr, iDBParams);
-    assert (lSociSession_ptr != NULL);
-    lTRADEMGEN_ServiceContext.setSociSession (*lSociSession_ptr);
+  // //////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::
+  initStdAirService (const stdair::BasLogParams& iLogParams,
+                     const stdair::BasDBParams& iDBParams,
+                     const stdair::AirlineFeatureSet& iAirlineFeatureSet) {
 
-    // Instanciate an empty World object
-    // World& lWorld = FacWorld::instance().create();
-    // lTRADEMGEN_ServiceContext.setWorld (lWorld);
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+    
+    // Initialise the STDAIR service handler
+    // Note that the track on the object memory is kept thanks to the Boost
+    // Smart Pointers component.
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
+      boost::make_shared<stdair::STDAIR_Service> (iLogParams, iDBParams);
+
+    // Retrieve the root of the BOM tree, on which all of the other BOM objects
+    // will be attached
+    assert (lSTDAIR_Service_ptr != NULL);
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
+
+    // Set the AirlineFeatureSet for the BomRoot.
+    lBomRoot.setAirlineFeatureSet (&iAirlineFeatureSet);
+    
+    // Store the STDAIR service object within the (TRADEMGEN) service context
+    lTRADEMGEN_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
   }
   
   // //////////////////////////////////////////////////////////////////////
-  void TRADEMGEN_Service::finalise () {
+  void TRADEMGEN_Service::
+  init (const stdair::Filename_T& iDemandInputFilename) {
+
+    // Check that the file path given as input corresponds to an actual file
+    const bool doesExistAndIsReadable =
+      stdair::BasFileMgr::doesExistAndIsReadable (iDemandInputFilename);
+    if (doesExistAndIsReadable == false) {
+      STDAIR_LOG_ERROR ("The schedule input file, '" << iDemandInputFilename
+                        << "', can not be retrieved on the file-system");
+      throw stdair::FileNotFoundException();
+    }
+
+    // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
 
-    // Terminate the SOCI Session
-    soci::session* lSociSession_ptr = _trademgenServiceContext->getSociSession();
-    SociSessionManager::finalise (lSociSession_ptr);
+    // Retrieve the StdAir service context
+    stdair::STDAIR_Service& lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    
+    // Get the root of the BOM tree, on which all of the other BOM objects
+    // will be attached
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+
+    // Initialise the demand generators
+    // DemandGenerator::initialiseGenerators (iDemandInputFilename, lBomRoot);
+
+    // DEBUG
+    STDAIR_LOG_DEBUG ("Generated BomRoot:");
+    std::ostringstream oStream;
+    stdair::BomManager::display (oStream, lBomRoot);
+    STDAIR_LOG_DEBUG (oStream.str());
   }
-
+  
   // //////////////////////////////////////////////////////////////////////
   std::string TRADEMGEN_Service::calculateTrademgen () {
     std::ostringstream oStr;
@@ -114,22 +181,21 @@ namespace TRADEMGEN {
 
     try {
       
-      // Retrieve the SOCI Session
-      soci::session& lSociSession =
-        lTRADEMGEN_ServiceContext.getSociSessionHandler();
-      
       // Delegate the query execution to the dedicated command
       stdair::BasChronometer lTrademgenChronometer;
       lTrademgenChronometer.start();
 
+      // Retrieve the database session handler
+      stdair::DBSession_T& lDBSession =
+        stdair::DBSessionManager::instance().getDBSession();
+      
       //
       oStr << "That is my request: hello world!";
 
       const double lTrademgenMeasure = lTrademgenChronometer.elapsed();
 
       // DEBUG
-      STDAIR_LOG_DEBUG ("Match query on Xapian database (index): "
-                        << lTrademgenMeasure);
+      STDAIR_LOG_DEBUG ("Sample service for TraDemGen: " << lTrademgenMeasure);
       
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());

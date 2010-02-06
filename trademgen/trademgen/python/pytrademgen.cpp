@@ -9,7 +9,14 @@
 // Boost String
 #include <boost/python.hpp>
 // StdAir
+#include <stdair/STDAIR_Types.hpp>
+#include <stdair/STDAIR_Service.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
+#include <stdair/basic/BasLogParams.hpp>
+#include <stdair/basic/BasDBParams.hpp>
+#include <stdair/factory/FacBomContent.hpp>
+#include <stdair/bom/AirlineFeatureSet.hpp>
+#include <stdair/bom/AirlineFeature.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Service.hpp>
 
@@ -93,6 +100,7 @@ namespace TRADEMGEN {
     
     /** Wrapper around the search use case. */
     bool init (const std::string& iLogFilepath,
+               const stdair::Filename_T& iDemandInputFilename,
                const std::string& iDBUser, const std::string& iDBPasswd,
                const std::string& iDBHost, const std::string& iDBPort,
                const std::string& iDBDBName) {
@@ -121,9 +129,27 @@ namespace TRADEMGEN {
         const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG,
                                                *_logOutputStream);
         
+        // Initialise the set of required airline features
+        stdair::AirlineFeatureSet& lAirlineFeatureSet =
+          stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
+
+        // Airline code
+        stdair::AirlineCode_T lAirlineCode ("BA");
+        
+        // Initialise an AirlineFeature object
+        stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
+        stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
+          instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
+        stdair::FacBomContent::
+          linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
+                                                  lAirlineFeatureSet);
+    
         // Initialise the context
-        DBParams lDBParams (iDBUser, iDBPasswd, iDBHost, iDBPort, iDBDBName);
-        _trademgenService = new TRADEMGEN_Service (lLogParams, lDBParams);
+        stdair::BasDBParams lDBParams (iDBUser, iDBPasswd, iDBHost, iDBPort,
+                                       iDBDBName);
+        _trademgenService = new TRADEMGEN_Service (lLogParams, lDBParams,
+                                                   lAirlineFeatureSet,
+                                                   iDemandInputFilename);
         
         // DEBUG
         *_logOutputStream << "Python wrapper initialised" << std::endl;

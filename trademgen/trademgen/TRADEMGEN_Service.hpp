@@ -6,13 +6,15 @@
 // //////////////////////////////////////////////////////////////////////
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
-#include <stdair/basic/BasLogParams.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
-#include <trademgen/DBParams.hpp>
 
 // Forward declarations.
 namespace stdair {
+  class AirlineFeatureSet;
+  class STDAIR_Service;
+  struct BasLogParams;
+  struct BasDBParams;
   struct BookingRequestStruct;
 }
 
@@ -20,59 +22,82 @@ namespace TRADEMGEN {
 
   // Forward declaration
   class TRADEMGEN_ServiceContext;
+
   
   /** Trademgen services. */
   class TRADEMGEN_Service {
   public:
-
-    // ////////// Use Cases //////////
-    /** Calculate the trademgens. */
-    std::string calculateTrademgen ();
-
-    // ////////// Business methods //////////
-    /** Generate a hardcoded booking request. */
-    stdair::BookingRequestStruct generateBookingRequest () const;
-
-    
-    // ////////// Constructors and destructors //////////
+    // ////////////////// Constructors and Destructors //////////////////    
     /** Constructor.
         <br>The init() method is called; see the corresponding documentation
         for more details.
-        <br>Moreover, a reference on an output stream is given, so
-        that log outputs can be directed onto that stream.       
+        <br>A reference on an output stream is given, so that log
+        outputs can be directed onto that stream.
+        <br>Moreover, database connection parameters are given, so that a
+        session can be created on the corresponding database.
         @param const stdair::BasLogParams& Parameters for the output log stream.
-        @param const DBParams& The SQL database parameters. */
-    TRADEMGEN_Service (const stdair::BasLogParams&, const DBParams&);
+        @param const stdair::BasDBParams& Parameters for the database access.
+        @param const stdair::AirlineFeatureSet& Set of airline features.
+        @param const stdair::Filename_T& Filename of the input demand file. */
+    TRADEMGEN_Service (const stdair::BasLogParams&, const stdair::BasDBParams&,
+                       const stdair::AirlineFeatureSet&,
+                       const stdair::Filename_T& iDemandInputFilename);
 
     /** Constructor.
         <br>The init() method is called; see the corresponding documentation
         for more details.
         <br>Moreover, as no reference on any output stream is given,
-        it is assumed that the StdAir log service has already been
-        initialised with the proper log output stream by some other
-        methods in the calling chain (for instance, when the AIRINV_Service
-        is itself being initialised by another library service such as
-        DSIM_Service).
-        @param const DBParams& The SQL database parameters. */
-    TRADEMGEN_Service (const DBParams&);
-
+        neither any database access parameter is given, it is assumed
+        that the StdAir log service has already been initialised with
+        the proper log output stream by some other methods in the
+        calling chain (for instance, when the TRADEMGEN_Service is
+        itself being initialised by another library service such as
+        SIMCRS_Service).
+        @param const stdair::AirlineFeatureSet& Set of airline features.
+        @param const stdair::Filename_T& Filename of the input demand file. */
+    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
+                       const stdair::Filename_T& iDemandInputFilename);
+    
     /** Destructor. */
     ~TRADEMGEN_Service();
+    
 
+    // ////////////////// Business support methods //////////////////    
+    /** Calculate the trademgens. */
+    std::string calculateTrademgen ();
+
+    /** Generate a hardcoded booking request. */
+    stdair::BookingRequestStruct generateBookingRequest () const;
+
+    
   private:
-    // /////// Construction and Destruction helper methods ///////
-    /** Default constructor. */
+    // ////////////////// Constructors and Destructors //////////////////    
+    /** Default Constructors, which must not be used. */
     TRADEMGEN_Service ();
     /** Default copy constructor. */
     TRADEMGEN_Service (const TRADEMGEN_Service&);
 
-    /** Initialise the log. */
-    void logInit (const stdair::BasLogParams&);
+    /** Initialise the (TRADEMGEN) service context (i.e., the
+        TRADEMGEN_ServiceContext object). */
+    void initServiceContext ();
 
+    /** Initialise the STDAIR service (including the log service).
+        <br>A reference on the root of the BOM tree, namely the BomRoot object,
+        is stored within the service context for later use.
+        @param const stdair::BasLogParams& Parameters for the output log stream.
+        @param const stdair::BasDBParams& Parameters for the database access.
+        @param const stdair::AirlineFeatureSet& Set of airline features. */
+    void initStdAirService (const stdair::BasLogParams&,
+                            const stdair::BasDBParams&,
+                            const stdair::AirlineFeatureSet&);
+    
     /** Initialise.
-        @param const DBParams& The SQL database parameters. */
-    void init (const DBParams&);
-
+        <br>The CSV file, describing the airline schedules for the
+        simulator, is parsed and the inventories are generated accordingly.
+        @param const stdair::AirlineFeatureSet& Set of airline features.
+        @param const stdair::Filename_T& Filename of the input demand file. */
+    void init (const stdair::Filename_T& iDemandInputFilename);
+    
     /** Finalise. */
     void finalise ();
 

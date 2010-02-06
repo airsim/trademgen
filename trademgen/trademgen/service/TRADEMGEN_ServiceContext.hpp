@@ -6,38 +6,29 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
+// Boost
+#include <boost/shared_ptr.hpp>
+// STDAIR
+#include <stdair/STDAIR_Types.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/service/ServiceAbstract.hpp>
-
-// Forward declarations
-namespace soci {
-  class session;
-}
 
 namespace TRADEMGEN {
 
   /** Class holding the context of the Trademgen services. */
   class TRADEMGEN_ServiceContext : public ServiceAbstract {
-    friend class FacTrademgenServiceContext;
+    friend class FacTRADEMGENServiceContext;
   public:
     // ///////// Getters //////////
-    /** Get the SOCI Session. */
-    soci::session* getSociSession () const {
-      return _sociSession;
-    }
-
-    /** Get the SOCI Session. */
-    soci::session& getSociSessionHandler () const;
-
+    /** Get the pointer on the STDAIR service handler. */
+    stdair::STDAIR_Service& getSTDAIR_Service () const;
     
     // ///////// Setters //////////
-    /** Set the SOCI Session. */
-    void setSociSession (soci::session& ioSociSession) {
-      _sociSession = &ioSociSession;
-    }
+    /** Set the pointer on the STDAIR service handler. */
+    void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T);
 
-
+    
     // ///////// Display Methods //////////
     /** Display the short TRADEMGEN_ServiceContext content. */
     const std::string shortDisplay() const;
@@ -57,8 +48,13 @@ namespace TRADEMGEN {
     ~TRADEMGEN_ServiceContext();
       
   private:
-    /** SOCI session. */
-    soci::session* _sociSession;
+    // ///////////// Children ////////////
+    /** Standard Airline (StdAir) Service Handler. */
+    stdair::STDAIR_ServicePtr_T _stdairService;
+
+  private:
+    // ////////////// Attributes ////////////////
+    //
   };
 
 }

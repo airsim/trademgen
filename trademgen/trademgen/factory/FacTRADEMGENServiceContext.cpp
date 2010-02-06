@@ -5,23 +5,23 @@
 #include <cassert>
 // TRADEMGEN Common
 #include <trademgen/factory/FacSupervisor.hpp>
-#include <trademgen/factory/FacTrademgenServiceContext.hpp>
+#include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
 #include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
 
 namespace TRADEMGEN {
 
-  FacTrademgenServiceContext* FacTrademgenServiceContext::_instance = NULL;
+  FacTRADEMGENServiceContext* FacTRADEMGENServiceContext::_instance = NULL;
 
   // //////////////////////////////////////////////////////////////////////
-  FacTrademgenServiceContext::~FacTrademgenServiceContext () {
+  FacTRADEMGENServiceContext::~FacTRADEMGENServiceContext () {
     _instance = NULL;
   }
 
   // //////////////////////////////////////////////////////////////////////
-  FacTrademgenServiceContext& FacTrademgenServiceContext::instance () {
+  FacTRADEMGENServiceContext& FacTRADEMGENServiceContext::instance () {
 
     if (_instance == NULL) {
-      _instance = new FacTrademgenServiceContext();
+      _instance = new FacTRADEMGENServiceContext();
       assert (_instance != NULL);
       
       FacSupervisor::instance().registerServiceFactory (_instance);
@@ -30,17 +30,16 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  TRADEMGEN_ServiceContext& FacTrademgenServiceContext::
-  create (const std::string& iServiceName) {
-    TRADEMGEN_ServiceContext* aTRADEMGEN_ServiceContext_ptr = NULL;
+  TRADEMGEN_ServiceContext& FacTRADEMGENServiceContext::create () {
+    TRADEMGEN_ServiceContext* aServiceContext_ptr = NULL;
 
-    aTRADEMGEN_ServiceContext_ptr = new TRADEMGEN_ServiceContext (iServiceName);
-    assert (aTRADEMGEN_ServiceContext_ptr != NULL);
+    aServiceContext_ptr = new TRADEMGEN_ServiceContext ();
+    assert (aServiceContext_ptr != NULL);
 
     // The new object is added to the Bom pool
-    _pool.push_back (aTRADEMGEN_ServiceContext_ptr);
+    _pool.push_back (aServiceContext_ptr);
 
-    return *aTRADEMGEN_ServiceContext_ptr;
+    return *aServiceContext_ptr;
   }
 
 }

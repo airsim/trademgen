@@ -7,46 +7,30 @@
 #include <soci/core/soci.h>
 #include <soci/backends/mysql/soci-mysql.h>
 // StdAir
+#include <stdair/bom/AirlineStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/command/DBManager.hpp>
 
 namespace TRADEMGEN {
 
-  //
-  struct Place {
-  };
-
   // //////////////////////////////////////////////////////////////////////
-  void DBManager::prepareSelectStatement (soci::session& ioSociSession,
-                                          soci::statement& ioSelectStatement,
-                                          Place& ioPlace) {
+  void DBManager::
+  prepareSelectStatement (stdair::DBSession_T& ioSociSession,
+                          stdair::DBRequestStatement_T& ioSelectStatement,
+                          stdair::AirlineStruct& ioAirline) {
   
     try {
     
       // Instanciate a SQL statement (no request is performed at that stage)
       /**
-         select rpd.code AS code, city_code, xapian_docid, is_airport, is_city,
-         is_main, is_commercial, state_code, country_code, region_code,
-         continent_code, time_zone_grp, longitude, latitude, language_code,
-         classical_name, extended_name, alternate_name1, alternate_name2,
-         alternate_name3, alternate_name4, alternate_name5, alternate_name6,
-         alternate_name7, alternate_name8, alternate_name9, alternate_name10
-         from ref_place_details rpd, ref_place_names rpn
-         where rpd.code = rpn.code
+         select code, name
+         from airlines
 
       ioSelectStatement =
         (ioSociSession.prepare
-         << "select rpd.code AS code, city_code, xapian_docid, is_airport, "
-         << "is_city, is_main, is_commercial, state_code, country_code, "
-         << "region_code, continent_code, time_zone_grp, longitude, latitude, "
-         << "language_code, classical_name, extended_name, "
-         << "alternate_name1, alternate_name2, alternate_name3, "
-         << "alternate_name4, alternate_name5, alternate_name6, "
-         << "alternate_name7, alternate_name8, alternate_name9, "
-         << "alternate_name10 "
-         << "from ref_place_details rpd, ref_place_names rpn "
-         << "where rpd.code = rpn.code", soci::into (ioPlace));
+         << "select code, name "
+         << "from airlines ", soci::into (ioAirline));
 
       // Execute the SQL query
       ioSelectStatement.execute();
@@ -60,10 +44,10 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   void DBManager::
-  prepareSelectOnPlaceCodeStatement (soci::session& ioSociSession,
-                                     soci::statement& ioSelectStatement,
-                                     const std::string& iPlaceCode,
-                                     Place& ioPlace) {
+  prepareSelectOnAirlineCodeStatement (stdair::DBSession_T& ioSociSession,
+                                       stdair::DBRequestStatement_T& ioSelectStatement,
+                                       const stdair::AirlineCode_T& iAirlineCode,
+                                       stdair::AirlineStruct& ioAirline) {
   
     try {
     
@@ -75,8 +59,8 @@ namespace TRADEMGEN {
          classical_name, extended_name, alternate_name1, alternate_name2,
          alternate_name3, alternate_name4, alternate_name5, alternate_name6,
          alternate_name7, alternate_name8, alternate_name9, alternate_name10
-         from ref_place_details rpd, ref_place_names rpn
-         where rpd.code = iPlaceCode
+         from ref_airline_details rpd, ref_airline_names rpn
+         where rpd.code = iAirlineCode
            and rpn.code = rpd.code;
 
       ioSelectStatement =
@@ -89,10 +73,10 @@ namespace TRADEMGEN {
          << "alternate_name4, alternate_name5, alternate_name6, "
          << "alternate_name7, alternate_name8, alternate_name9, "
          << "alternate_name10 "
-         << "from ref_place_details rpd, ref_place_names rpn "
-         << "where rpd.code = :place_code "
+         << "from ref_airline_details rpd, ref_airline_names rpn "
+         << "where rpd.code = :airline_code "
          << "and rpn.code = rpd.code",
-         soci::into (ioPlace), soci::use (iPlaceCode));
+         soci::into (ioAirline), soci::use (iAirlineCode));
 
       // Execute the SQL query
       ioSelectStatement.execute();
@@ -105,19 +89,19 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  bool DBManager::iterateOnStatement (soci::statement& ioStatement,
-                                      Place& ioPlace,
+  bool DBManager::iterateOnStatement (stdair::DBRequestStatement_T& ioStatement,
+                                      stdair::AirlineStruct& ioAirline,
                                       const bool iShouldDoReset) {
     bool hasStillData = false;
   
     try {
 
-      // Reset the list of names of the given Place object
+      // Reset the list of names of the given Airline object
       if (iShouldDoReset == true) {
-        // ioPlace.resetMatrix();
+        // ioAirline.resetMatrix();
       }
 
-      // Retrieve the next row of Place object
+      // Retrieve the next row of Airline object
       hasStillData = ioStatement.fetch();
       
     } catch (std::exception const& lException) {
@@ -129,8 +113,8 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  void DBManager::updatePlaceInDB (soci::session& ioSociSession,
-                                   const Place& iPlace) {
+  void DBManager::updateAirlineInDB (stdair::DBSession_T& ioSociSession,
+                                     const stdair::AirlineStruct& iAirline) {
   
     try {
     
@@ -138,17 +122,17 @@ namespace TRADEMGEN {
       ioSociSession.begin();
       
       // Instanciate a SQL statement (no request is performed at that stage)
-      std::string lPlaceCode;
+      std::string lAirlineCode;
       /*
-      soci::statement lUpdateStatement =
+      stdair::DBRequestStatement_T lUpdateStatement =
         (ioSociSession.prepare
-         << "update ref_place_details "
+         << "update ref_airline_details "
          << "set xapian_docid = :xapian_docid "
-         << "where code = :code", soci::use (lDocID), soci::use (lPlaceCode));
+         << "where code = :code", soci::use (lDocID), soci::use (lAirlineCode));
       
       // Execute the SQL query
-      lDocID = iPlace.getDocID();
-      lPlaceCode = iPlace.getPlaceCode();
+      lDocID = iAirline.getDocID();
+      lAirlineCode = iAirline.getAirlineCode();
       lUpdateStatement.execute (true);
       */
       
@@ -156,7 +140,7 @@ namespace TRADEMGEN {
       ioSociSession.commit();
         
       // Debug
-      // TRADEMGEN_LOG_DEBUG ("[" << lDocID << "] " << iPlace);
+      // TRADEMGEN_LOG_DEBUG ("[" << lDocID << "] " << iAirline);
       
     } catch (std::exception const& lException) {
       STDAIR_LOG_ERROR ("Error: " << lException.what());
@@ -165,38 +149,38 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  bool DBManager::retrievePlace (soci::session& ioSociSession,
-                                 const std::string& iPlaceCode,
-                                 Place& ioPlace) {
-    bool oHasRetrievedPlace = false;
+  bool DBManager::retrieveAirline (stdair::DBSession_T& ioSociSession,
+                                   const stdair::AirlineCode_T& iAirlineCode,
+                                   stdair::AirlineStruct& ioAirline) {
+    bool oHasRetrievedAirline = false;
       
     try {
 
       // Prepare the SQL request corresponding to the select statement
-      soci::statement lSelectStatement (ioSociSession);
-      DBManager::prepareSelectOnPlaceCodeStatement (ioSociSession,
+      stdair::DBRequestStatement_T lSelectStatement (ioSociSession);
+      DBManager::prepareSelectOnAirlineCodeStatement (ioSociSession,
                                                     lSelectStatement,
-                                                    iPlaceCode, ioPlace);
+                                                    iAirlineCode, ioAirline);
       const bool shouldDoReset = true;
-      bool hasStillData = iterateOnStatement (lSelectStatement, ioPlace,
+      bool hasStillData = iterateOnStatement (lSelectStatement, ioAirline,
                                               shouldDoReset);
       if (hasStillData == true) {
-        oHasRetrievedPlace = true;
+        oHasRetrievedAirline = true;
       }
 
       // Sanity check
       const bool shouldNotDoReset = false;
-      hasStillData = iterateOnStatement (lSelectStatement, ioPlace,
+      hasStillData = iterateOnStatement (lSelectStatement, ioAirline,
                                          shouldNotDoReset);
       // Debug
-      // STDAIR_LOG_DEBUG ("[" << iDocID << "] " << ioPlace);
+      // STDAIR_LOG_DEBUG ("[" << iDocID << "] " << ioAirline);
       
     } catch (std::exception const& lException) {
       STDAIR_LOG_ERROR ("Error: " << lException.what());
       throw SQLDatabaseException();
     }
 
-    return oHasRetrievedPlace;
+    return oHasRetrievedAirline;
   }
 
 }

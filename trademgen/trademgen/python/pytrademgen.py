@@ -46,7 +46,7 @@ searchString = handle_opt()
 # Initialise the Trademgen C++ library
 import libpytrademgen
 trademgenLibrary = libpytrademgen.Trademgener()
-trademgenLibrary.init('pytrademgen.log', 'trademgen', 'trademgen', 'localhost', '3306', 'trademgen')
+trademgenLibrary.init ('pytrademgen.log', '../../test/samples/demand01.csv', 'dsim', 'dsim', 'localhost', '3306', 'dsim')
 
 # If no search string was supplied as arguments of the command-line,
 # ask the user for some
