@@ -55,7 +55,7 @@ namespace TRADEMGEN {
         SIMCRS_Service).
         @param const stdair::AirlineFeatureSet& Set of airline features.
         @param const stdair::Filename_T& Filename of the input demand file. */
-    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
+    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T,
                        const stdair::Filename_T& iDemandInputFilename);
     
     /** Destructor. */

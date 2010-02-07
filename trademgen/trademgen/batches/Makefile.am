@@ -1,3 +1,4 @@
+# batches
 include $(top_srcdir)/Makefile.common
 include $(srcdir)/sources.mk
 
