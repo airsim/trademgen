@@ -64,22 +64,6 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   TRADEMGEN_Service::
   TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
-                     const stdair::Filename_T& iDemandInputFilename)
-    : _trademgenServiceContext (NULL) {
-    
-    // Initialise the service context
-    initServiceContext ();
-    
-    // Initialise the STDAIR service handler
-    initStdAirService (iLogParams);
-    
-    // Initialise the (remaining of the) context
-    init (iDemandInputFilename);
-  }
-
-  // //////////////////////////////////////////////////////////////////////
-  TRADEMGEN_Service::
-  TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
                      const stdair::BasDBParams& iDBParams,
                      const stdair::Filename_T& iDemandInputFilename)
     : _trademgenServiceContext (NULL) {
@@ -89,6 +73,22 @@ namespace TRADEMGEN {
     
     // Initialise the STDAIR service handler
     initStdAirService (iLogParams, iDBParams);
+    
+    // Initialise the (remaining of the) context
+    init (iDemandInputFilename);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  TRADEMGEN_Service::
+  TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
+                     const stdair::Filename_T& iDemandInputFilename)
+    : _trademgenServiceContext (NULL) {
+    
+    // Initialise the service context
+    initServiceContext ();
+    
+    // Initialise the STDAIR service handler
+    initStdAirService (iLogParams);
     
     // Initialise the (remaining of the) context
     init (iDemandInputFilename);
