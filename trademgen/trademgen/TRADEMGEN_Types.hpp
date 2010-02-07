@@ -33,7 +33,7 @@ namespace TRADEMGEN {
   class SQLDatabaseConnectionImpossibleException : public SQLDatabaseException {
   };
 
-  class TrademgenCalculationException : public RootException {
+  class TrademgenGenerationException : public RootException {
   };
 
 

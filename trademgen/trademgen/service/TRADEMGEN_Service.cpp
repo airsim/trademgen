@@ -14,10 +14,11 @@
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
 #include <stdair/bom/BomRoot.hpp>
-#include <stdair/bom/AirlineFeature.hpp>
-#include <stdair/bom/AirlineFeatureSet.hpp>
+#include <stdair/bom/AirlineStruct.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
+#include <stdair/command/DBManagerForAirlines.hpp>
 #include <stdair/service/Logger.hpp>
+#include <stdair/service/DBSessionManager.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
@@ -63,8 +64,6 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   TRADEMGEN_Service::
   TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
-                     const stdair::BasDBParams& iDBParams,
-                     const stdair::AirlineFeatureSet& iAirlineFeatureSet,
                      const stdair::Filename_T& iDemandInputFilename)
     : _trademgenServiceContext (NULL) {
     
@@ -72,7 +71,24 @@ namespace TRADEMGEN {
     initServiceContext ();
     
     // Initialise the STDAIR service handler
-    initStdAirService (iLogParams, iDBParams, iAirlineFeatureSet);
+    initStdAirService (iLogParams);
+    
+    // Initialise the (remaining of the) context
+    init (iDemandInputFilename);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  TRADEMGEN_Service::
+  TRADEMGEN_Service (const stdair::BasLogParams& iLogParams,
+                     const stdair::BasDBParams& iDBParams,
+                     const stdair::Filename_T& iDemandInputFilename)
+    : _trademgenServiceContext (NULL) {
+    
+    // Initialise the service context
+    initServiceContext ();
+    
+    // Initialise the STDAIR service handler
+    initStdAirService (iLogParams, iDBParams);
     
     // Initialise the (remaining of the) context
     init (iDemandInputFilename);
@@ -93,8 +109,7 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   void TRADEMGEN_Service::
   initStdAirService (const stdair::BasLogParams& iLogParams,
-                     const stdair::BasDBParams& iDBParams,
-                     const stdair::AirlineFeatureSet& iAirlineFeatureSet) {
+                     const stdair::BasDBParams& iDBParams) {
 
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
@@ -106,14 +121,27 @@ namespace TRADEMGEN {
     // Smart Pointers component.
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
       boost::make_shared<stdair::STDAIR_Service> (iLogParams, iDBParams);
-
-    // Retrieve the root of the BOM tree, on which all of the other BOM objects
-    // will be attached
     assert (lSTDAIR_Service_ptr != NULL);
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service_ptr->getBomRoot();
+    
+    // Store the STDAIR service object within the (TRADEMGEN) service context
+    lTRADEMGEN_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
+  }
+  
+  // //////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::
+  initStdAirService (const stdair::BasLogParams& iLogParams) {
 
-    // Set the AirlineFeatureSet for the BomRoot.
-    lBomRoot.setAirlineFeatureSet (&iAirlineFeatureSet);
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+    
+    // Initialise the STDAIR service handler
+    // Note that the track on the object memory is kept thanks to the Boost
+    // Smart Pointers component.
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr = 
+      boost::make_shared<stdair::STDAIR_Service> (iLogParams);
+    assert (lSTDAIR_Service_ptr != NULL);
     
     // Store the STDAIR service object within the (TRADEMGEN) service context
     lTRADEMGEN_ServiceContext.setSTDAIR_Service (lSTDAIR_Service_ptr);
@@ -156,15 +184,13 @@ namespace TRADEMGEN {
   }
   
   // //////////////////////////////////////////////////////////////////////
-  std::string TRADEMGEN_Service::calculateTrademgen () {
-    std::ostringstream oStr;
-
+  void TRADEMGEN_Service::displayAirlineListFromDB () const {
     if (_trademgenServiceContext == NULL) {
       throw NonInitialisedServiceException();
     }
     assert (_trademgenServiceContext != NULL);
-    //TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
-    //  *_trademgenServiceContext;
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
 
     // Get the date-time for the present time
     boost::posix_time::ptime lNowDateTime =
@@ -180,23 +206,44 @@ namespace TRADEMGEN {
     try {
       
       // Delegate the query execution to the dedicated command
-      stdair::BasChronometer lTrademgenChronometer;
-      lTrademgenChronometer.start();
+      stdair::BasChronometer lDsimChronometer;
+      lDsimChronometer.start();
 
-      //
-      oStr << "That is my request: hello world!";
+      // Retrieve the database session handler
+      stdair::DBSession_T& lDBSession =
+        stdair::DBSessionManager::instance().getDBSession();
+      
+      // Prepare and execute the select statement
+      stdair::AirlineStruct lAirline;
+      stdair::DBRequestStatement_T lSelectStatement (lDBSession);
+      stdair::DBManagerForAirlines::prepareSelectStatement (lDBSession,
+                                                            lSelectStatement,
+                                                            lAirline);
 
-      const double lTrademgenMeasure = lTrademgenChronometer.elapsed();
+      // Prepare the SQL request corresponding to the select statement
+      bool hasStillData = true;
+      unsigned int idx = 0;
+      while (hasStillData == true) {
+        hasStillData =
+          stdair::DBManagerForAirlines::iterateOnStatement (lSelectStatement,
+                                                            lAirline);
+        
+        // DEBUG
+        STDAIR_LOG_DEBUG ("[" << idx << "]: " << lAirline);
+
+        // Iteration
+        ++idx;
+      }
+
+      const double lDsimMeasure = lDsimChronometer.elapsed();
 
       // DEBUG
-      STDAIR_LOG_DEBUG ("Sample service for TraDemGen: " << lTrademgenMeasure);
+      STDAIR_LOG_DEBUG ("Sample service for Dsim: " << lDsimMeasure);
       
     } catch (const std::exception& error) {
       STDAIR_LOG_ERROR ("Exception: "  << error.what());
-      throw TrademgenCalculationException();
+      throw TrademgenGenerationException();
     }
-  
-    return oStr.str();
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -218,7 +265,8 @@ namespace TRADEMGEN {
 
       // Booking request
       return stdair::BookingRequestStruct (lOrigin, lDestination,
-                                           lDepartureDate, lPaxType, lPartySize);
+                                           lDepartureDate, lPaxType,
+                                           lPartySize);
   }
 
 }

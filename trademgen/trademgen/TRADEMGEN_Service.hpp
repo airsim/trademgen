@@ -11,7 +11,6 @@
 
 // Forward declarations.
 namespace stdair {
-  class AirlineFeatureSet;
   class STDAIR_Service;
   struct BasLogParams;
   struct BasDBParams;
@@ -37,10 +36,18 @@ namespace TRADEMGEN {
         session can be created on the corresponding database.
         @param const stdair::BasLogParams& Parameters for the output log stream.
         @param const stdair::BasDBParams& Parameters for the database access.
-        @param const stdair::AirlineFeatureSet& Set of airline features.
         @param const stdair::Filename_T& Filename of the input demand file. */
     TRADEMGEN_Service (const stdair::BasLogParams&, const stdair::BasDBParams&,
-                       const stdair::AirlineFeatureSet&,
+                       const stdair::Filename_T& iDemandInputFilename);
+
+    /** Constructor.
+        <br>The init() method is called; see the corresponding documentation
+        for more details.
+        <br>A reference on an output stream is given, so that log
+        outputs can be directed onto that stream.
+        @param const stdair::BasLogParams& Parameters for the output log stream.
+        @param const stdair::Filename_T& Filename of the input demand file. */
+    TRADEMGEN_Service (const stdair::BasLogParams&,
                        const stdair::Filename_T& iDemandInputFilename);
 
     /** Constructor.
@@ -53,7 +60,7 @@ namespace TRADEMGEN {
         calling chain (for instance, when the TRADEMGEN_Service is
         itself being initialised by another library service such as
         SIMCRS_Service).
-        @param const stdair::AirlineFeatureSet& Set of airline features.
+        @param stdair::STDAIR_ServicePtr_T Handler on the STDAIR_Service.
         @param const stdair::Filename_T& Filename of the input demand file. */
     TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T,
                        const stdair::Filename_T& iDemandInputFilename);
@@ -63,11 +70,11 @@ namespace TRADEMGEN {
     
 
     // ////////////////// Business support methods //////////////////    
-    /** Calculate the trademgens. */
-    std::string calculateTrademgen ();
+    /** Display the list of airlines, as held within the sample database. */
+    void displayAirlineListFromDB() const;
 
     /** Generate a hardcoded booking request. */
-    stdair::BookingRequestStruct generateBookingRequest () const;
+    stdair::BookingRequestStruct generateBookingRequest() const;
 
     
   private:
@@ -85,11 +92,16 @@ namespace TRADEMGEN {
         <br>A reference on the root of the BOM tree, namely the BomRoot object,
         is stored within the service context for later use.
         @param const stdair::BasLogParams& Parameters for the output log stream.
-        @param const stdair::BasDBParams& Parameters for the database access.
-        @param const stdair::AirlineFeatureSet& Set of airline features. */
+        @param const stdair::BasDBParams& Parameters for the database access. */
     void initStdAirService (const stdair::BasLogParams&,
-                            const stdair::BasDBParams&,
-                            const stdair::AirlineFeatureSet&);
+                            const stdair::BasDBParams&);
+    
+    /** Initialise the STDAIR service (including the log service).
+        <br>A reference on the root of the BOM tree, namely the BomRoot object,
+        is stored within the service context for later use.
+        @param const stdair::BasLogParams& Parameters for the output log
+               stream. */
+    void initStdAirService (const stdair::BasLogParams&);
     
     /** Initialise.
         <br>The CSV file, describing the airline schedules for the

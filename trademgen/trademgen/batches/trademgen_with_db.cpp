@@ -13,8 +13,6 @@
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/STDAIR_Service.hpp>
-#include <stdair/bom/BookingRequestStruct.hpp>
-#include <stdair/service/Logger.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Service.hpp>
 #include <trademgen/config/trademgen-paths.hpp>
@@ -26,13 +24,20 @@ typedef std::vector<std::string> WordList_T;
 
 // //////// Constants //////
 /** Default name and location for the log file. */
-const std::string K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
+const std::string K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen_with_db.log");
 
 /** Default name and location for the (CSV) input file. */
 const std::string K_TRADEMGEN_DEFAULT_INPUT_FILENAME ("../../test/samples/demand01.csv");
 
 /** Default query string. */
 const std::string K_TRADEMGEN_DEFAULT_QUERY_STRING ("my good old query");
+
+/** Default parameters for the database connection. */
+const std::string K_TRADEMGEN_DEFAULT_DB_USER ("dsim");
+const std::string K_TRADEMGEN_DEFAULT_DB_PASSWD ("dsim");
+const std::string K_TRADEMGEN_DEFAULT_DB_DBNAME ("dsim");
+const std::string K_TRADEMGEN_DEFAULT_DB_HOST ("localhost");
+const std::string K_TRADEMGEN_DEFAULT_DB_PORT ("3306");
 
 
 // //////////////////////////////////////////////////////////////////////
@@ -90,7 +95,10 @@ const int K_TRADEMGEN_EARLY_RETURN_STATUS = 99;
 int readConfiguration (int argc, char* argv[], 
                        std::string& ioQueryString,
                        stdair::Filename_T& ioInputFilename,
-                       std::string& ioLogFilename) {
+                       std::string& ioLogFilename,
+                       std::string& ioDBUser, std::string& ioDBPasswd,
+                       std::string& ioDBHost, std::string& ioDBPort,
+                       std::string& ioDBDBName) {
 
   // Initialise the travel query string, if that one is empty
   if (ioQueryString.empty() == true) {
@@ -118,6 +126,21 @@ int readConfiguration (int argc, char* argv[],
     ("log,l",
      boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_TRADEMGEN_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
+    ("user,u",
+     boost::program_options::value< std::string >(&ioDBUser)->default_value(K_TRADEMGEN_DEFAULT_DB_USER),
+     "SQL database hostname (e.g., dsim)")
+    ("passwd,p",
+     boost::program_options::value< std::string >(&ioDBPasswd)->default_value(K_TRADEMGEN_DEFAULT_DB_PASSWD),
+     "SQL database hostname (e.g., dsim)")
+    ("host,H",
+     boost::program_options::value< std::string >(&ioDBHost)->default_value(K_TRADEMGEN_DEFAULT_DB_HOST),
+     "SQL database hostname (e.g., localhost)")
+    ("port,P",
+     boost::program_options::value< std::string >(&ioDBPort)->default_value(K_TRADEMGEN_DEFAULT_DB_PORT),
+     "SQL database port (e.g., 3306)")
+    ("dbname,m",
+     boost::program_options::value< std::string >(&ioDBDBName)->default_value(K_TRADEMGEN_DEFAULT_DB_DBNAME),
+     "SQL database name (e.g., dsim)")
     ("query,q",
      boost::program_options::value< WordList_T >(&lWordList)->multitoken(),
      "Query word list")
@@ -148,7 +171,7 @@ int readConfiguration (int argc, char* argv[],
     store (boost::program_options::command_line_parser (argc, argv).
 	   options (cmdline_options).positional(p).run(), vm);
 
-  std::ifstream ifs ("trademgen.cfg");
+  std::ifstream ifs ("trademgen_with_db.cfg");
   boost::program_options::store (parse_config_file (ifs, config_file_options),
                                  vm);
   boost::program_options::notify (vm);
@@ -178,6 +201,31 @@ int readConfiguration (int argc, char* argv[],
     std::cout << "Log filename is: " << ioLogFilename << std::endl;
   }
 
+  if (vm.count ("user")) {
+    ioDBUser = vm["user"].as< std::string >();
+    std::cout << "SQL database user name is: " << ioDBUser << std::endl;
+  }
+
+  if (vm.count ("passwd")) {
+    ioDBPasswd = vm["passwd"].as< std::string >();
+    // std::cout << "SQL database user password is: " << ioDBPasswd << std::endl;
+  }
+
+  if (vm.count ("host")) {
+    ioDBHost = vm["host"].as< std::string >();
+    std::cout << "SQL database host name is: " << ioDBHost << std::endl;
+  }
+
+  if (vm.count ("port")) {
+    ioDBPort = vm["port"].as< std::string >();
+    std::cout << "SQL database port number is: " << ioDBPort << std::endl;
+  }
+
+  if (vm.count ("dbname")) {
+    ioDBDBName = vm["dbname"].as< std::string >();
+    std::cout << "SQL database name is: " << ioDBDBName << std::endl;
+  }
+
   ioQueryString = createStringFromWordList (lWordList);
   std::cout << "The query string is: " << ioQueryString << std::endl;
   
@@ -187,7 +235,6 @@ int readConfiguration (int argc, char* argv[],
 
 // /////////////// M A I N /////////////////
 int main (int argc, char* argv[]) {
-
   try {
 
     // Query
@@ -199,16 +246,28 @@ int main (int argc, char* argv[]) {
     // Output log File
     std::string lLogFilename;
 
+    // SQL database parameters
+    std::string lDBUser;
+    std::string lDBPasswd;
+    std::string lDBHost;
+    std::string lDBPort;
+    std::string lDBDBName;
+                       
     // Airline code
     stdair::AirlineCode_T lAirlineCode ("BA");
     
     // Call the command-line option parser
     const int lOptionParserStatus = 
-      readConfiguration (argc, argv, lQuery, lInputFilename, lLogFilename);
+      readConfiguration (argc, argv, lQuery, lInputFilename, lLogFilename,
+                         lDBUser, lDBPasswd, lDBHost, lDBPort, lDBDBName);
 
     if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
       return 0;
     }
+    
+    // Set the database parameters
+    stdair::BasDBParams lDBParams (lDBUser, lDBPasswd, lDBHost, lDBPort,
+                                   lDBDBName);
     
     // Set the log parameters
     std::ofstream logOutputFile;
@@ -218,15 +277,12 @@ int main (int argc, char* argv[]) {
 
     // Initialise the TraDemGen service object
     const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
-    TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
+    TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lDBParams,
+                                                   lInputFilename);
 
-    // Generate some events
-    const stdair::BookingRequestStruct lBookingRequest =
-      trademgenService.generateBookingRequest();
+    // Query the database
+    trademgenService.displayAirlineListFromDB();
 
-    // DEBUG
-    STDAIR_LOG_DEBUG ("BookingRequest: " << lBookingRequest);
-  
     // Close the Log outputFile
     logOutputFile.close();
 

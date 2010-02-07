@@ -14,9 +14,6 @@
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/basic/BasLogParams.hpp>
 #include <stdair/basic/BasDBParams.hpp>
-#include <stdair/factory/FacBomContent.hpp>
-#include <stdair/bom/AirlineFeatureSet.hpp>
-#include <stdair/bom/AirlineFeature.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Service.hpp>
 
@@ -53,15 +50,11 @@ namespace TRADEMGEN {
         assert (_trademgenService != NULL);
         
         // Do the trademgen
-        const std::string& lTrademgenOutput =
-          _trademgenService->calculateTrademgen();
+        _trademgenService->displayAirlineListFromDB();
 
-        //
-        oStream << lTrademgenOutput;
-      
         // DEBUG
         *_logOutputStream << "Python search for '" << iQuery
-                          << "' returned '" << lTrademgenOutput << std::endl;
+                          << "' returned '" << std::endl;
 
         // DEBUG
         *_logOutputStream << "Trademgen output: "
@@ -129,26 +122,10 @@ namespace TRADEMGEN {
         const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG,
                                                *_logOutputStream);
         
-        // Initialise the set of required airline features
-        stdair::AirlineFeatureSet& lAirlineFeatureSet =
-          stdair::FacBomContent::instance().create<stdair::AirlineFeatureSet>();
-
-        // Airline code
-        stdair::AirlineCode_T lAirlineCode ("BA");
-        
-        // Initialise an AirlineFeature object
-        stdair::AirlineFeatureKey_T lAirlineFeatureKey (lAirlineCode);
-        stdair::AirlineFeature& lAirlineFeature = stdair::FacBomContent::
-          instance().create<stdair::AirlineFeature> (lAirlineFeatureKey);
-        stdair::FacBomContent::
-          linkWithParent<stdair::AirlineFeature> (lAirlineFeature,
-                                                  lAirlineFeatureSet);
-    
         // Initialise the context
         stdair::BasDBParams lDBParams (iDBUser, iDBPasswd, iDBHost, iDBPort,
                                        iDBDBName);
         _trademgenService = new TRADEMGEN_Service (lLogParams, lDBParams,
-                                                   lAirlineFeatureSet,
                                                    iDemandInputFilename);
         
         // DEBUG
