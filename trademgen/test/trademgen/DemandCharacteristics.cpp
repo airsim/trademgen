@@ -2,11 +2,12 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // STL
-#include <iosfwd>
+#include <cassert>
+#include <sstream>
 // TraDemGen
-#include <BasTypes.hpp>
-#include <DemandCharacteristics.hpp>
-#include <ContinuousAttribute.hpp>
+#include <test/trademgen/BasTypes.hpp>
+#include <test/trademgen/DemandCharacteristics.hpp>
+#include <test/trademgen/ContinuousAttribute.hpp>
 
 namespace TRADEMGEN {
   
@@ -20,23 +21,38 @@ namespace TRADEMGEN {
   }
   
   // /////////////////////////////////////////////////////
-  DemandCharacteristics::DemandCharacteristics (const DemandCharacteristics& iDemandCharacteristics) {
+  DemandCharacteristics::
+  DemandCharacteristics (const DemandCharacteristics& iDemandCharacteristics) {
     _meanNumberOfRequests = iDemandCharacteristics._meanNumberOfRequests;
-    _standardDeviationNumberOfRequests = iDemandCharacteristics._standardDeviationNumberOfRequests;
+    _standardDeviationNumberOfRequests =
+      iDemandCharacteristics._standardDeviationNumberOfRequests;
     _origin = iDemandCharacteristics._origin;
     _preferredDepartureDate = iDemandCharacteristics._preferredDepartureDate;
     _arrivalPattern = iDemandCharacteristics._arrivalPattern;
   }
   
   // /////////////////////////////////////////////////////
-  void DemandCharacteristics::display (std::ostream& ioStream) const {
-    ioStream << "****************** Demand characteristics ******************" << std::endl;
-    ioStream << "Mean number of requests .......... : " << _meanNumberOfRequests << std::endl;
-    ioStream << "Std dev of number of requests .... : " << _standardDeviationNumberOfRequests << std::endl;
-    ioStream << "Origin ........................... : " << _origin << std::endl;
-    ioStream << "Preferred departure date ......... : " << _preferredDepartureDate << std::endl;
-    ioStream << "Arrival pattern (days from departure, proportion):" << std::endl;
-    _arrivalPattern.displayCumulativeDistribution (ioStream);
+  std::string DemandCharacteristics::display() const {
+    std::ostringstream oStr;
+
+    //
+    oStr << "****************** Demand characteristics ******************"
+             << std::endl;
+    oStr << "Mean number of requests .......... : "
+             << _meanNumberOfRequests << std::endl;
+    oStr << "Std dev of number of requests .... : "
+             << _standardDeviationNumberOfRequests << std::endl;
+    oStr << "Origin ........................... : "
+             << _origin << std::endl;
+    oStr << "Preferred departure date ......... : "
+             << _preferredDepartureDate << std::endl;
+    oStr << "Arrival pattern (days from departure, proportion):"
+             << std::endl;
+
+    //
+    oStr << _arrivalPattern.displayCumulativeDistribution();
+    
+    return oStr.str();
   }
     
 }

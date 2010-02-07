@@ -4,7 +4,14 @@
 #include <string>
 // CPPUNIT
 #include <extracppunit/CppUnitCore.hpp>
-// TraDemGen
+// StdAir
+#include <stdair/STDAIR_Types.hpp>
+#include <stdair/STDAIR_Service.hpp>
+#include <stdair/bom/BookingRequestStruct.hpp>
+#include <stdair/service/Logger.hpp>
+// Trademgen
+#include <trademgen/TRADEMGEN_Service.hpp>
+// Local (test) TraDemGen
 #include <test/trademgen/BasTypes.hpp>
 #include <test/trademgen/DemandCharacteristics.hpp>
 #include <test/trademgen/DemandStream.hpp>
@@ -12,8 +19,6 @@
 #include <test/trademgen/ContinuousAttribute.hpp>
 #include <test/trademgen/EventStruct.hpp>
 #include <test/trademgen/EventQueue.hpp>
-//#include <trademgen/TRADEMGEN_Service.hpp>
-//#include <trademgen/TRADEMGEN_Types.hpp>
 // TraDemGen Test Suite
 #include <test/trademgen/DemandGenerationTestSuite.hpp>
 
@@ -23,6 +28,27 @@
 
 // //////////////////////////////////////////////////////////////////////
 void DemandGenerationTestSuite::simpleEventGenerationHelper() {
+
+  // Input file name
+  stdair::Filename_T lInputFilename ("../samples/demand01.csv");
+
+  // Output log File
+  std::string lLogFilename ("DemandGenerationTestSuite.log");
+  
+  // Airline code
+  stdair::AirlineCode_T lAirlineCode ("BA");
+    
+  // Set the log parameters
+  std::ofstream logOutputFile;
+  // open and clean the log outputfile
+  logOutputFile.open (lLogFilename.c_str());
+  logOutputFile.clear();
+  
+  // Initialise the TraDemGen service object
+  const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
+  TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
+
+  // ////////////////////////////////////
 
   // Demand characteristics
   TRADEMGEN::DemandCharacteristics demand1;
@@ -43,34 +69,40 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   
   // arrival pattern
   std::multimap<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> arrivalPatternCumulativeDistribution1;
-  arrivalPatternCumulativeDistribution1.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-365.0, 0) );
-  arrivalPatternCumulativeDistribution1.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-67.0, 0.2) );
-  arrivalPatternCumulativeDistribution1.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-17.0, 0.5) );
-  arrivalPatternCumulativeDistribution1.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (0.0, 1.0) );
+  arrivalPatternCumulativeDistribution1.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-365.0, 0) );
+  arrivalPatternCumulativeDistribution1.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-67.0, 0.2) );
+  arrivalPatternCumulativeDistribution1.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-17.0, 0.5) );
+  arrivalPatternCumulativeDistribution1.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (0.0, 1.0) );
 
   std::multimap<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> arrivalPatternCumulativeDistribution2;
-  arrivalPatternCumulativeDistribution2.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-365.0, 0) );
-  arrivalPatternCumulativeDistribution2.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-300.0, 0.5) );
-  arrivalPatternCumulativeDistribution2.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-200.0, 0.9) );
-  arrivalPatternCumulativeDistribution2.insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (0.0, 1.0) );
+  arrivalPatternCumulativeDistribution2.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-365.0, 0) );
+  arrivalPatternCumulativeDistribution2.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-300.0, 0.5) );
+  arrivalPatternCumulativeDistribution2.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (-200.0, 0.9) );
+  arrivalPatternCumulativeDistribution2.
+    insert ( std::pair<TRADEMGEN::FloatDuration_T, TRADEMGEN::Probability_T> (0.0, 1.0) );
 
-  // When creating the ContinuousAttribute object, the mapping is inverted, i.e.,
-  // the inverse cumulative distribution can be derived from the cumulative
-  // distribution
+  // When creating the ContinuousAttribute object, the mapping is
+  // inverted, i.e., the inverse cumulative distribution can be
+  // derived from the cumulative distribution
   const TRADEMGEN::ContinuousAttribute<TRADEMGEN::FloatDuration_T> arrivalPattern1 (arrivalPatternCumulativeDistribution1);
   demand1.setArrivalPattern (arrivalPattern1);
   const TRADEMGEN::ContinuousAttribute<TRADEMGEN::FloatDuration_T> arrivalPattern2 (arrivalPatternCumulativeDistribution2);
   demand2.setArrivalPattern (arrivalPattern2);
   
 
-  // display
-  std::cout << "Demand 1" << std::endl;
-  demand1.display (std::cout);
-  std::cout << std::endl << std::endl;
+  // Display
+  STDAIR_LOG_DEBUG ("Demand 1: " << demand1.display()
+                    << std::endl << std::endl);
 
-  std::cout << "Demand 2" << std::endl;
-  demand2.display (std::cout);
-  std::cout << std::endl << std::endl;
+  STDAIR_LOG_DEBUG ("Demand 2: " << demand2.display()
+                    << std::endl << std::endl);
 
   // Seeds
   TRADEMGEN::RandomSeed_T seed = 2;
@@ -90,55 +122,72 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   lDemandStreamMap.insert(std::pair<TRADEMGEN::Key_T, TRADEMGEN::DemandStream *> (key2, &demandStream2));
   
   // Get the total number of requests to be generated
-  TRADEMGEN::Count_T totalNumberOfRequestsToBeGenerated1 = demandStream1.getTotalNumberOfRequestsToBeGenerated ();
-  TRADEMGEN::Count_T totalNumberOfRequestsToBeGenerated2 = demandStream2.getTotalNumberOfRequestsToBeGenerated ();
+  TRADEMGEN::Count_T totalNumberOfRequestsToBeGenerated1 =
+    demandStream1.getTotalNumberOfRequestsToBeGenerated ();
+  TRADEMGEN::Count_T totalNumberOfRequestsToBeGenerated2 =
+    demandStream2.getTotalNumberOfRequestsToBeGenerated ();
 
-  std::cout << "Number of requests to be generated (demand 1): "
-            << totalNumberOfRequestsToBeGenerated1 << std::endl << std::endl;
-  std::cout << "Number of requests to be generated (demand 2): "
-            << totalNumberOfRequestsToBeGenerated2 << std::endl << std::endl;
+  STDAIR_LOG_DEBUG ("Number of requests to be generated (demand 1): "
+                    << totalNumberOfRequestsToBeGenerated1 << std::endl);
+  STDAIR_LOG_DEBUG ("Number of requests to be generated (demand 2): "
+                    << totalNumberOfRequestsToBeGenerated2 << std::endl);
 
   // /////////////////////////////////////////////////////
   // Event queue
-  TRADEMGEN::Datetime_T lInitialDatetime = boost::posix_time::ptime(
-                                  boost::gregorian::date (2009,1,1),
-                                  boost::posix_time::time_duration (0,0,0)
-                                  );
+  TRADEMGEN::Datetime_T lInitialDatetime =
+    boost::posix_time::ptime (boost::gregorian::date (2009,1,1),
+                              boost::posix_time::time_duration (0,0,0));
   TRADEMGEN::EventQueue lEventQueue (lInitialDatetime);
   
   // Initialize by adding one request of each type
-  TRADEMGEN::Request * lRequest1 = new TRADEMGEN::Request ();
+  TRADEMGEN::Request* lRequest1 = new TRADEMGEN::Request();
+  
   bool flag_generated1 = demandStream1.generateNext (*lRequest1);
   if (flag_generated1) {
     TRADEMGEN::Datetime_T lRequestDatetime = lRequest1->getRequestDatetime ();
-    TRADEMGEN::EventStruct lEventStruct ("Request", lRequestDatetime, lRequest1);
+    TRADEMGEN::EventStruct lEventStruct("Request", lRequestDatetime, lRequest1);
     lEventQueue.addEvent (lEventStruct);
   }
-  TRADEMGEN::Request * lRequest2 = new TRADEMGEN::Request ();
+  
+  TRADEMGEN::Request* lRequest2 = new TRADEMGEN::Request ();
+  
   bool flag_generated2 = demandStream2.generateNext (*lRequest2);
   if (flag_generated2) {
     TRADEMGEN::Datetime_T lRequestDatetime = lRequest2->getRequestDatetime ();
-    TRADEMGEN::EventStruct lEventStruct ("Request", lRequestDatetime, lRequest2);
+    TRADEMGEN::EventStruct lEventStruct("Request", lRequestDatetime, lRequest2);
     lEventQueue.addEvent (lEventStruct);
   }
   
   // Pop requests, get type, and generate next request of same type
   int i = 0;
-  while (!lEventQueue.isQueueDone () && i < 20) {
-    std::cout << "Before popping (" << i << ")" << std::endl;
-    std::cout << "Queue size: " << lEventQueue.getQueueSize () << std::endl;
-    std::cout << "Position of current: " << lEventQueue.getPositionOfCurrent () << std::endl;
-    std::cout << "Is queue done? " << lEventQueue.isQueueDone () << std::endl;
-    TRADEMGEN::EventStruct * lEventStruct_ptr = lEventQueue.popEvent ();
-    std::cout << "After popping" << std::endl;
-    std::cout << "Queue size: " << lEventQueue.getQueueSize () << std::endl;
-    std::cout << "Position of current: " << lEventQueue.getPositionOfCurrent () << std::endl;
-    std::cout << "Is queue done? " << lEventQueue.isQueueDone () << std::endl;
+  while (lEventQueue.isQueueDone() == false && i < 20) {
+    // DEBUG
+    STDAIR_LOG_DEBUG ("Before popping (" << i << ")" );
+    STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize () );
+    STDAIR_LOG_DEBUG ("Position of current: "
+                      << lEventQueue.getPositionOfCurrent () );
+    STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone () );
+    
+    TRADEMGEN::EventStruct* lEventStruct_ptr = lEventQueue.popEvent ();
+
+    // DEBUG
+    STDAIR_LOG_DEBUG ("After popping" );
+    STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
+    STDAIR_LOG_DEBUG ("Position of current: "
+                      << lEventQueue.getPositionOfCurrent ());
+    STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
+
     if (lEventStruct_ptr != NULL) {
-      std::cout << "Popped request " << i << std::endl;
-      const TRADEMGEN::Request * lPoppedRequest = lEventStruct_ptr->getPointerToRequestEvent ();
-      lPoppedRequest->display (std::cout);
-      // get key to determine demand stream
+      STDAIR_LOG_DEBUG ("Popped request " << i );
+
+      const TRADEMGEN::Request* lPoppedRequest =
+        lEventStruct_ptr->getPointerToRequestEvent ();
+      assert (lPoppedRequest != NULL);
+
+      // DEBUG
+      STDAIR_LOG_DEBUG (lPoppedRequest->display());
+
+      // Get key to determine demand stream
       const TRADEMGEN::Key_T lKey = lPoppedRequest->getDemandStreamKey ();
       TRADEMGEN::DemandStream * lDemandStream = lDemandStreamMap[lKey];
       // delete popped request
@@ -146,21 +195,31 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
       // generate next request
       TRADEMGEN::Request * lNextRequest = new TRADEMGEN::Request ();
       bool flag_generated = lDemandStream->generateNext (*lNextRequest);
-      std::cout << "flag_generated: " << flag_generated << std::endl;
+      STDAIR_LOG_DEBUG ("flag_generated: " << flag_generated );
       if (flag_generated) {
-        std::cout << "Added request" << std::endl;
-        lNextRequest->display (std::cout);
-        TRADEMGEN::Datetime_T lNextRequestDatetime = lNextRequest->getRequestDatetime ();
-        TRADEMGEN::EventStruct lNextEventStruct ("Request", lNextRequestDatetime, lNextRequest);
+        // DEBUG
+        STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->display());
+        
+        TRADEMGEN::Datetime_T lNextRequestDatetime =
+          lNextRequest->getRequestDatetime ();
+        TRADEMGEN::EventStruct lNextEventStruct ("Request",
+                                                 lNextRequestDatetime,
+                                                 lNextRequest);
         lEventQueue.addEvent (lNextEventStruct);
-        std::cout << "After adding" << std::endl;
-        std::cout << "Queue size: " << lEventQueue.getQueueSize () << std::endl;
-        std::cout << "Position of current: " << lEventQueue.getPositionOfCurrent () << std::endl;
-        std::cout << "Is queue done? " << lEventQueue.isQueueDone () << std::endl;
+
+        // DEBUG
+        STDAIR_LOG_DEBUG ("After adding");
+        STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
+        STDAIR_LOG_DEBUG ("Position of current: "
+                          << lEventQueue.getPositionOfCurrent ());
+        STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
       }
     }
-    std::cout << std::endl << std::endl;
-    // iterate
+
+    // DEBUG
+    STDAIR_LOG_DEBUG (std::endl);
+    
+    // Iterate
     ++i;
   }
 }

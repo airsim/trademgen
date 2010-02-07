@@ -5,10 +5,10 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // STL
-#include <iosfwd>
+#include <string>
 // TraDemGen
-#include <BasTypes.hpp>
-#include <ContinuousAttribute.hpp>
+#include <test/trademgen/BasTypes.hpp>
+#include <test/trademgen/ContinuousAttribute.hpp>
 
 namespace TRADEMGEN {
   
@@ -76,7 +76,7 @@ namespace TRADEMGEN {
   public:
     // ////////////// Display Support Methods //////////
     /** Display demand characteristics */
-    void display (std::ostream&) const;
+    std::string display() const;
 
     
   public:

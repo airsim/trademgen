@@ -5,9 +5,9 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // STL
-#include <iosfwd>
+#include <string>
 // TraDemGen
-#include <BasTypes.hpp>
+#include <test/trademgen/BasTypes.hpp>
 
 namespace TRADEMGEN {
 
@@ -60,7 +60,7 @@ namespace TRADEMGEN {
   public:
     // ////////////// Display Request //////////
     /** Display request */
-    void display (std::ostream&) const;
+    std::string display() const;
     
   public:
     // ////////// Constructors and destructors /////////
