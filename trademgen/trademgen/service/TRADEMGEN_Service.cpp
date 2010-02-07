@@ -18,11 +18,9 @@
 #include <stdair/bom/AirlineFeatureSet.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
-#include <stdair/service/DBSessionManager.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
-#include <airsched/bom/BomRoot.hpp>
 #include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
 #include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
@@ -165,8 +163,8 @@ namespace TRADEMGEN {
       throw NonInitialisedServiceException();
     }
     assert (_trademgenServiceContext != NULL);
-    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
-      *_trademgenServiceContext;
+    //TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+    //  *_trademgenServiceContext;
 
     // Get the date-time for the present time
     boost::posix_time::ptime lNowDateTime =
@@ -185,10 +183,6 @@ namespace TRADEMGEN {
       stdair::BasChronometer lTrademgenChronometer;
       lTrademgenChronometer.start();
 
-      // Retrieve the database session handler
-      stdair::DBSession_T& lDBSession =
-        stdair::DBSessionManager::instance().getDBSession();
-      
       //
       oStr << "That is my request: hello world!";
 
