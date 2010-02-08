@@ -12,6 +12,7 @@
 // StdAir
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
+#include <stdair/basic/BasConst_General.hpp>
 #include <stdair/bom/BomManager.hpp> // for display()
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/bom/AirlineStruct.hpp>
@@ -265,7 +266,8 @@ namespace TRADEMGEN {
 
       // Booking request
       return stdair::BookingRequestStruct (lOrigin, lDestination,
-                                           lDepartureDate, lPaxType,
+                                           lDepartureDate, 
+                                           stdair::DEFAULT_DATETIME, lPaxType,
                                            lPartySize);
   }
 
