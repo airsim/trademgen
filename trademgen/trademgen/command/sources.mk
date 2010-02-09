@@ -1,2 +1,8 @@
-cmd_h_sources = $(top_srcdir)/trademgen/command/DBManager.hpp
-cmd_cc_sources = $(top_srcdir)/trademgen/command/DBManager.cpp
+cmd_h_sources = \
+		$(top_srcdir)/trademgen/command/DBManager.hpp \
+		$(top_srcdir)/trademgen/command/DemandParserHelper.hpp \
+		$(top_srcdir)/trademgen/command/DemandParser.hpp
+cmd_cc_sources = \
+		$(top_srcdir)/trademgen/command/DBManager.cpp \
+		$(top_srcdir)/trademgen/command/DemandParserHelper.cpp \
+		$(top_srcdir)/trademgen/command/DemandParser.cpp
