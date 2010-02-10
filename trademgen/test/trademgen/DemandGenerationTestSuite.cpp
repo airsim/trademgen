@@ -14,6 +14,7 @@
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
+#include <stdair/factory/FacBomContent.hpp>
 #include <stdair/service/Logger.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Service.hpp>
@@ -62,11 +63,17 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   demandDistribution2.setStandardDeviationNumberOfRequests (1.0);
 
   // origin
-  demandCharacteristics1.setOrigin ("CDG");
-  demandCharacteristics2.setOrigin ("FRA");
+  demandCharacteristics1.setOrigin ("LHR");
+  demandCharacteristics2.setOrigin ("LHR");
+  // destination
+  demandCharacteristics1.setDestination ("JFK");
+  demandCharacteristics2.setDestination ("JFK");
   // preferred departure date
-  demandCharacteristics1.setPreferredDepartureDate (boost::gregorian::date (2010,1,1));
-  demandCharacteristics2.setPreferredDepartureDate (boost::gregorian::date (2010,2,1));
+  demandCharacteristics1.setPreferredDepartureDate (boost::gregorian::date (2010,1,17));
+  demandCharacteristics2.setPreferredDepartureDate (boost::gregorian::date (2010,1,18));
+  // Passenger type
+  demandCharacteristics1.setPaxType ("L");
+  demandCharacteristics2.setPaxType ("B");
   
   // arrival pattern
   std::multimap<stdair::FloatDuration_T, stdair::Probability_T> arrivalPatternCumulativeDistribution1;
@@ -97,7 +104,6 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   const stdair::ContinuousAttribute<stdair::FloatDuration_T> arrivalPattern2 (arrivalPatternCumulativeDistribution2);
   demandCharacteristics2.setArrivalPattern (arrivalPattern2);
   
-
   // Display
   STDAIR_LOG_DEBUG ("Demand 1: " << demandCharacteristics1.display()
                     << demandDistribution1.display()
@@ -116,15 +122,12 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   
 
   // Initialize the demand stream
-  stdair::DemandStream demandStream1 (key1, demandCharacteristics1,
-                                      demandDistribution1, seed, seed, seed);
-  stdair::DemandStream demandStream2 (key2, demandCharacteristics2,
-                                      demandDistribution2, seed, seed, seed);
-  
-  // map of demand streams
-  std::map<stdair::DemandStreamKey_T, stdair::DemandStream *> lDemandStreamMap;
-  lDemandStreamMap.insert(std::pair<stdair::DemandStreamKey_T, stdair::DemandStream *> (key1, &demandStream1));
-  lDemandStreamMap.insert(std::pair<stdair::DemandStreamKey_T, stdair::DemandStream *> (key2, &demandStream2));
+  stdair::DemandStream& demandStream1 = stdair::FacBomContent::
+    instance().createDemandStream (key1, demandCharacteristics1,
+                                   demandDistribution1, seed, seed, seed);
+  stdair::DemandStream& demandStream2 = stdair::FacBomContent::
+    instance().createDemandStream (key2, demandCharacteristics2,
+                                   demandDistribution2, seed, seed, seed);
   
   // Get the total number of requests to be generated
   stdair::Count_T totalNumberOfRequestsToBeGenerated1 =
@@ -145,20 +148,22 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   stdair::EventQueue lEventQueue (lInitialDateTime);
   
   // Initialize by adding one request of each type
-  stdair::BookingRequestStruct* lRequest1 = new stdair::BookingRequestStruct();
-  
-  bool flag_generated1 = demandStream1.generateNext (*lRequest1);
-  if (flag_generated1) {
+  const bool stillHavingRequestsToBeGenerated1 = 
+    demandStream1.stillHavingRequestsToBeGenerated ();
+  if (stillHavingRequestsToBeGenerated1) {
+    stdair::BookingRequestPtr_T lRequest1 = demandStream1.generateNext();
+    assert (lRequest1 != NULL);
     stdair::DateTime_T lRequestDateTime = lRequest1->getRequestDateTime ();
     stdair::EventStruct lEventStruct("Request", lRequestDateTime, demandStream1,
                                      lRequest1);
     lEventQueue.addEvent (lEventStruct);
   }
   
-  stdair::BookingRequestStruct* lRequest2 = new stdair::BookingRequestStruct ();
-  
-  bool flag_generated2 = demandStream2.generateNext (*lRequest2);
-  if (flag_generated2) {
+  const bool stillHavingRequestsToBeGenerated2 = 
+    demandStream2.stillHavingRequestsToBeGenerated ();
+  if (stillHavingRequestsToBeGenerated2) {
+    stdair::BookingRequestPtr_T lRequest2 = demandStream2.generateNext();
+    assert (lRequest2 != NULL);
     stdair::DateTime_T lRequestDateTime = lRequest2->getRequestDateTime ();
     stdair::EventStruct lEventStruct("Request", lRequestDateTime, demandStream2,
                                      lRequest2);
@@ -187,22 +192,21 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
     if (lEventStruct_ptr != NULL) {
       STDAIR_LOG_DEBUG ("Popped request " << i );
 
-      const stdair::BookingRequestStruct* lPoppedRequest =
-        lEventStruct_ptr->getPointerToRequestEvent ();
-      assert (lPoppedRequest != NULL);
+      const stdair::BookingRequestStruct& lPoppedRequest =
+        lEventStruct_ptr->getBookingRequest ();
 
       // DEBUG
-      STDAIR_LOG_DEBUG (lPoppedRequest->describe());
+      STDAIR_LOG_DEBUG (lPoppedRequest.describe());
 
       // Retrieve the corresponding demand stream
       stdair::DemandStream& lDemandStream = lEventStruct_ptr->getDemandStream();
-      // delete popped request
-      delete lPoppedRequest; lPoppedRequest=NULL;
       // generate next request
-      stdair::BookingRequestStruct* lNextRequest = new stdair::BookingRequestStruct ();
-      bool flag_generated = lDemandStream.generateNext (*lNextRequest);
-      STDAIR_LOG_DEBUG ("flag_generated: " << flag_generated );
-      if (flag_generated) {
+      bool stillHavingRequestsToBeGenerated = 
+        lDemandStream.stillHavingRequestsToBeGenerated();
+      STDAIR_LOG_DEBUG ("stillHavingRequestsToBeGenerated: " << stillHavingRequestsToBeGenerated );
+      if (stillHavingRequestsToBeGenerated) {
+        stdair::BookingRequestPtr_T lNextRequest = lDemandStream.generateNext();
+        assert (lNextRequest != NULL);
         // DEBUG
         STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->describe());
         
