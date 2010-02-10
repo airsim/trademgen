@@ -51,4 +51,24 @@ namespace TRADEMGEN {
     return oStr.str();
   }
 
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_ServiceContext::
+  addDemandStream (const DemandStream& iDemandStream) {
+    const bool succeed =
+      _demandStreamList.
+      insert(DemandStreamList_T::
+             value_type(iDemandStream.getKey(), iDemandStream)).second;
+    // TODO
+    assert (succeed == true);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  DemandStream& TRADEMGEN_ServiceContext::
+  getDemandStream (const stdair::DemandStreamKey_T& iKey) {
+    DemandStreamList_T::iterator itDemandStream =
+      _demandStreamList.find (iKey);
+    // TODO
+    assert (itDemandStream != _demandStreamList.end());
+    return itDemandStream->second;
+  }
 }

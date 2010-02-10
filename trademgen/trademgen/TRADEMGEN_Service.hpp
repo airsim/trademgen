@@ -21,7 +21,7 @@ namespace TRADEMGEN {
 
   // Forward declaration
   class TRADEMGEN_ServiceContext;
-
+  struct DemandStream;
   
   /** Trademgen services. */
   class TRADEMGEN_Service {
@@ -75,6 +75,12 @@ namespace TRADEMGEN {
 
     /** Generate a hardcoded booking request. */
     stdair::BookingRequestStruct generateBookingRequest() const;
+
+    /** Add a demand stream into the context. */
+    void addDemandStream (const DemandStream&) const;
+
+    /** Retrieve the demand stream which corresponds to the given key. */
+    DemandStream& getDemandStream (const stdair::DemandStreamKey_T&) const;
 
     
   private:

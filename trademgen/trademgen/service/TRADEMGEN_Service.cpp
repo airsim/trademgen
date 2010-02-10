@@ -270,5 +270,27 @@ namespace TRADEMGEN {
                                            stdair::DEFAULT_DATETIME, lPaxType,
                                            lPartySize);
   }
+  
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::
+  addDemandStream (const DemandStream& iDemandStream) const {
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    lTRADEMGEN_ServiceContext.addDemandStream (iDemandStream);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  DemandStream& TRADEMGEN_Service::
+  getDemandStream (const stdair::DemandStreamKey_T& iKey) const {
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    return lTRADEMGEN_ServiceContext.getDemandStream (iKey);
+  }
 
 }

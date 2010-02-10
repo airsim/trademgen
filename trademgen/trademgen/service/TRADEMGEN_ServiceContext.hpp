@@ -12,6 +12,8 @@
 #include <stdair/STDAIR_Types.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
+#include <trademgen/bom/DemandStreamTypes.hpp>
+#include <trademgen/bom/DemandStream.hpp>
 #include <trademgen/service/ServiceAbstract.hpp>
 
 namespace TRADEMGEN {
@@ -23,12 +25,13 @@ namespace TRADEMGEN {
     // ///////// Getters //////////
     /** Get the pointer on the STDAIR service handler. */
     stdair::STDAIR_Service& getSTDAIR_Service () const;
-    
+
+  public:
     // ///////// Setters //////////
     /** Set the pointer on the STDAIR service handler. */
     void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T);
 
-    
+  public:
     // ///////// Display Methods //////////
     /** Display the short TRADEMGEN_ServiceContext content. */
     const std::string shortDisplay() const;
@@ -36,6 +39,13 @@ namespace TRADEMGEN {
     /** Display the full TRADEMGEN_ServiceContext content. */
     const std::string display() const;
 
+  public:
+    // //////// Business methodes //////////
+    /** Add a demand stream into the context. */
+    void addDemandStream (const DemandStream&);
+    
+    /** Retrieve the demand stream which corresponds to the given key. */
+    DemandStream& getDemandStream (const stdair::DemandStreamKey_T&);
     
   private:
     // /////// Construction / initialisation ////////
@@ -54,7 +64,8 @@ namespace TRADEMGEN {
 
   private:
     // ////////////// Attributes ////////////////
-    //
+    /** The list of all demand streams. */
+    DemandStreamList_T _demandStreamList;
   };
 
 }
