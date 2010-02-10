@@ -10,13 +10,12 @@
 #include <stdair/basic/DemandCharacteristics.hpp>
 #include <stdair/basic/CategoricalAttribute.hpp>
 #include <stdair/basic/ContinuousAttribute.hpp>
-#include <stdair/bom/DemandStream.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
-#include <stdair/factory/FacBomContent.hpp>
 #include <stdair/service/Logger.hpp>
 // Trademgen
+#include <trademgen/bom/DemandStream.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
 // TraDemGen Test Suite
 #include <test/trademgen/DemandGenerationTestSuite.hpp>
@@ -122,12 +121,13 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   
 
   // Initialize the demand stream
-  stdair::DemandStream& demandStream1 = stdair::FacBomContent::
-    instance().createDemandStream (key1, demandCharacteristics1,
-                                   demandDistribution1, seed, seed, seed);
-  stdair::DemandStream& demandStream2 = stdair::FacBomContent::
-    instance().createDemandStream (key2, demandCharacteristics2,
-                                   demandDistribution2, seed, seed, seed);
+  TRADEMGEN::DemandStream demandStream1 (key1, demandCharacteristics1,
+                                         demandDistribution1, seed, seed, seed);
+  TRADEMGEN::DemandStream demandStream2 (key2, demandCharacteristics2,
+                                         demandDistribution2, seed, seed, seed);
+
+  trademgenService.addDemandStream (demandStream1);
+  trademgenService.addDemandStream (demandStream2);
   
   // Get the total number of requests to be generated
   stdair::Count_T totalNumberOfRequestsToBeGenerated1 =
@@ -142,10 +142,7 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
 
   // /////////////////////////////////////////////////////
   // Event queue
-  stdair::DateTime_T lInitialDateTime =
-    boost::posix_time::ptime (boost::gregorian::date (2009,1,1),
-                              boost::posix_time::time_duration (0,0,0));
-  stdair::EventQueue lEventQueue (lInitialDateTime);
+  stdair::EventQueue lEventQueue = stdair::EventQueue ();
   
   // Initialize by adding one request of each type
   const bool stillHavingRequestsToBeGenerated1 = 
@@ -154,8 +151,8 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
     stdair::BookingRequestPtr_T lRequest1 = demandStream1.generateNext();
     assert (lRequest1 != NULL);
     stdair::DateTime_T lRequestDateTime = lRequest1->getRequestDateTime ();
-    stdair::EventStruct lEventStruct("Request", lRequestDateTime, demandStream1,
-                                     lRequest1);
+    stdair::EventStruct lEventStruct ("Request", lRequestDateTime, key1,
+                                      lRequest1);
     lEventQueue.addEvent (lEventStruct);
   }
   
@@ -165,7 +162,7 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
     stdair::BookingRequestPtr_T lRequest2 = demandStream2.generateNext();
     assert (lRequest2 != NULL);
     stdair::DateTime_T lRequestDateTime = lRequest2->getRequestDateTime ();
-    stdair::EventStruct lEventStruct("Request", lRequestDateTime, demandStream2,
+    stdair::EventStruct lEventStruct("Request", lRequestDateTime, key2,
                                      lRequest2);
     lEventQueue.addEvent (lEventStruct);
   }
@@ -176,55 +173,52 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
     // DEBUG
     STDAIR_LOG_DEBUG ("Before popping (" << i << ")" );
     STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize () );
-    STDAIR_LOG_DEBUG ("Position of current: "
-                      << lEventQueue.getPositionOfCurrent () );
     STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone () );
     
-    stdair::EventStruct* lEventStruct_ptr = lEventQueue.popEvent ();
+    stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
 
     // DEBUG
     STDAIR_LOG_DEBUG ("After popping" );
     STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
-    STDAIR_LOG_DEBUG ("Position of current: "
-                      << lEventQueue.getPositionOfCurrent ());
     STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
 
-    if (lEventStruct_ptr != NULL) {
-      STDAIR_LOG_DEBUG ("Popped request " << i );
-
-      const stdair::BookingRequestStruct& lPoppedRequest =
-        lEventStruct_ptr->getBookingRequest ();
-
+    STDAIR_LOG_DEBUG ("Popped request " << i );
+    
+    const stdair::BookingRequestStruct& lPoppedRequest =
+      lEventStruct.getBookingRequest ();
+    
+    // DEBUG
+    STDAIR_LOG_DEBUG (lPoppedRequest.describe());
+    
+    // Retrieve the corresponding demand stream
+    const stdair::DemandStreamKey_T& lDemandStreamKey =
+      lEventStruct.getDemandStreamKey ();
+    TRADEMGEN::DemandStream& lDemandStream =
+      trademgenService.getDemandStream (lDemandStreamKey);
+    // generate next request
+    bool stillHavingRequestsToBeGenerated = 
+      lDemandStream.stillHavingRequestsToBeGenerated();
+    STDAIR_LOG_DEBUG ("stillHavingRequestsToBeGenerated: " << stillHavingRequestsToBeGenerated );
+    if (stillHavingRequestsToBeGenerated) {
+      stdair::BookingRequestPtr_T lNextRequest = lDemandStream.generateNext();
+      assert (lNextRequest != NULL);
       // DEBUG
-      STDAIR_LOG_DEBUG (lPoppedRequest.describe());
-
-      // Retrieve the corresponding demand stream
-      stdair::DemandStream& lDemandStream = lEventStruct_ptr->getDemandStream();
-      // generate next request
-      bool stillHavingRequestsToBeGenerated = 
-        lDemandStream.stillHavingRequestsToBeGenerated();
-      STDAIR_LOG_DEBUG ("stillHavingRequestsToBeGenerated: " << stillHavingRequestsToBeGenerated );
-      if (stillHavingRequestsToBeGenerated) {
-        stdair::BookingRequestPtr_T lNextRequest = lDemandStream.generateNext();
-        assert (lNextRequest != NULL);
-        // DEBUG
-        STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->describe());
-        
-        stdair::DateTime_T lNextRequestDateTime =
-          lNextRequest->getRequestDateTime ();
-        stdair::EventStruct lNextEventStruct ("Request",
-                                              lNextRequestDateTime,
-                                              lDemandStream,
-                                              lNextRequest);
-        lEventQueue.addEvent (lNextEventStruct);
-
-        // DEBUG
-        STDAIR_LOG_DEBUG ("After adding");
-        STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
-        STDAIR_LOG_DEBUG ("Position of current: "
-                          << lEventQueue.getPositionOfCurrent ());
-        STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
-      }
+      STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->describe());
+      
+      stdair::DateTime_T lNextRequestDateTime =
+        lNextRequest->getRequestDateTime ();
+      stdair::EventStruct lNextEventStruct ("Request",
+                                            lNextRequestDateTime,
+                                            lDemandStreamKey,
+                                            lNextRequest);
+      lEventQueue.eraseLastUsedEvent ();
+      lEventQueue.addEvent (lNextEventStruct);
+      
+      // DEBUG
+      STDAIR_LOG_DEBUG ("After adding");
+      STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
+      STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
+    
     }
 
     // DEBUG
