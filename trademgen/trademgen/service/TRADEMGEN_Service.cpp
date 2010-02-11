@@ -273,24 +273,55 @@ namespace TRADEMGEN {
   
   // ////////////////////////////////////////////////////////////////////
   void TRADEMGEN_Service::
-  addDemandStream (const DemandStream& iDemandStream) const {
+  addDemandStream (const stdair::DemandStreamKey_T& iKey,
+                   const stdair::DemandCharacteristics& iDemandCharacteristics,
+                   const stdair::DemandDistribution& iDemandDistribution,
+                   const stdair::RandomSeed_T& iNumberOfRequestsSeed,
+                   const stdair::RandomSeed_T& iRequestDateTimeSeed,
+                   const stdair::RandomSeed_T& iDemandCharacteristicsSeed) const{
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    lTRADEMGEN_ServiceContext.addDemandStream (iDemandStream);
+    lTRADEMGEN_ServiceContext.addDemandStream (iKey, iDemandCharacteristics,
+                                               iDemandDistribution,
+                                               iNumberOfRequestsSeed,
+                                               iRequestDateTimeSeed,
+                                               iDemandCharacteristicsSeed);
   }
 
   // ////////////////////////////////////////////////////////////////////
-  DemandStream& TRADEMGEN_Service::
-  getDemandStream (const stdair::DemandStreamKey_T& iKey) const {
+  const stdair::Count_T& TRADEMGEN_Service::
+  getTotalNumberOfRequestsToBeGenerated (const stdair::DemandStreamKey_T& iKey) const {
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    return lTRADEMGEN_ServiceContext.getDemandStream (iKey);
+    return lTRADEMGEN_ServiceContext.getTotalNumberOfRequestsToBeGenerated(iKey);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const bool TRADEMGEN_Service::
+  stillHavingRequestsToBeGenerated (const stdair::DemandStreamKey_T& iKey) const{
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    return lTRADEMGEN_ServiceContext.stillHavingRequestsToBeGenerated (iKey);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  stdair::BookingRequestPtr_T TRADEMGEN_Service::
+  generateNextRequest (const stdair::DemandStreamKey_T& iKey) const {
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    return lTRADEMGEN_ServiceContext.generateNextRequest (iKey);
   }
 
 }

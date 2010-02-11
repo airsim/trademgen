@@ -10,68 +10,49 @@
 #include <iosfwd>
 // STDAIR
 #include <stdair/STDAIR_Types.hpp>
-#include <stdair/basic/DemandCharacteristics.hpp>
-#include <stdair/basic/DemandDistribution.hpp>
-#include <stdair/basic/RandomGeneration.hpp>
-#include <stdair/basic/RandomGenerationContext.hpp>
-#include <stdair/bom/StructAbstract.hpp>
+#include <stdair/bom/DemandStream.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 
-namespace TRADEMGEN {  
+// Forward declarations.
+namespace stdair {
+  struct DemandCharacteristics;
+  struct DemandDistribution;
+  struct RandomGeneration;
+  struct RandomGenerationContext;
+}
+
+namespace TRADEMGEN {
+  
   /** Class modeling a demand stream. */
-  struct DemandStream  : public stdair::StructAbstract {
-    
-  public:
-    // ///////////// Getters ///////////
-    /** Get the key */
-    const stdair::DemandStreamKey_T& getKey () const {
-      return _key;
-    }
-    
-    /** Get the total number of requests to be generated. */
-    const stdair::Count_T& getTotalNumberOfRequestsToBeGenerated() const {
-      return _totalNumberOfRequestsToBeGenerated;
-    }
-
-  public:
-    // ///////////// Setters ///////////
-    /** Set the demand characteristics */
-    void setKey (const stdair::DemandStreamKey_T& iKey) {
-      _key = iKey;
-    }
-
-  public:
-    /** Give a description of the structure (for display purposes). */
-    const std::string describe() const { return ""; }
-    
-  public:
+  class DemandStream  : public stdair::DemandStream {
+    friend class TRADEMGEN_ServiceContext;
+ 
+  private:
     // /////////////// Business Methods //////////////
     /** Check whether enough requests have already been generated. */
+    static const bool stillHavingRequestsToBeGenerated (const stdair::DemandStream&);
     const bool stillHavingRequestsToBeGenerated () const;
     
     /** Generate the next request. */
-    stdair::BookingRequestPtr_T generateNext ();
+    static stdair::BookingRequestPtr_T generateNextRequest (stdair::DemandStream&);
+    stdair::BookingRequestPtr_T generateNextRequest ();
 
-  public:
+
+  private:
     // ////////// Constructors and destructors /////////
-    /** Constructor by default */
+    /** Default constructors. */
+    DemandStream ();
+    DemandStream (const DemandStream&);
     DemandStream (const stdair::DemandStreamKey_T&,
                   const stdair::DemandCharacteristics&,
                   const stdair::DemandDistribution&, const stdair::RandomSeed_T&,
                   const stdair::RandomSeed_T&, const stdair::RandomSeed_T&);
-    /** Destructor */
-    virtual ~DemandStream ();
+    /** Destructor. */
+    ~DemandStream ();
 
-    /** Default constructors. */
-    DemandStream ();
-    DemandStream (const DemandStream&);
-
-    /** Initialization. */
-    void init();
-  
+    
   private:
     // ////////// Attributes //////////
-    
     /** Key */
     stdair::DemandStreamKey_T _key;
     
