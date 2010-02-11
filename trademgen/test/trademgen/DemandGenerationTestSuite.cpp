@@ -8,6 +8,7 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/STDAIR_Service.hpp>
 #include <stdair/basic/DemandCharacteristics.hpp>
+#include <stdair/basic/DemandDistribution.hpp>
 #include <stdair/basic/CategoricalAttribute.hpp>
 #include <stdair/basic/ContinuousAttribute.hpp>
 #include <stdair/bom/EventStruct.hpp>
@@ -15,7 +16,6 @@
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // Trademgen
-#include <trademgen/bom/DemandStream.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
 // TraDemGen Test Suite
 #include <test/trademgen/DemandGenerationTestSuite.hpp>
@@ -121,19 +121,16 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   
 
   // Initialize the demand stream
-  TRADEMGEN::DemandStream demandStream1 (key1, demandCharacteristics1,
-                                         demandDistribution1, seed, seed, seed);
-  TRADEMGEN::DemandStream demandStream2 (key2, demandCharacteristics2,
-                                         demandDistribution2, seed, seed, seed);
-
-  trademgenService.addDemandStream (demandStream1);
-  trademgenService.addDemandStream (demandStream2);
+  trademgenService.addDemandStream (key1, demandCharacteristics1,
+                                    demandDistribution1, seed, seed, seed);
+  trademgenService.addDemandStream (key2, demandCharacteristics2,
+                                    demandDistribution2, seed, seed, seed);
   
   // Get the total number of requests to be generated
   stdair::Count_T totalNumberOfRequestsToBeGenerated1 =
-    demandStream1.getTotalNumberOfRequestsToBeGenerated ();
+    trademgenService.getTotalNumberOfRequestsToBeGenerated (key1);
   stdair::Count_T totalNumberOfRequestsToBeGenerated2 =
-    demandStream2.getTotalNumberOfRequestsToBeGenerated ();
+    trademgenService.getTotalNumberOfRequestsToBeGenerated (key2);
 
   STDAIR_LOG_DEBUG ("Number of requests to be generated (demand 1): "
                     << totalNumberOfRequestsToBeGenerated1 << std::endl);
@@ -146,9 +143,10 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   
   // Initialize by adding one request of each type
   const bool stillHavingRequestsToBeGenerated1 = 
-    demandStream1.stillHavingRequestsToBeGenerated ();
+    trademgenService.stillHavingRequestsToBeGenerated (key1);
   if (stillHavingRequestsToBeGenerated1) {
-    stdair::BookingRequestPtr_T lRequest1 = demandStream1.generateNext();
+    stdair::BookingRequestPtr_T lRequest1 =
+      trademgenService.generateNextRequest (key1);
     assert (lRequest1 != NULL);
     stdair::DateTime_T lRequestDateTime = lRequest1->getRequestDateTime ();
     stdair::EventStruct lEventStruct ("Request", lRequestDateTime, key1,
@@ -157,9 +155,10 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
   }
   
   const bool stillHavingRequestsToBeGenerated2 = 
-    demandStream2.stillHavingRequestsToBeGenerated ();
+    trademgenService.stillHavingRequestsToBeGenerated (key2);
   if (stillHavingRequestsToBeGenerated2) {
-    stdair::BookingRequestPtr_T lRequest2 = demandStream2.generateNext();
+    stdair::BookingRequestPtr_T lRequest2 =
+      trademgenService.generateNextRequest (key2);
     assert (lRequest2 != NULL);
     stdair::DateTime_T lRequestDateTime = lRequest2->getRequestDateTime ();
     stdair::EventStruct lEventStruct("Request", lRequestDateTime, key2,
@@ -193,14 +192,13 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
     // Retrieve the corresponding demand stream
     const stdair::DemandStreamKey_T& lDemandStreamKey =
       lEventStruct.getDemandStreamKey ();
-    TRADEMGEN::DemandStream& lDemandStream =
-      trademgenService.getDemandStream (lDemandStreamKey);
     // generate next request
     bool stillHavingRequestsToBeGenerated = 
-      lDemandStream.stillHavingRequestsToBeGenerated();
+      trademgenService.stillHavingRequestsToBeGenerated(lDemandStreamKey);
     STDAIR_LOG_DEBUG ("stillHavingRequestsToBeGenerated: " << stillHavingRequestsToBeGenerated );
     if (stillHavingRequestsToBeGenerated) {
-      stdair::BookingRequestPtr_T lNextRequest = lDemandStream.generateNext();
+      stdair::BookingRequestPtr_T lNextRequest =
+        trademgenService.generateNextRequest (lDemandStreamKey);
       assert (lNextRequest != NULL);
       // DEBUG
       STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->describe());
