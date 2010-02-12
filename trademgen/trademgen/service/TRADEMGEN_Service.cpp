@@ -246,30 +246,6 @@ namespace TRADEMGEN {
       throw TrademgenGenerationException();
     }
   }
-
-  // ////////////////////////////////////////////////////////////////////
-  stdair::BookingRequestStruct TRADEMGEN_Service::
-  generateBookingRequest () const {
-    
-      // TODO: remove this hardcoded section
-      // Hardcode a booking request in order to simulate a sale.
-      // Departure airport code
-      stdair::AirportCode_T lOrigin ("LHR");
-      // Arrival airport code
-      stdair::AirportCode_T lDestination ("JFK");
-      // Departure date
-      stdair::Date_T lDepartureDate (2010, 01, 19);
-      // Passenger type
-      stdair::PassengerType_T lPaxType ("L");
-      // Number of passengers in the travelling group
-      stdair::NbOfSeats_T lPartySize = 5;
-
-      // Booking request
-      return stdair::BookingRequestStruct (lOrigin, lDestination,
-                                           lDepartureDate, 
-                                           stdair::DEFAULT_DATETIME, lPaxType,
-                                           lPartySize);
-  }
   
   // ////////////////////////////////////////////////////////////////////
   void TRADEMGEN_Service::

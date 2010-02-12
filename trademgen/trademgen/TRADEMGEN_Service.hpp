@@ -76,9 +76,6 @@ namespace TRADEMGEN {
     /** Display the list of airlines, as held within the sample database. */
     void displayAirlineListFromDB() const;
 
-    /** Generate a hardcoded booking request. */
-    stdair::BookingRequestStruct generateBookingRequest() const;
-
     /** Add a demand stream into the context. */
     void addDemandStream (const stdair::DemandStreamKey_T&,
                           const stdair::DemandCharacteristics&,
