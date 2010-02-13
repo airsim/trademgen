@@ -55,13 +55,48 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    void storeDestination::operator() (iterator_t iStr, iterator_t iStrEnd) const {
+    void storeDestination::operator() (iterator_t iStr,
+                                       iterator_t iStrEnd) const {
       stdair::AirportCode_T lDestination (iStr, iStrEnd);
       _demand._destination = lDestination;
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePreferredDepartureTime::storePreferredDepartureTime (DemandStruct_T& ioDemand)
+    storeCabin::storeCabin (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeCabin::operator() (char iChar) const { 
+      _demand._cabinCode = iChar; 
+      //std::cout << "Cabin code: " << iChar << std::endl;
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    storeDemandMean::storeDemandMean (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDemandMean::operator() (double iReal) const { 
+      _demand._demandMean = iReal; 
+      //std::cout << "Demand mean: " << iReal << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeDemandStdDev::storeDemandStdDev (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDemandStdDev::operator() (double iReal) const { 
+      _demand._demandStdDev = iReal; 
+      //std::cout << "Demand stddev: " << iReal << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storePreferredDepartureTime::
+    storePreferredDepartureTime (DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -75,29 +110,41 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeFfCode::storeFfCode (DemandStruct_T& ioDemand)
+    storeFFCode::storeFFCode (DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
     // //////////////////////////////////////////////////////////////////
-    void storeFfCode::operator() (char iChar) const { 
-      _demand._ffCode = iChar; 
-      //std::cout << "Cabin code: " << iChar << std::endl;
+    void storeFFCode::operator() (iterator_t iStr, iterator_t iStrEnd) const {
+      const std::string oneChar (iStr, iStrEnd);
+      const FFCode lFFCode (oneChar.at(0));
+      _demand._itFFCode = lFFCode.getCode();
+      //std::cout << "FF code: " << lFFCode << std::endl;
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeFfProbMass::storeFfProbMass (DemandStruct_T& ioDemand)
+    storeFFProbMass::storeFFProbMass (DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
     // //////////////////////////////////////////////////////////////////
-    void storeFfProbMass::operator() (double iReal) const { 
-      _demand._ffProbMass = iReal; 
+    void storeFFProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = 
+        _demand._ffProbDist.insert (FFProbDist_T::value_type (_demand._itFFCode,
+                                                              iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same Frequent Flyer code ('"
+                          << FFCode (_demand._itFFCode)
+                          << "') has probably been given twice");
+        // TODO: throw an exception
+      }
+      
       //std::cout << "FfProbMass: " << iReal << std::endl;
     }
 
     // //////////////////////////////////////////////////////////////////
-    doEndDemand::doEndDemand (stdair::BomRoot& ioBomRoot, DemandStruct_T& ioDemand)
+    doEndDemand::doEndDemand (stdair::BomRoot& ioBomRoot,
+                              DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand), _bomRoot (ioBomRoot) {
     }
     
@@ -109,8 +156,7 @@ namespace TRADEMGEN {
       STDAIR_LOG_DEBUG ("Demand: " << _demand.describe());
 
       // Create the Demand BOM objects
-      // DemandGenerator::generateDemandCharacteristicObjects (_bomRoot,
-      //   _startAnalysisDate, _demand);
+      //DemandGenerator::generateDemandCharacteristicObjects (_bomRoot, _demand);
     }
 
       
@@ -176,7 +222,8 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
 
     // //////////////////////////////////////////////////////////////////
-    DemandParser::DemandParser (stdair::BomRoot& ioBomRoot, DemandStruct_T& ioDemand) 
+    DemandParser::DemandParser (stdair::BomRoot& ioBomRoot,
+                                DemandStruct_T& ioDemand) 
       : _bomRoot (ioBomRoot), _demand (ioDemand) {
     }
 
@@ -189,11 +236,26 @@ namespace TRADEMGEN {
                        | boost::spirit::classic::comment_p("/*", "*/")
                        | demand )
         ;
+
+      /*
+       PrefDepDate; Origin; Destination; Cabin; Mean; StdDev;
+       PosDist; ChannelDist; TripTypeDist; StayDurationDist;
+       FrequentFlyerDist; WTPDist; PrefDepTimeDist;
+       (PrefArrivalDate; PrefArrivalTime;) TimeValueDist; 
+       ValueOfTimeDist; ArrivalPatternDist;
+       2010-02-08; SIN; BKK; M; 10.0; 1.0;
+       SIN:0.7, BKK:0.2, row:0.1; DF:0.1, DN:0.3, IF:0.4, IN:0.2;
+       RO:0.6, RI:0.2, OW:0.2; 0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
+       P:0.01, G:0.05, S:0.15, M:0.3, N:0.49;
+       6:0, 7:0.1, 9:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1;
+       100:0, 500:0.8, 2000:1; 15:0, 60:1; 330:0, 40:0.2, 20:0.6, 1:1;
+      */
       
       demand =
-        pref_dep_date
-        >> ';' >> origin >> ';' >> destination >> ';' >> ff_dist
-        >> ';' >> demand_end[doEndDemand(self._bomRoot, self._demand)]
+        pref_dep_date >> ';' >> origin >> ';' >> destination  >> ';' >> cabin
+        >> ';' >> demand_params
+        >> ';' >> ff_dist
+        >> demand_end[doEndDemand(self._bomRoot, self._demand)]
         ;
 
       demand_end =
@@ -222,6 +284,16 @@ namespace TRADEMGEN {
         (airport_p)[storeDestination(self._demand)]
         ;
 
+      cabin =
+        (cabin_code_p)[storeCabin(self._demand)]
+        ;
+
+      demand_params =
+        (boost::spirit::classic::ureal_p)[storeDemandMean(self._demand)]
+        >> ';'
+        >> (boost::spirit::classic::ureal_p)[storeDemandStdDev(self._demand)]
+        ;
+      
       pref_dep_time =
         time[storePreferredDepartureTime(self._demand)]
         ;
@@ -236,11 +308,12 @@ namespace TRADEMGEN {
         ;
 
       ff_dist =
-        *( ff_pair )
+        ff_pair >> *( ',' >> ff_pair )
         ;
 
       ff_pair =
-        ff_code >> ':' >> ff_share
+        ff_code[storeFFCode(self._demand)]
+        >> ':' >> ff_share
         ;
 
       ff_code =
@@ -251,7 +324,8 @@ namespace TRADEMGEN {
         | boost::spirit::classic::ch_p('N')
         ;
 
-      ff_share = (boost::spirit::classic::ureal_p)[storeFfProbMass(self._demand)]
+      ff_share =
+        (boost::spirit::classic::ureal_p)[storeFFProbMass(self._demand)]
         ;
       
       // BOOST_SPIRIT_DEBUG_NODE (DemandParser);
@@ -262,6 +336,8 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (date);
       BOOST_SPIRIT_DEBUG_NODE (origin);
       BOOST_SPIRIT_DEBUG_NODE (destination);
+      BOOST_SPIRIT_DEBUG_NODE (cabin);
+      BOOST_SPIRIT_DEBUG_NODE (demand_params);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time);
       BOOST_SPIRIT_DEBUG_NODE (time);
       BOOST_SPIRIT_DEBUG_NODE (ff_dist);
@@ -300,7 +376,7 @@ namespace TRADEMGEN {
 
     // Check the filename exists and can be open
     if (!_startIterator) {
-      STDAIR_LOG_ERROR ("The file " << _filename << " can not be open." << std::endl);
+      STDAIR_LOG_ERROR ("The file " << _filename << " can not be open.");
 
       throw stdair::FileNotFoundException();
     }
@@ -310,19 +386,19 @@ namespace TRADEMGEN {
   }
     
   // //////////////////////////////////////////////////////////////////////
-  bool DemandFileParser::generateInventories () {
+  bool DemandFileParser::generateDemand () {
     bool oResult = false;
       
     STDAIR_LOG_DEBUG ("Parsing demand input file: " << _filename);
 
     // Initialise the parser (grammar) with the helper/staging structure.
-    DemandParserHelper::DemandParser lFPParser (_bomRoot, _demand);
+    DemandParserHelper::DemandParser lDemandParser (_bomRoot, _demand);
       
     // Launch the parsing of the file and, thanks to the doEndDemand
     // call-back structure, the building of the whole BomRoot BOM
     // (i.e., including Inventory, FlightDate, LegDate, SegmentDate, etc.)
     boost::spirit::classic::parse_info<iterator_t> info =
-      boost::spirit::classic::parse (_startIterator, _endIterator, lFPParser, 
+      boost::spirit::classic::parse (_startIterator, _endIterator, lDemandParser,
                                      boost::spirit::classic::space_p);
 
     // Retrieves whether or not the parsing was successful

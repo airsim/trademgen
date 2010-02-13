@@ -11,6 +11,7 @@
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/BasParserTypes.hpp>
+#include <trademgen/basic/FFCode.hpp>
 #include <trademgen/bom/DemandStruct.hpp>
 
 // Forward declarations
@@ -65,18 +66,42 @@ namespace TRADEMGEN {
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
 
-    /** Store the ff code. */
-    struct storeFfCode : public ParserSemanticAction {
+    /** Store the cabin code. */
+    struct storeCabin : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeFfCode (DemandStruct_T&);
+      storeCabin (DemandStruct_T&);
       /** Actor Function (functor). */
       void operator() (char iChar) const;
     };
+
+    /** Store the demand mean value. */
+    struct storeDemandMean : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDemandMean (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the demand stdandard deviation value. */
+    struct storeDemandStdDev : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDemandStdDev (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the ff code. */
+    struct storeFFCode : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeFFCode (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
+    };
   
     /** Store the ff probability mass. */
-    struct storeFfProbMass : public ParserSemanticAction {
+    struct storeFFProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeFfProbMass (DemandStruct_T&);
+      storeFFProbMass (DemandStruct_T&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -98,15 +123,49 @@ namespace TRADEMGEN {
     //
     /////////////////////////////////////////////////////////////////////////
     /**
-       PrefDepDate; Origin; Destination; PosDist; ChannelDist; TripTypeDist;
-       StayDurationDist; FrequentFlyerDist; PrefDateTimeDist; WTPDist;
+       PrefDepDate; Origin; Destination; Cabin; Mean; StdDev;
+       PosDist; ChannelDist; TripTypeDist; StayDurationDist;
+       FrequentFlyerDist; WTPDist; PrefDepTimeDist;
+       (PrefArrivalDate; PrefArrivalTime;) TimeValueDist; 
        ValueOfTimeDist; ArrivalPatternDist;
-       2010/02/08;SIN;BKK;M;SIN:0...
+       2010-02-08; SIN; BKK; M; 10.0; 1.0;
+       SIN:0.7, BKK:0.2, row:0.1; DF:0.1, DN:0.3, IF:0.4, IN:0.2;
+       RO:0.6, RI:0.2, OW:0.2; 0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
+       P:0.01, G:0.05, S:0.15, M:0.3, N:0.49;
+       6:0, 7:0.1, 9:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1;
+       100:0, 500:0.8, 2000:1; 15:0, 60:1; 330:0, 40:0.2, 20:0.6, 1:1;
        
+      Fixed:
+        Prefered departure date (yyyy/mm/dd)
+        Origin (3-char airport code)
+        Destination (3-char airport code)
+        Cabin (1-char cabin code)
+      Observable:
+        Mean
+        StdDev
+      Distribution with Probability Masses:
+        POS
+        Channel (D=direct, I=indirect, N=oNline, F=oFfline)
+        Trip type(RO=outbound of round-trip,RI=inbound of round-trip,OW=one way)
+        Stay duration (number of days)
+        Frequent flyer (P=Platinum, G=Gold, S=Silver, M=Member, N=None)
+      Continuous cumulative distribution:
+        Preferred departure time (hh:mm:ss)
+        WTP (moneraty value)
+        Preferred arrival date (equal to Prefered departure date)
+        Preferred arrival time (equal to Prefered departure time)
+        Value of time
+        Arrival pattern (DTD as a positive value)
+    The main fields are separated by ';'
+    Probability mass distributions are defined by comma-separated
+      'value:probability' pairs
+    Continuous cumulative distribution are defined by comma-separated
+      'value:probability' pairs, sorted in increasing order of values.
+    The meaning of probability is P(random variable<=value) = probability.
+
+
        Grammar:
-       DOW                 ::= int
-       FlightKey           ::= AirlineCode ';' FlightNumber
-       ';' PreferredDepartureDate ';' DateRangeEnd ';' DOW
+       PreferredDepartureDate ::= date
        LegKey              ::= BoardingPoint ';' OffPoint
        LegDetails          ::= PreferredDepartureTime ['/' BoardingDateOffSet]
        ';' OffTime ['/' BoardingDateOffSet]
@@ -139,8 +198,8 @@ namespace TRADEMGEN {
         
         // Instantiation of rules
         boost::spirit::classic::rule<ScannerT> demand_list, demand, demand_end,
-          pref_dep_date, date, origin, destination, pref_dep_time, time,
-          ff_dist, ff_pair, ff_code, ff_share;
+          pref_dep_date, date, origin, destination, cabin, demand_params,
+          pref_dep_time, time, ff_dist, ff_pair, ff_code, ff_share;
 
         /** Entry point of the parser. */
         boost::spirit::classic::rule<ScannerT> const& start() const;
@@ -167,10 +226,11 @@ namespace TRADEMGEN {
   class DemandFileParser : public stdair::CmdAbstract {
   public:
     /** Constructor. */
-    DemandFileParser (stdair::BomRoot&, const stdair::Filename_T& iDemandInputFilename);
+    DemandFileParser (stdair::BomRoot&,
+                      const stdair::Filename_T& iDemandInputFilename);
 
     /** Parse the demand input file. */
-    bool generateInventories ();
+    bool generateDemand ();
       
   private:
     /** Initialise. */

@@ -24,6 +24,7 @@
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
+#include <trademgen/command/DemandParser.hpp>
 #include <trademgen/service/TRADEMGEN_ServiceContext.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
 
@@ -175,7 +176,7 @@ namespace TRADEMGEN {
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
 
     // Initialise the demand generators
-    // DemandGenerator::initialiseGenerators (iDemandInputFilename, lBomRoot);
+    DemandParser::generateDemand (iDemandInputFilename, lBomRoot);
 
     // DEBUG
     STDAIR_LOG_DEBUG ("Generated BomRoot:");
@@ -190,8 +191,8 @@ namespace TRADEMGEN {
       throw NonInitialisedServiceException();
     }
     assert (_trademgenServiceContext != NULL);
-    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
-      *_trademgenServiceContext;
+    // TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+    //  *_trademgenServiceContext;
 
     // Get the date-time for the present time
     boost::posix_time::ptime lNowDateTime =
@@ -280,7 +281,7 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   const bool TRADEMGEN_Service::
-  stillHavingRequestsToBeGenerated (const stdair::DemandStreamKey_T& iKey) const{
+  stillHavingRequestsToBeGenerated(const stdair::DemandStreamKey_T& iKey) const {
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =

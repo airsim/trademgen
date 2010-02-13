@@ -23,7 +23,7 @@ namespace TRADEMGEN {
 
     // Parse the CSV-formatted demand input file, and generate the
     // corresponding DemandCharacteristic objects.
-    // lDemandParser.generateDemand ();
+    lDemandParser.generateDemand ();
   }
 
 }
