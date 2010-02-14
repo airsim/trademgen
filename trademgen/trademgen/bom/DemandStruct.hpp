@@ -1,5 +1,5 @@
-#ifndef __TRADEMGEN_BOM_FLIGHTPERIODSTRUCT_HPP
-#define __TRADEMGEN_BOM_FLIGHTPERIODSTRUCT_HPP
+#ifndef __TRADEMGEN_BOM_DEMANDSTRUCT_HPP
+#define __TRADEMGEN_BOM_DEMANDSTRUCT_HPP
 
 // //////////////////////////////////////////////////////////////////////
 // Import section
@@ -22,7 +22,7 @@
 
 namespace TRADEMGEN {
 
-  /** Utility Structure for the parsing of Flight-Period structures. */
+  /** Utility Structure for the parsing of Demand structures. */
   struct DemandStruct_T : public stdair::StructAbstract {
     
     /** Set the date from the staging details. */
