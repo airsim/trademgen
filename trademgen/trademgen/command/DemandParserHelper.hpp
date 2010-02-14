@@ -11,7 +11,6 @@
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/BasParserTypes.hpp>
-#include <trademgen/basic/FFCode.hpp>
 #include <trademgen/bom/DemandStruct.hpp>
 
 // Forward declarations
@@ -146,7 +145,7 @@ namespace TRADEMGEN {
       void operator() (double iReal) const;
     };
   
-    /** Store the ff code. */
+    /** Store the frequent flyer code. */
     struct storeFFCode : public ParserSemanticAction {
       /** Actor Constructor. */
       storeFFCode (DemandStruct_T&);
@@ -154,7 +153,7 @@ namespace TRADEMGEN {
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
   
-    /** Store the ff probability mass. */
+    /** Store the frequent flyer probability mass. */
     struct storeFFProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
       storeFFProbMass (DemandStruct_T&);
@@ -180,6 +179,58 @@ namespace TRADEMGEN {
       void operator() (double iReal) const;
     };
   
+    /** Store the parameters for the Willingness-To-Pay (WTP)
+        continuous probability distribution. */
+    struct storeWTP : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeWTP (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };    
+    
+    /** Store the parameters for the Willingness-To-Pay (WTP) continuous
+        probability distribution. */
+    struct storeWTPProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeWTPProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the time value. */
+    struct storeTimeValue : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeTimeValue (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (unsigned int iInteger) const;
+    };
+  
+    /** Store the time value probability mass. */
+    struct storeTimeValueProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeTimeValueProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the parameters for the arrival pattern (as expressed in DTD)
+        continuous probability distribution. */
+    struct storeDTD : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDTD (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (unsigned int iInteger) const;
+    };    
+    
+    /** Store the parameters for the arrival pattern (as expressed in DTD)
+        continuous probability distribution. */
+    struct storeDTDProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDTDProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
     /** Mark the end of the demand parsing. */
     struct doEndDemand : public ParserSemanticAction {
       /** Actor Constructor. */
@@ -199,18 +250,21 @@ namespace TRADEMGEN {
     /**
        PrefDepDate; Origin; Destination; Cabin; Mean; StdDev;
        PosDist; ChannelDist; TripTypeDist; StayDurationDist;
-       FrequentFlyerDist; WTPDist; PrefDepTimeDist;
+       FrequentFlyerDist; PrefDepTimeDist; WTPDist;
        (PrefArrivalDate; PrefArrivalTime;) TimeValueDist; 
        ValueOfTimeDist; ArrivalPatternDist;
        2010-02-08; SIN; BKK; M; 10.0; 1.0;
        SIN:0.7, BKK:0.2, row:0.1; DF:0.1, DN:0.3, IF:0.4, IN:0.2;
-       RO:0.6, RI:0.2, OW:0.2; 0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
+       RO:0.6, RI:0.2, OW:0.2;
+       0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
        P:0.01, G:0.05, S:0.15, M:0.3, N:0.49;
-       6:0, 7:0.1, 9:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1;
-       100:0, 500:0.8, 2000:1; 15:0, 60:1; 330:0, 40:0.2, 20:0.6, 1:1;
+       06:0, 07:0.1, 09:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1;
+       100:0, 500:0.8, 2000:1;
+       15:0, 60:1;
+       330:0, 40:0.2, 20:0.6, 1:1;
        
       Fixed:
-        Prefered departure date (yyyy/mm/dd)
+        Prefered departure date (yyyy-mm-dd)
         Origin (3-char airport code)
         Destination (3-char airport code)
         Cabin (1-char cabin code)
@@ -226,8 +280,8 @@ namespace TRADEMGEN {
       Continuous cumulative distribution:
         Preferred departure time (hh:mm:ss)
         WTP (moneraty value)
-        Preferred arrival date (equal to Prefered departure date)
-        Preferred arrival time (equal to Prefered departure time)
+        Preferred arrival date (equal to prefered departure date)
+        Preferred arrival time (equal to prefered departure time)
         Value of time
         Arrival pattern (DTD as a positive value)
     The main fields are separated by ';'
@@ -235,30 +289,49 @@ namespace TRADEMGEN {
       'value:probability' pairs
     Continuous cumulative distribution are defined by comma-separated
       'value:probability' pairs, sorted in increasing order of values.
-    The meaning of probability is P(random variable<=value) = probability.
+    The meaning of probability is P(random variable <= value) = probability.
 
-
-       Grammar:
-       PreferredDepartureDate ::= date
-       LegKey              ::= BoardingPoint ';' OffPoint
-       LegDetails          ::= PreferredDepartureTime ['/' BoardingDateOffSet]
-       ';' OffTime ['/' BoardingDateOffSet]
-       ';' Elapsed
-       LegCabinDetails     ::= CabinCode ';' FfProbMass
-       Leg                 ::= LegKey ';' LegDetails (';' CabinDetails)+
-       SegmentKey          ::= BoardingPoint ';' OffPoint
-       SegmentCabinDetails ::= CabinCode ';' Classes
-       (';' FamilyCabinDetails)*
-       FamilyCabinDetails  ::= CabinCode ';' Classes
-       FullSegmentCabinDetails::= (';' SegmentCabinDetails)+
-       GeneralSegments     ::= '0' (';' SegmentCabinDetails)+
-       SpecificSegments    ::= '1' (';' SegmentKey
-       ';' FullSegmentCabinDetails)+
-       Segment             ::= GeneralSegment | SpecificSegment
-       Demand        ::= FlightKey (';' Leg)+
-       (';' Segment)+ ';' EndOfFlight
-       EndOfFlight         ::= ';'
-    */
+    Grammar:
+      Demand ::= PrefDepDate ';' Origin ';' Destination ';' Cabin
+         ';' DemandParams ';' PosDist ';' ChannelDist ';'  TripDist
+         ';' StayDist ';' FfDist ';'  PrefDepTimeDist
+         ';' WtpDist ';' TimeValueDist ';'  DtdDist
+         EndOfDemand
+      PrefDepDate ::= date
+      DemandParams ::= DemandMean ';' DemandStdDev
+      PosDist ::= PosPair (',' PosPair)*
+      PosPair ::= PosCode ':' PosShare
+      PosCode ::= AirportCode | "row"
+      PosShare ::= real
+      ChannelDist ::= ChannelPair (',' ChannelPair)*
+      ChannelPair ::= Channel_Code ':' ChannelShare
+      ChannelCode ::= "DF" | "DN" | "IF" | "IN"
+      ChannelShare ::= real
+      TripDist ::= TripPair (',' TripPair)*
+      TripPair ::= TripCode ':' TripShare
+      TripCode ::= "RO" | "RI" | "OW"
+      TripShare ::= real
+      StayDist ::= StayPair (',' StayPair)*
+      StayPair ::= [0;3]-digit-integer ':' stay_share
+      StayShare ::= real
+      FFDist ::= FF_Pair (',' FF_Pair)*
+      FFPair ::= FFCode ':' FFShare
+      FFCode ::= 'P' | 'G' | 'S' | 'M' | 'N'
+      FFShare ::= real
+      PrefDepTimeDist ::= PrefDepTimePair (',' PrefDepTimePair)*
+      PrefDepTimePair ::= time ':' PrefDepTimeShare
+      PrefDepTimeShare ::= real
+      WTPDist ::= WTPPair (',' WTPPair)*
+      WTPPair ::= real ':' WTPShare
+      WTPShare ::= real
+      TimeValueDist ::= TimeValuePair (',' TimeValuePair)*
+      TimeValuePair ::= [0;2]-digit-integer ':' TimeValueShare
+      TimeValueShare ::= real
+      DTDDist ::= DTDPair (',' DTDPair)*
+      DTDPair ::= real ':' DTDShare
+      DTDShare ::= real
+      EndOfDemand ::= ';'
+     */
 
     /** Grammar for the Flight-Period parser. */
     struct DemandParser : 
@@ -278,7 +351,10 @@ namespace TRADEMGEN {
           trip_dist, trip_pair, trip_code, trip_share,
           stay_dist, stay_pair, stay_share,
           ff_dist, ff_pair, ff_code, ff_share,
-          pref_dep_time_dist, pref_dep_time_pair, pref_dep_time_share, time;
+          pref_dep_time_dist, pref_dep_time_pair, pref_dep_time_share, time,
+          wtp_dist, wtp_pair, wtp_share,
+          time_value_dist, time_value_pair, time_value_share,
+          dtd_dist, dtd_pair, dtd_share;
 
         /** Entry point of the parser. */
         boost::spirit::classic::rule<ScannerT> const& start() const;

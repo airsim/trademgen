@@ -11,11 +11,11 @@
 
 namespace TRADEMGEN {
 
-  /** Point-Of-Sale (STAY) probability mass. */
+  /** Stay duration probability mass. */
   typedef float StayProbMass_T;
   
-  /** Type definition for the distribution of Point-Of-Sale (STAY)
-      probability masses. */
+  /** Type definition for the distribution of stay duration probability
+      masses. */
   typedef std::map<stdair::DayDuration_T, StayProbMass_T> StayProbDist_T;
   
 }

@@ -7,7 +7,10 @@ bas_h_sources = \
 		$(top_srcdir)/trademgen/basic/TripCode.hpp \
 		$(top_srcdir)/trademgen/basic/TripCodeTypes.hpp \
 		$(top_srcdir)/trademgen/basic/StayDurationTypes.hpp \
-		$(top_srcdir)/trademgen/basic/PrefDepTimeTypes.hpp
+		$(top_srcdir)/trademgen/basic/PrefDepTimeTypes.hpp \
+		$(top_srcdir)/trademgen/basic/WTPTypes.hpp \
+		$(top_srcdir)/trademgen/basic/TimeValueTypes.hpp \
+		$(top_srcdir)/trademgen/basic/DTDTypes.hpp
 bas_cc_sources = \
 		$(top_srcdir)/trademgen/basic/BasConst.cpp \
 		$(top_srcdir)/trademgen/basic/FFCode.cpp \

@@ -15,7 +15,7 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   DemandStruct_T::DemandStruct_T ()
-    : _prefDepDate (stdair::DEFAULT_DATE), _itSeconds (0),
+    : _prefDepDate (stdair::DEFAULT_DATE), _itMinutes (0), _itSeconds (0),
       _itFFCode (FFCode::NONE) {
   }
 
@@ -34,7 +34,7 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   const std::string DemandStruct_T::describe() const {
     std::ostringstream ostr;
-    ostr << _prefDepDate << " "
+    ostr << _prefDepDate << " -> " << _prefArrDate
          << " " << _origin << "-" << _destination
          << " " << _cabinCode
          << ", N(" << _demandMean << ", " << _demandStdDev << "); ";
@@ -108,6 +108,42 @@ namespace TRADEMGEN {
         ostr << ", ";
       }
       ostr << lPrefDepTime << ":" << lPrefDepTimeProbMass;
+    }
+    ostr << "; ";
+    
+    idx = 0;
+    for (WTPProbDist_T::const_iterator it = _wtpProbDist.begin();
+         it != _wtpProbDist.end(); ++it, ++idx) {
+      const stdair::WTP_T& lWTP = it->first;
+      const WTPProbMass_T& lWTPProbMass = it->second;
+      if (idx != 0) {
+        ostr << ", ";
+      }
+      ostr << lWTP << ":" << lWTPProbMass;
+    }
+    ostr << "; ";
+    
+    idx = 0;
+    for (TimeValueProbDist_T::const_iterator it = _timeValueProbDist.begin();
+         it != _timeValueProbDist.end(); ++it, ++idx) {
+      const stdair::Duration_T& lTimeValue = it->first;
+      const TimeValueProbMass_T& lTimeValueProbMass = it->second;
+      if (idx != 0) {
+        ostr << ", ";
+      }
+      ostr << lTimeValue << ":" << lTimeValueProbMass;
+    }
+    ostr << "; ";
+    
+    idx = 0;
+    for (DTDProbDist_T::const_iterator it = _dtdProbDist.begin();
+         it != _dtdProbDist.end(); ++it, ++idx) {
+      const stdair::DayDuration_T& lDTD = it->first;
+      const DTDProbMass_T& lDTDProbMass = it->second;
+      if (idx != 0) {
+        ostr << ", ";
+      }
+      ostr << lDTD << ":" << lDTDProbMass;
     }
     ostr << "; ";
     

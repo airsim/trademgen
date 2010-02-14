@@ -16,6 +16,9 @@
 #include <trademgen/basic/TripCodeTypes.hpp>
 #include <trademgen/basic/FFCodeTypes.hpp>
 #include <trademgen/basic/PrefDepTimeTypes.hpp>
+#include <trademgen/basic/WTPTypes.hpp>
+#include <trademgen/basic/TimeValueTypes.hpp>
+#include <trademgen/basic/DTDTypes.hpp>
 
 namespace TRADEMGEN {
 
@@ -36,6 +39,7 @@ namespace TRADEMGEN {
 
     // Attributes
     stdair::Date_T _prefDepDate;
+    stdair::Date_T _prefArrDate;
     stdair::AirportCode_T _origin;
     stdair::AirportCode_T _destination;
     std::string _cabinCode;
@@ -46,7 +50,10 @@ namespace TRADEMGEN {
     TripProbDist_T _tripProbDist;
     StayProbDist_T _stayProbDist;
     FFProbDist_T _ffProbDist;
-    PrefDepTimeProbDist_T _prefDepTimeProbDist;
+    PrefDepTimeProbDist_T _prefDepTimeProbDist; 
+    WTPProbDist_T _wtpProbDist;
+    TimeValueProbDist_T _timeValueProbDist;
+    DTDProbDist_T _dtdProbDist;
     
     /** Staging Date. */
     unsigned int _itYear;
@@ -75,6 +82,15 @@ namespace TRADEMGEN {
 
     /** Staging preferred departure time. */
     stdair::Duration_T _itPrefDepTime;
+
+    /** Staging Willingness-To-Pay (WTP). */
+    stdair::WTP_T _itWTP;
+    
+    /** Staging time value. */
+    stdair::Duration_T _itTimeValue;
+
+    /** Staging DTD (Days-To-Departure). */
+    stdair::DayDuration_T _itDTD;
   };
 
 }

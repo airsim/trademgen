@@ -33,9 +33,9 @@ namespace TRADEMGEN {
     void storePreferredDepartureDate::operator() (iterator_t iStr,
                                                   iterator_t iStrEnd) const {
       _demand._prefDepDate = _demand.getDate();
-        
-      // Reset the number of seconds
-      _demand._itSeconds = 0;
+
+      // TODO: do not harcode the preferred arrival date
+      _demand._prefArrDate = _demand._prefDepDate;
     }
       
     // //////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
     void storeCabin::operator() (char iChar) const { 
       _demand._cabinCode = iChar; 
-      //std::cout << "Cabin code: " << iChar << std::endl;
+      //STDAIR_LOG_DEBUG ("Cabin code: " << iChar);
     }
     
     // //////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
     void storeDemandMean::operator() (double iReal) const { 
       _demand._demandMean = iReal; 
-      //std::cout << "Demand mean: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("Demand mean: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
     void storeDemandStdDev::operator() (double iReal) const { 
       _demand._demandStdDev = iReal; 
-      //std::cout << "Demand stddev: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("Demand stddev: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ namespace TRADEMGEN {
     void storePosCode::operator() (iterator_t iStr, iterator_t iStrEnd) const {
       const stdair::AirportCode_T lPosCode (iStr, iStrEnd);
       _demand._itPosCode = lPosCode;
-      //std::cout << "Pos code: " << lPosCode << std::endl;
+      //STDAIR_LOG_DEBUG ("Pos code: " << lPosCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //std::cout << "PosProbMass: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("PosProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ namespace TRADEMGEN {
       const std::string lChannelCodeStr (iStr, iStrEnd);
       const ChannelCode lChannelCode (lChannelCodeStr);
       _demand._itChannelCode = lChannelCode.getCode();
-      //std::cout << "Channel code: " << lChannelCode << std::endl;
+      //STDAIR_LOG_DEBUG ("Channel code: " << lChannelCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //std::cout << "ChannelProbMass: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("ChannelProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -171,7 +171,7 @@ namespace TRADEMGEN {
       const std::string lTripCodeStr (iStr, iStrEnd);
       const TripCode lTripCode (lTripCodeStr);
       _demand._itTripCode = lTripCode.getCode();
-      //std::cout << "Trip code: " << lTripCode << std::endl;
+      //STDAIR_LOG_DEBUG ("Trip code: " << lTripCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //std::cout << "TripProbMass: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("TripProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -204,7 +204,7 @@ namespace TRADEMGEN {
     void storeStayCode::operator() (unsigned int iInteger) const {
       const stdair::DayDuration_T lStayDuration (iInteger);
       _demand._itStayDuration = lStayDuration;
-      //std::cout << "Stay code: " << lStayDuration << std::endl;
+      //STDAIR_LOG_DEBUG ("Stay duration: " << lStayDuration);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -224,7 +224,7 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //std::cout << "StayProbMass: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("StayProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -237,7 +237,7 @@ namespace TRADEMGEN {
       const std::string oneChar (iStr, iStrEnd);
       const FFCode lFFCode (oneChar.at(0));
       _demand._itFFCode = lFFCode.getCode();
-      //std::cout << "FF code: " << lFFCode << std::endl;
+      //STDAIR_LOG_DEBUG ("FF code: " << lFFCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -257,7 +257,7 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //std::cout << "FfProbMass: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("FfProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -270,6 +270,11 @@ namespace TRADEMGEN {
                                        iterator_t iStrEnd) const {
       _demand._itPrefDepTime = _demand.getTime();
         
+      // DEBUG
+      // STDAIR_LOG_DEBUG ("Pref dep time: " << _demand._itHours << ":"
+      //                   << _demand._itMinutes << ":" << _demand._itSeconds
+      //                   << " ==> " << _demand._itPrefDepTime);
+      
       // Reset the number of minutes and seconds
       _demand._itMinutes = 0;
       _demand._itSeconds = 0;
@@ -292,7 +297,100 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //std::cout << "PrefDepTimeProbMass: " << iReal << std::endl;
+      //STDAIR_LOG_DEBUG ("PrefDepTimeProbMass: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeWTP::storeWTP (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeWTP::operator() (double iReal) const {
+      _demand._itWTP = iReal;
+      //STDAIR_LOG_DEBUG ("WTP: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeWTPProbMass::storeWTPProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeWTPProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull =
+        _demand._wtpProbDist.insert (WTPProbDist_T::value_type (_demand._itWTP,
+                                                                iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same WTP ('" << _demand._itWTP
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //STDAIR_LOG_DEBUG ("WTPProbMass: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeTimeValue::storeTimeValue (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeTimeValue::operator() (unsigned int iInteger) const {
+      const stdair::Duration_T lTimeValue (iInteger, 0, 0);
+      _demand._itTimeValue = lTimeValue;
+      //STDAIR_LOG_DEBUG ("Time value: " << lTimeDuration);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeTimeValueProbMass::storeTimeValueProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeTimeValueProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = 
+        _demand._timeValueProbDist.
+        insert (TimeValueProbDist_T::value_type (_demand._itTimeValue,
+                                                 iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same time value ('" << _demand._itTimeValue
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //STDAIR_LOG_DEBUG ("TimeValueProbMass: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeDTD::storeDTD (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDTD::operator() (unsigned int iInteger) const {
+      const stdair::DayDuration_T lDTD (iInteger);
+      _demand._itDTD = lDTD;
+      //STDAIR_LOG_DEBUG ("DTD: " << lDTD);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeDTDProbMass::storeDTDProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDTDProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull =
+        _demand._dtdProbDist.insert (DTDProbDist_T::value_type (_demand._itDTD,
+                                                                iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same DTD ('" << _demand._itDTD
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //STDAIR_LOG_DEBUG ("DTDProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -310,6 +408,17 @@ namespace TRADEMGEN {
 
       // Create the Demand BOM objects
       //DemandGenerator::generateDemandCharacteristicObjects (_bomRoot, _demand);
+
+      // Clean the lists
+      _demand._posProbDist.clear();
+      _demand._channelProbDist.clear();
+      _demand._tripProbDist.clear();
+      _demand._stayProbDist.clear();
+      _demand._ffProbDist.clear();
+      _demand._prefDepTimeProbDist.clear(); 
+      _demand._wtpProbDist.clear();
+      _demand._timeValueProbDist.clear();
+      _demand._dtdProbDist.clear();
     }
 
       
@@ -326,6 +435,9 @@ namespace TRADEMGEN {
     
     /** Up-to-2-digit-integer parser */
     uint1_2_p_t uint1_2_p;
+
+    /** Up-to-3-digit-integer parser */
+    uint1_3_p_t uint1_3_p;
 
     /** 4-digit-integer parser */
     uint4_p_t uint4_p;
@@ -355,7 +467,7 @@ namespace TRADEMGEN {
     repeat_p_t airport_p (chset_t("0-9A-Z").derived(), 3, 3);
       
     /** Hour Parser: limit_d(0u, 23u)[uint2_p] */
-    bounded2_p_t hours_p (uint2_p.derived(), 0u, 23u);
+    bounded1_2_p_t hours_p (uint1_2_p.derived(), 0u, 23u);
 
     /** Minute Parser: limit_d(0u, 59u)[uint2_p] */
     bounded2_p_t minutes_p (uint2_p.derived(), 0u, 59u);
@@ -371,6 +483,9 @@ namespace TRADEMGEN {
       
     /** Class Code List Parser: repeat_p(1,26)[chset_p("A-Z")] */
     repeat_p_t class_code_list_p (chset_t("A-Z").derived(), 1, 26);
+
+    /** Stay duration Parser: limit_d(0u, 999u)[uint3_p] */
+    bounded1_3_p_t stay_duration_p (uint1_3_p.derived(), 0u, 23u);
 
 
     // //////////////////////////////////////////////////////////////////
@@ -393,20 +508,6 @@ namespace TRADEMGEN {
                        | demand )
         ;
 
-      /*
-       PrefDepDate; Origin; Destination; Cabin; Mean; StdDev;
-       PosDist; ChannelDist; TripTypeDist; StayDurationDist;
-       FrequentFlyerDist; WTPDist; PrefDepTimeDist;
-       (PrefArrivalDate; PrefArrivalTime;) TimeValueDist; 
-       ValueOfTimeDist; ArrivalPatternDist;
-       2010-02-08; SIN; BKK; M; 10.0; 1.0;
-       SIN:0.7, BKK:0.2, row:0.1; DF:0.1, DN:0.3, IF:0.4, IN:0.2;
-       RO:0.6, RI:0.2, OW:0.2; 0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
-       P:0.01, G:0.05, S:0.15, M:0.3, N:0.49;
-       06:0, 07:0.1, 09:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1
-       100:0, 500:0.8, 2000:1; 15:0, 60:1; 330:0, 40:0.2, 20:0.6, 1:1;
-      */
-      
       demand =
         pref_dep_date >> ';' >> origin >> ';' >> destination  >> ';' >> cabin
         >> ';' >> demand_params
@@ -416,6 +517,9 @@ namespace TRADEMGEN {
         >> ';' >> stay_dist
         >> ';' >> ff_dist
         >> ';' >> pref_dep_time_dist
+        >> ';' >> wtp_dist
+        >> ';' >> time_value_dist
+        >> ';' >> dtd_dist
         >> demand_end[doEndDemand(self._bomRoot, self._demand)]
         ;
 
@@ -517,7 +621,7 @@ namespace TRADEMGEN {
         ;
 
       stay_pair =
-        (int1_p)[storeStayCode(self._demand)]
+        (stay_duration_p)[storeStayCode(self._demand)]
         >> ':' >> stay_share
         ;
 
@@ -567,6 +671,45 @@ namespace TRADEMGEN {
        ]
         ;
 
+      wtp_dist =
+        wtp_pair >> *( ',' >> wtp_pair )
+        ;
+
+      wtp_pair =
+        (boost::spirit::classic::ureal_p)[storeWTP(self._demand)]
+        >> ':' >> wtp_share
+        ;
+
+      wtp_share =
+        (boost::spirit::classic::ureal_p)[storeWTPProbMass(self._demand)]
+        ;
+
+      time_value_dist =
+        time_value_pair >> *( ',' >> time_value_pair )
+        ;
+
+      time_value_pair =
+        (uint1_2_p)[storeTimeValue(self._demand)]
+        >> ':' >> time_value_share
+        ;
+
+      time_value_share =
+        (boost::spirit::classic::ureal_p)[storeTimeValueProbMass(self._demand)]
+        ;
+
+      dtd_dist =
+        dtd_pair >> *( ',' >> dtd_pair )
+        ;
+
+      dtd_pair =
+        (boost::spirit::classic::ureal_p)[storeDTD(self._demand)]
+        >> ':' >> dtd_share
+        ;
+
+      dtd_share =
+        (boost::spirit::classic::ureal_p)[storeDTDProbMass(self._demand)]
+        ;
+
       // BOOST_SPIRIT_DEBUG_NODE (DemandParser);
       BOOST_SPIRIT_DEBUG_NODE (demand_list);
       BOOST_SPIRIT_DEBUG_NODE (demand);
@@ -600,6 +743,15 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_pair);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_share);
       BOOST_SPIRIT_DEBUG_NODE (time);
+      BOOST_SPIRIT_DEBUG_NODE (wtp_dist);
+      BOOST_SPIRIT_DEBUG_NODE (wtp_pair);
+      BOOST_SPIRIT_DEBUG_NODE (wtp_share);
+      BOOST_SPIRIT_DEBUG_NODE (time_value_dist);
+      BOOST_SPIRIT_DEBUG_NODE (time_value_pair);
+      BOOST_SPIRIT_DEBUG_NODE (time_value_share);
+      BOOST_SPIRIT_DEBUG_NODE (dtd_dist);
+      BOOST_SPIRIT_DEBUG_NODE (dtd_pair);
+      BOOST_SPIRIT_DEBUG_NODE (dtd_share);
     }
 
     // //////////////////////////////////////////////////////////////////

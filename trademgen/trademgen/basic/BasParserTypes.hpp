@@ -50,6 +50,9 @@ namespace TRADEMGEN {
   /** Up-to-2-digit-integer parser */
   typedef boost::spirit::classic::uint_parser<unsigned int, 10, 1, 2> uint1_2_p_t;    
 
+  /** Up-to-3-digit-integer parser */
+  typedef boost::spirit::classic::uint_parser<unsigned int, 10, 1, 3> uint1_3_p_t;    
+
   /** 4-digit-integer parser */
   typedef boost::spirit::classic::uint_parser<unsigned int, 10, 4, 4> uint4_p_t;
 
@@ -67,8 +70,9 @@ namespace TRADEMGEN {
 
   /** Bounded-number-of-integers parser */
   typedef boost::spirit::classic::bounded<uint2_p_t, unsigned int> bounded2_p_t;
+  typedef boost::spirit::classic::bounded<uint1_2_p_t, unsigned int> bounded1_2_p_t;
+  typedef boost::spirit::classic::bounded<uint1_3_p_t, unsigned int> bounded1_3_p_t;
   typedef boost::spirit::classic::bounded<uint4_p_t, unsigned int> bounded4_p_t;
   typedef boost::spirit::classic::bounded<uint1_4_p_t, unsigned int> bounded1_4_p_t;
-    
 }
 #endif // __TRADEMGEN_BAS_BASCOMPARSERTYPES_HPP
