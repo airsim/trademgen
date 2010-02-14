@@ -27,6 +27,15 @@ namespace TRADEMGEN {
   class ObjectNotFoundException : public RootException {
   };
 
+  class ParserException : public RootException {
+  };
+
+  class CodeConversionException : public ParserException {
+  };
+
+  class CodeDuplicationException : public ParserException {
+  };
+
   class SQLDatabaseException : public RootException {
   };
 

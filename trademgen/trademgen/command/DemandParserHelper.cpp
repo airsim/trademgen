@@ -95,18 +95,136 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePreferredDepartureTime::
-    storePreferredDepartureTime (DemandStruct_T& ioDemand)
+    storePosCode::storePosCode (DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
     // //////////////////////////////////////////////////////////////////
-    void storePreferredDepartureTime::operator() (iterator_t iStr,
-                                                  iterator_t iStrEnd) const {
-      _demand._prefDepTime = _demand.getTime();
-        
-      // Reset the number of seconds
-      _demand._itSeconds = 0;
+    void storePosCode::operator() (iterator_t iStr, iterator_t iStrEnd) const {
+      const stdair::AirportCode_T lPosCode (iStr, iStrEnd);
+      _demand._itPosCode = lPosCode;
+      //std::cout << "Pos code: " << lPosCode << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storePosProbMass::storePosProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storePosProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = 
+        _demand._posProbDist.
+        insert (PosProbDist_T::value_type (_demand._itPosCode, iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same POS code ('" << _demand._itPosCode
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //std::cout << "PosProbMass: " << iReal << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeChannelCode::storeChannelCode (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeChannelCode::operator() (iterator_t iStr,
+                                       iterator_t iStrEnd) const {
+      const std::string lChannelCodeStr (iStr, iStrEnd);
+      const ChannelCode lChannelCode (lChannelCodeStr);
+      _demand._itChannelCode = lChannelCode.getCode();
+      //std::cout << "Channel code: " << lChannelCode << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeChannelProbMass::storeChannelProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeChannelProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = 
+        _demand._channelProbDist.
+        insert (ChannelProbDist_T::value_type (_demand._itChannelCode,
+                                               iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same channel type code ('"
+                          << ChannelCode (_demand._itChannelCode)
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //std::cout << "ChannelProbMass: " << iReal << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeTripCode::storeTripCode (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeTripCode::operator() (iterator_t iStr,
+                                       iterator_t iStrEnd) const {
+      const std::string lTripCodeStr (iStr, iStrEnd);
+      const TripCode lTripCode (lTripCodeStr);
+      _demand._itTripCode = lTripCode.getCode();
+      //std::cout << "Trip code: " << lTripCode << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeTripProbMass::storeTripProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeTripProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = 
+        _demand._tripProbDist.
+        insert (TripProbDist_T::value_type (_demand._itTripCode,
+                                               iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same trip type code ('"
+                          << TripCode (_demand._itTripCode)
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //std::cout << "TripProbMass: " << iReal << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeStayCode::storeStayCode (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeStayCode::operator() (unsigned int iInteger) const {
+      const stdair::DayDuration_T lStayDuration (iInteger);
+      _demand._itStayDuration = lStayDuration;
+      //std::cout << "Stay code: " << lStayDuration << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeStayProbMass::storeStayProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeStayProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = 
+        _demand._stayProbDist.
+        insert (StayProbDist_T::value_type (_demand._itStayDuration,
+                                            iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same stay duration ('" << _demand._itStayDuration
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //std::cout << "StayProbMass: " << iReal << std::endl;
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -136,10 +254,45 @@ namespace TRADEMGEN {
         STDAIR_LOG_ERROR ("The same Frequent Flyer code ('"
                           << FFCode (_demand._itFFCode)
                           << "') has probably been given twice");
-        // TODO: throw an exception
+        throw CodeDuplicationException();
       }
       
       //std::cout << "FfProbMass: " << iReal << std::endl;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storePrefDepTime::storePrefDepTime (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storePrefDepTime::operator() (iterator_t iStr,
+                                       iterator_t iStrEnd) const {
+      _demand._itPrefDepTime = _demand.getTime();
+        
+      // Reset the number of minutes and seconds
+      _demand._itMinutes = 0;
+      _demand._itSeconds = 0;
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storePrefDepTimeProbMass::storePrefDepTimeProbMass (DemandStruct_T& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storePrefDepTimeProbMass::operator() (double iReal) const {
+      const bool hasInsertBeenSuccessfull = _demand._prefDepTimeProbDist.
+        insert (PrefDepTimeProbDist_T::value_type (_demand._itPrefDepTime,
+                                                   iReal)).second;
+      if (hasInsertBeenSuccessfull == false) {
+        STDAIR_LOG_ERROR ("The same preferred departure time ('"
+                          << _demand._itPrefDepTime
+                          << "') has probably been given twice");
+        throw CodeDuplicationException();
+      }
+      
+      //std::cout << "PrefDepTimeProbMass: " << iReal << std::endl;
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -171,6 +324,9 @@ namespace TRADEMGEN {
     /** 2-digit-integer parser */
     uint2_p_t uint2_p;
     
+    /** Up-to-2-digit-integer parser */
+    uint1_2_p_t uint1_2_p;
+
     /** 4-digit-integer parser */
     uint4_p_t uint4_p;
     
@@ -247,14 +403,19 @@ namespace TRADEMGEN {
        SIN:0.7, BKK:0.2, row:0.1; DF:0.1, DN:0.3, IF:0.4, IN:0.2;
        RO:0.6, RI:0.2, OW:0.2; 0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
        P:0.01, G:0.05, S:0.15, M:0.3, N:0.49;
-       6:0, 7:0.1, 9:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1;
+       06:0, 07:0.1, 09:0.3, 17:0.4, 19:0.8, 20:0.95, 22:1
        100:0, 500:0.8, 2000:1; 15:0, 60:1; 330:0, 40:0.2, 20:0.6, 1:1;
       */
       
       demand =
         pref_dep_date >> ';' >> origin >> ';' >> destination  >> ';' >> cabin
         >> ';' >> demand_params
+        >> ';' >> pos_dist
+        >> ';' >> channel_dist
+        >> ';' >> trip_dist
+        >> ';' >> stay_dist
         >> ';' >> ff_dist
+        >> ';' >> pref_dep_time_dist
         >> demand_end[doEndDemand(self._bomRoot, self._demand)]
         ;
 
@@ -294,17 +455,74 @@ namespace TRADEMGEN {
         >> (boost::spirit::classic::ureal_p)[storeDemandStdDev(self._demand)]
         ;
       
-      pref_dep_time =
-        time[storePreferredDepartureTime(self._demand)]
+      pos_dist =
+        pos_pair >> *( ',' >> pos_pair )
         ;
-	 
-      time =
-        boost::spirit::classic::lexeme_d[
-       (hours_p)[boost::spirit::classic::assign_a(self._demand._itHours)]
-       >> ':'
-       >> (minutes_p)[boost::spirit::classic::assign_a(self._demand._itMinutes)]
-       >> !(':' >> (seconds_p)[boost::spirit::classic::assign_a(self._demand._itSeconds)])
-       ]
+
+      pos_pair =
+        pos_code[storePosCode(self._demand)]
+        >> ':' >> pos_share
+        ;
+
+      pos_code =
+        airport_p
+        | boost::spirit::classic::chseq_p("row")
+        ;
+
+      pos_share =
+        (boost::spirit::classic::ureal_p)[storePosProbMass(self._demand)]
+        ;
+
+      channel_dist =
+        channel_pair >> *( ',' >> channel_pair )
+        ;
+
+      channel_pair =
+        channel_code[storeChannelCode(self._demand)]
+        >> ':' >> channel_share
+        ;
+
+      channel_code =
+        boost::spirit::classic::chseq_p("DF")
+        | boost::spirit::classic::chseq_p("DN")
+        | boost::spirit::classic::chseq_p("IF")
+        | boost::spirit::classic::chseq_p("IN")
+        ;
+
+      channel_share =
+        (boost::spirit::classic::ureal_p)[storeChannelProbMass(self._demand)]
+        ;
+      
+      trip_dist =
+        trip_pair >> *( ',' >> trip_pair )
+        ;
+
+      trip_pair =
+        trip_code[storeTripCode(self._demand)]
+        >> ':' >> trip_share
+        ;
+
+      trip_code =
+        boost::spirit::classic::chseq_p("RO")
+        | boost::spirit::classic::chseq_p("RI")
+        | boost::spirit::classic::chseq_p("OW")
+        ;
+
+      trip_share =
+        (boost::spirit::classic::ureal_p)[storeTripProbMass(self._demand)]
+        ;
+      
+      stay_dist =
+        stay_pair >> *( ',' >> stay_pair )
+        ;
+
+      stay_pair =
+        (int1_p)[storeStayCode(self._demand)]
+        >> ':' >> stay_share
+        ;
+
+      stay_share =
+        (boost::spirit::classic::ureal_p)[storeStayProbMass(self._demand)]
         ;
 
       ff_dist =
@@ -328,6 +546,27 @@ namespace TRADEMGEN {
         (boost::spirit::classic::ureal_p)[storeFFProbMass(self._demand)]
         ;
       
+      pref_dep_time_dist =
+        pref_dep_time_pair >> *( ',' >> pref_dep_time_pair )
+        ;
+
+      pref_dep_time_pair =
+        (time)[storePrefDepTime(self._demand)]
+        >> ':' >> pref_dep_time_share
+        ;
+
+      pref_dep_time_share =
+        (boost::spirit::classic::ureal_p)[storePrefDepTimeProbMass(self._demand)]
+        ;
+
+      time =
+        boost::spirit::classic::lexeme_d[
+       (hours_p)[boost::spirit::classic::assign_a(self._demand._itHours)]
+       >> !('.' >> (minutes_p)[boost::spirit::classic::assign_a(self._demand._itMinutes)])
+       >> !('.' >> (seconds_p)[boost::spirit::classic::assign_a(self._demand._itSeconds)])
+       ]
+        ;
+
       // BOOST_SPIRIT_DEBUG_NODE (DemandParser);
       BOOST_SPIRIT_DEBUG_NODE (demand_list);
       BOOST_SPIRIT_DEBUG_NODE (demand);
@@ -338,12 +577,29 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (destination);
       BOOST_SPIRIT_DEBUG_NODE (cabin);
       BOOST_SPIRIT_DEBUG_NODE (demand_params);
-      BOOST_SPIRIT_DEBUG_NODE (pref_dep_time);
-      BOOST_SPIRIT_DEBUG_NODE (time);
+      BOOST_SPIRIT_DEBUG_NODE (pos_dist);
+      BOOST_SPIRIT_DEBUG_NODE (pos_pair);
+      BOOST_SPIRIT_DEBUG_NODE (pos_code);
+      BOOST_SPIRIT_DEBUG_NODE (pos_share);
+      BOOST_SPIRIT_DEBUG_NODE (channel_dist);
+      BOOST_SPIRIT_DEBUG_NODE (channel_pair);
+      BOOST_SPIRIT_DEBUG_NODE (channel_code);
+      BOOST_SPIRIT_DEBUG_NODE (channel_share);
+      BOOST_SPIRIT_DEBUG_NODE (trip_dist);
+      BOOST_SPIRIT_DEBUG_NODE (trip_pair);
+      BOOST_SPIRIT_DEBUG_NODE (trip_code);
+      BOOST_SPIRIT_DEBUG_NODE (trip_share);
+      BOOST_SPIRIT_DEBUG_NODE (stay_dist);
+      BOOST_SPIRIT_DEBUG_NODE (stay_pair);
+      BOOST_SPIRIT_DEBUG_NODE (stay_share);
       BOOST_SPIRIT_DEBUG_NODE (ff_dist);
       BOOST_SPIRIT_DEBUG_NODE (ff_pair);
       BOOST_SPIRIT_DEBUG_NODE (ff_code);
       BOOST_SPIRIT_DEBUG_NODE (ff_share);
+      BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_dist);
+      BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_pair);
+      BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_share);
+      BOOST_SPIRIT_DEBUG_NODE (time);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -413,12 +669,12 @@ namespace TRADEMGEN {
                        << "been fully read. Stop point: " << info.stop);
         
     } else {
-      // TODO: decide whether to throw an exception
       STDAIR_LOG_ERROR ("Parsing of demand input file: " << _filename
                        << " failed: read " << info.length
                        << " characters. The input file has "
                        << hasBeenFullyReadStr
                        << "been fully read. Stop point: " << info.stop);
+      throw ParserException();
     }
 
     return oResult;

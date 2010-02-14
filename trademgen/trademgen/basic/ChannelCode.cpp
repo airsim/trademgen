@@ -8,52 +8,60 @@
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
-#include <trademgen/basic/FFCode.hpp>
+#include <trademgen/basic/ChannelCode.hpp>
 
 namespace TRADEMGEN {
-
-  // //////////////////////////////////////////////////////////////////////
-  const std::string FFCode::_labels[LAST_VALUE] =
-        { "Platinum", "Gold", "Silver", "Member", "None" };
-
-  const char FFCode::_codeLabels[LAST_VALUE] = { 'P', 'G', 'S', 'M', 'N' };
-  
   
   // //////////////////////////////////////////////////////////////////////
-  FFCode::FFCode (const EN_FFCode& iFFCode) : _code (iFFCode) {
+  const std::string ChannelCode::_labels[LAST_VALUE] =
+    { "Direct Off-line","Direct On-line","Indirect Off-line","Indirect On-line"};
+
+  const std::string ChannelCode::_codeLabels[LAST_VALUE] =
+    { "DF", "DN", "IF", "IN" };
+
+  
+  // //////////////////////////////////////////////////////////////////////
+  ChannelCode::ChannelCode (const EN_ChannelCode& iChannelCode)
+    : _code (iChannelCode) {
   }
-  
+
   // //////////////////////////////////////////////////////////////////////
-  FFCode::FFCode (const char iChar) {
-    switch (iChar) {
-    case 'P': _code = PLATINUM; break;
-    case 'G': _code = GOLD; break;
-    case 'S': _code = SILVER; break;
-    case 'M': _code = MEMBER; break;
-    case 'N': _code = NONE; break;
-    default: _code = LAST_VALUE; break;
-    }
+  ChannelCode::ChannelCode (const std::string& iCode) {
+    _code = LAST_VALUE;
     
+    if (iCode == "DF") {
+      _code = DIRECT_OFFLINE;
+
+    } else if (iCode == "DN") {
+      _code = DIRECT_ONLINE;
+
+    } else if (iCode == "IF") {
+      _code = INDIRECT_OFFLINE;
+
+    } else if (iCode == "IN") {
+      _code = INDIRECT_ONLINE;
+    }
+
     if (_code == LAST_VALUE) {
       const std::string& lLabels = describeLabels();
-      STDAIR_LOG_ERROR ("The channel code '" << iChar
+      STDAIR_LOG_ERROR ("The channel code '" << iCode
                         << "' is not known. Known channel codes: " << lLabels);
       throw CodeConversionException();
     }
   }
   
   // //////////////////////////////////////////////////////////////////////
-  const std::string& FFCode::getLabel (const EN_FFCode& iCode) {
+  const std::string& ChannelCode::getLabel (const EN_ChannelCode& iCode) {
     return _labels[iCode];
   }
   
   // //////////////////////////////////////////////////////////////////////
-  char FFCode::getCodeLabel (const EN_FFCode& iCode) {
+  const std::string& ChannelCode::getCodeLabel (const EN_ChannelCode& iCode) {
     return _codeLabels[iCode];
   }
 
   // //////////////////////////////////////////////////////////////////////
-  std::string FFCode::describeLabels() {
+  std::string ChannelCode::describeLabels() {
     std::ostringstream ostr;
     for (unsigned short idx = 0; idx != LAST_VALUE; ++idx) {
       if (idx != 0) {
@@ -65,12 +73,12 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  FFCode::EN_FFCode FFCode::getCode() const {
+  ChannelCode::EN_ChannelCode ChannelCode::getCode() const {
     return _code;
   }
   
   // //////////////////////////////////////////////////////////////////////
-  const std::string FFCode::describe() const {
+  const std::string ChannelCode::describe() const {
     std::ostringstream ostr;
     ostr << _labels[_code];
     return ostr.str();

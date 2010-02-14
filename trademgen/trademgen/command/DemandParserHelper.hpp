@@ -58,14 +58,6 @@ namespace TRADEMGEN {
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
 
-    /** Store the preferred departure time. */
-    struct storePreferredDepartureTime : public ParserSemanticAction {
-      /** Actor Constructor. */
-      storePreferredDepartureTime (DemandStruct_T&);
-      /** Actor Function (functor). */
-      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
-    };
-
     /** Store the cabin code. */
     struct storeCabin : public ParserSemanticAction {
       /** Actor Constructor. */
@@ -90,6 +82,70 @@ namespace TRADEMGEN {
       void operator() (double iReal) const;
     };
   
+    /** Store the pos type code. */
+    struct storePosCode : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storePosCode (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
+    };
+  
+    /** Store the pos type probability mass. */
+    struct storePosProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storePosProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the channel type code. */
+    struct storeChannelCode : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeChannelCode (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
+    };
+  
+    /** Store the channel type probability mass. */
+    struct storeChannelProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeChannelProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the trip type code. */
+    struct storeTripCode : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeTripCode (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
+    };
+  
+    /** Store the trip type probability mass. */
+    struct storeTripProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeTripProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the stay type code. */
+    struct storeStayCode : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeStayCode (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (unsigned int iInteger) const;
+    };
+  
+    /** Store the stay type probability mass. */
+    struct storeStayProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeStayProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
     /** Store the ff code. */
     struct storeFFCode : public ParserSemanticAction {
       /** Actor Constructor. */
@@ -102,6 +158,24 @@ namespace TRADEMGEN {
     struct storeFFProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
       storeFFProbMass (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the parameters for the preferred departure time
+        continuous probability distribution. */
+    struct storePrefDepTime : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storePrefDepTime (DemandStruct_T&);
+      /** Actor Function (functor). */
+      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
+    };    
+    
+    /** Store the parameters for the preferred departure time continuous
+        probability distribution. */
+    struct storePrefDepTimeProbMass : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storePrefDepTimeProbMass (DemandStruct_T&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -199,7 +273,12 @@ namespace TRADEMGEN {
         // Instantiation of rules
         boost::spirit::classic::rule<ScannerT> demand_list, demand, demand_end,
           pref_dep_date, date, origin, destination, cabin, demand_params,
-          pref_dep_time, time, ff_dist, ff_pair, ff_code, ff_share;
+          pos_dist, pos_pair, pos_code, pos_share,
+          channel_dist, channel_pair, channel_code, channel_share,
+          trip_dist, trip_pair, trip_code, trip_share,
+          stay_dist, stay_pair, stay_share,
+          ff_dist, ff_pair, ff_code, ff_share,
+          pref_dep_time_dist, pref_dep_time_pair, pref_dep_time_share, time;
 
         /** Entry point of the parser. */
         boost::spirit::classic::rule<ScannerT> const& start() const;

@@ -47,6 +47,9 @@ namespace TRADEMGEN {
   /** 2-digit-integer parser */
   typedef boost::spirit::classic::uint_parser<unsigned int, 10, 2, 2> uint2_p_t;
     
+  /** Up-to-2-digit-integer parser */
+  typedef boost::spirit::classic::uint_parser<unsigned int, 10, 1, 2> uint1_2_p_t;    
+
   /** 4-digit-integer parser */
   typedef boost::spirit::classic::uint_parser<unsigned int, 10, 4, 4> uint4_p_t;
 

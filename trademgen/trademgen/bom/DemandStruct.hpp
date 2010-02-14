@@ -10,7 +10,12 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/bom/StructAbstract.hpp>
 // TraDemGen
+#include <trademgen/basic/StayDurationTypes.hpp>
+#include <trademgen/basic/PosCodeTypes.hpp>
+#include <trademgen/basic/ChannelCodeTypes.hpp>
+#include <trademgen/basic/TripCodeTypes.hpp>
 #include <trademgen/basic/FFCodeTypes.hpp>
+#include <trademgen/basic/PrefDepTimeTypes.hpp>
 
 namespace TRADEMGEN {
 
@@ -31,13 +36,17 @@ namespace TRADEMGEN {
 
     // Attributes
     stdair::Date_T _prefDepDate;
-    stdair::Duration_T _prefDepTime;
     stdair::AirportCode_T _origin;
     stdair::AirportCode_T _destination;
     std::string _cabinCode;
-    FFProbDist_T _ffProbDist;
     float _demandMean;
     float _demandStdDev;
+    PosProbDist_T _posProbDist;
+    ChannelProbDist_T _channelProbDist;
+    TripProbDist_T _tripProbDist;
+    StayProbDist_T _stayProbDist;
+    FFProbDist_T _ffProbDist;
+    PrefDepTimeProbDist_T _prefDepTimeProbDist;
     
     /** Staging Date. */
     unsigned int _itYear;
@@ -49,8 +58,23 @@ namespace TRADEMGEN {
     long _itMinutes;
     long _itSeconds;
 
+    /** Staging Point-Of-Sale (POS) code. */
+    stdair::AirportCode_T _itPosCode;
+
+    /** Staging channel type code. */
+    ChannelCode::EN_ChannelCode _itChannelCode;
+
+    /** Staging trip type code. */
+    TripCode::EN_TripCode _itTripCode;
+
+    /** Staging stay duration. */
+    stdair::DayDuration_T _itStayDuration;
+    
     /** Staging Frequent Flyer code. */
     FFCode::EN_FFCode _itFFCode;
+
+    /** Staging preferred departure time. */
+    stdair::Duration_T _itPrefDepTime;
   };
 
 }

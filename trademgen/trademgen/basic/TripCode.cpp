@@ -8,52 +8,57 @@
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
-#include <trademgen/basic/FFCode.hpp>
+#include <trademgen/basic/TripCode.hpp>
 
 namespace TRADEMGEN {
-
-  // //////////////////////////////////////////////////////////////////////
-  const std::string FFCode::_labels[LAST_VALUE] =
-        { "Platinum", "Gold", "Silver", "Member", "None" };
-
-  const char FFCode::_codeLabels[LAST_VALUE] = { 'P', 'G', 'S', 'M', 'N' };
-  
   
   // //////////////////////////////////////////////////////////////////////
-  FFCode::FFCode (const EN_FFCode& iFFCode) : _code (iFFCode) {
+  const std::string TripCode::_labels[LAST_VALUE] =
+    { "Outbound of Roundtrip", "Inbound of Roundtrip", "One-way"};
+
+  const std::string TripCode::_codeLabels[LAST_VALUE] = { "RO", "RI", "OW" };
+
+
+  // //////////////////////////////////////////////////////////////////////
+  TripCode::TripCode (const EN_TripCode& iTripCode)
+    : _code (iTripCode) {
   }
-  
+
   // //////////////////////////////////////////////////////////////////////
-  FFCode::FFCode (const char iChar) {
-    switch (iChar) {
-    case 'P': _code = PLATINUM; break;
-    case 'G': _code = GOLD; break;
-    case 'S': _code = SILVER; break;
-    case 'M': _code = MEMBER; break;
-    case 'N': _code = NONE; break;
-    default: _code = LAST_VALUE; break;
-    }
+  TripCode::TripCode (const std::string& iCode) {
+    _code = LAST_VALUE;
     
+    if (iCode == "RO") {
+      _code = OUTBOUND;
+
+    } else if (iCode == "RI") {
+      _code = INBOUND;
+
+    } else if (iCode == "OW") {
+      _code = ONEWAY;
+
+    }
+
     if (_code == LAST_VALUE) {
       const std::string& lLabels = describeLabels();
-      STDAIR_LOG_ERROR ("The channel code '" << iChar
-                        << "' is not known. Known channel codes: " << lLabels);
+      STDAIR_LOG_ERROR ("The trip code '" << iCode
+                        << "' is not known. Known trip codes: " << lLabels);
       throw CodeConversionException();
     }
   }
   
   // //////////////////////////////////////////////////////////////////////
-  const std::string& FFCode::getLabel (const EN_FFCode& iCode) {
+  const std::string& TripCode::getLabel (const EN_TripCode& iCode) {
     return _labels[iCode];
   }
   
   // //////////////////////////////////////////////////////////////////////
-  char FFCode::getCodeLabel (const EN_FFCode& iCode) {
+  const std::string& TripCode::getCodeLabel (const EN_TripCode& iCode) {
     return _codeLabels[iCode];
   }
 
   // //////////////////////////////////////////////////////////////////////
-  std::string FFCode::describeLabels() {
+  std::string TripCode::describeLabels() {
     std::ostringstream ostr;
     for (unsigned short idx = 0; idx != LAST_VALUE; ++idx) {
       if (idx != 0) {
@@ -65,12 +70,12 @@ namespace TRADEMGEN {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  FFCode::EN_FFCode FFCode::getCode() const {
+  TripCode::EN_TripCode TripCode::getCode() const {
     return _code;
   }
   
   // //////////////////////////////////////////////////////////////////////
-  const std::string FFCode::describe() const {
+  const std::string TripCode::describe() const {
     std::ostringstream ostr;
     ostr << _labels[_code];
     return ostr.str();

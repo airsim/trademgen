@@ -148,7 +148,7 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   stdair::BookingRequestPtr_T DemandStream::generateNextRequest () {
     // Forward the business the the corresponding static function.
-    generateNextRequest (*this);
+    return generateNextRequest (*this);
   }
 
 }
