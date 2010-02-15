@@ -229,87 +229,20 @@ int main (int argc, char* argv[]) {
     // ////////////////////////////////////
 
     /** Origin. */
-    const stdair::AirportCode_T lLHR ("LHR");
+    const stdair::AirportCode_T lSIN ("SIN");
     /** Destination. */
-    const stdair::AirportCode_T lJFK ("JFK");
+    const stdair::AirportCode_T lBKK ("BKK");
+    const stdair::AirportCode_T lHND ("HND");
     /** Preferred departure date. */
-    const stdair::Date_T lPreferredDepartureDate (2010, 1, 17);
+    const stdair::Date_T lPreferredDepartureDate (2010, 2, 8);
     /** Passenger type. */
     const stdair::PassengerType lLeisurePax ('L');
-    const stdair::PassengerType lBusinessPax ('B');
-    /** Demand distribution parameters. */
-    const stdair::NbOfRequests_T lDemandMean1 (10.0);
-    const stdair::StandardDeviationValue_T lDemandStdDev1 (2.0);
-    const stdair::NbOfRequests_T lDemandMean2 (12.0);
-    const stdair::StandardDeviationValue_T lDemandStdDev2 (1.0);
     
     // Demand characteristics
-    const stdair::DemandStreamKey_T key1 (lLHR, lJFK, lPreferredDepartureDate,
+    const stdair::DemandStreamKey_T key1 (lSIN, lBKK, lPreferredDepartureDate,
                                           lLeisurePax);
-    const stdair::DemandStreamKey_T key2 (lLHR, lJFK, lPreferredDepartureDate,
-                                          lBusinessPax);
-    
-    stdair::DemandCharacteristics demandCharacteristics1 (key1);
-    stdair::DemandCharacteristics demandCharacteristics2 (key2);
-    
-    // Demand distribution
-    stdair::DemandDistribution demandDistribution1(lDemandMean1, lDemandStdDev1);
-    stdair::DemandDistribution demandDistribution2(lDemandMean2, lDemandStdDev2);
-
-    // Arrival pattern
-    stdair::ArrivalPatternCumulativeDistribution_T arrivalPatternCumulativeDistribution1;
-    arrivalPatternCumulativeDistribution1.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (-365.0,
-                                                                          0) );
-    arrivalPatternCumulativeDistribution1.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (-67.0,
-                                                                          0.2) );
-    arrivalPatternCumulativeDistribution1.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (-17.0,
-                                                                          0.5) );
-    arrivalPatternCumulativeDistribution1.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (0.0,
-                                                                          1.0) );
-
-    stdair::ArrivalPatternCumulativeDistribution_T arrivalPatternCumulativeDistribution2;
-    arrivalPatternCumulativeDistribution2.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (-365.0,
-                                                                          0) );
-    arrivalPatternCumulativeDistribution2.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (-300.0,
-                                                                          0.5) );
-    arrivalPatternCumulativeDistribution2.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (-200.0,
-                                                                          0.9) );
-    arrivalPatternCumulativeDistribution2.
-      insert (stdair::ArrivalPatternCumulativeDistribution_T::value_type (0.0,
-                                                                          1.0) );
-
-    // When creating the ContinuousAttribute object, the mapping is
-    // inverted, i.e., the inverse cumulative distribution can be
-    // derived from the cumulative distribution
-    const stdair::ContinuousFloatDuration_T arrivalPattern1 (arrivalPatternCumulativeDistribution1);
-    demandCharacteristics1.setArrivalPattern (arrivalPattern1);
-    const stdair::ContinuousFloatDuration_T arrivalPattern2 (arrivalPatternCumulativeDistribution2);
-    demandCharacteristics2.setArrivalPattern (arrivalPattern2);
-  
-    // Display
-    STDAIR_LOG_DEBUG ("Demand 1: " << std::endl
-                      << demandCharacteristics1.display()
-                      << demandDistribution1.display());
-
-    STDAIR_LOG_DEBUG ("Demand 2: " << std::endl
-                      << demandCharacteristics2.display()
-                      << demandDistribution2.display());
-
-    // Seeds
-    stdair::RandomSeed_T seed = 2;
-  
-    // Initialise the demand stream
-    trademgenService.addDemandStream (key1, demandCharacteristics1,
-                                      demandDistribution1, seed, seed, seed);
-    trademgenService.addDemandStream (key2, demandCharacteristics2,
-                                      demandDistribution2, seed, seed, seed);
+    const stdair::DemandStreamKey_T key2 (lSIN, lHND, lPreferredDepartureDate,
+                                          lLeisurePax);
   
     // Get the total number of requests to be generated
     stdair::NbOfRequests_T totalNumberOfRequestsToBeGenerated1 =
