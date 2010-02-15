@@ -8,6 +8,7 @@
 #include <string>
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
+#include <stdair/bom/DemandStreamTypes.hpp>
 #include <stdair/command/CmdAbstract.hpp>
 
 // Forward declarations.
@@ -24,8 +25,8 @@ namespace TRADEMGEN {
         simulated booking request in a simulator.
         @param const stdair::Filename_T& The file-name of the CSV-formatted
                demand input file.
-        @param stdair::BomRoot& Root of the BOM tree.
-        @param const stdair::Date_T& */
+        @param const stdair::Date_T&
+        @param stdair::BomRoot& Root of the BOM tree. */
     static void generateDemand (const stdair::Filename_T&, stdair::BomRoot&);
   };
 }

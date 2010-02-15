@@ -6,11 +6,10 @@
 #include <iosfwd>
 #include <ostream>
 #include <sstream>
+#include <cmath>
 // Boost
 #include <boost/math/distributions/normal.hpp>
-// Math
-#include <math.h>
-// STDAIR
+// StdAir
 #include <stdair/basic/BasConst_General.hpp>
 #include <stdair/basic/DemandCharacteristics.hpp>
 #include <stdair/basic/DemandDistribution.hpp>
@@ -18,9 +17,8 @@
 #include <stdair/basic/RandomGenerationContext.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
-// TRADEMGEN
+// TraDemGen
 #include <trademgen/bom/DemandStream.hpp>
-
 
 namespace TRADEMGEN {
 
@@ -85,7 +83,7 @@ namespace TRADEMGEN {
     const stdair::Date_T& lPreferredDepartureDate =
       ioDemandStream.getPreferredDepartureDate ();
     // Passenger type.
-    const stdair::PassengerType_T& lPassengerType = ioDemandStream.getPaxType();
+    const stdair::PassengerType& lPassengerType = ioDemandStream.getPaxType();
     
     // Request datetime, determined from departure date and arrival pattern
     // Sequential generation

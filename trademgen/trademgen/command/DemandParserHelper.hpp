@@ -7,6 +7,7 @@
 // STL
 #include <string>
 // StdAir
+#include <stdair/bom/DemandStreamTypes.hpp>
 #include <stdair/command/CmdAbstract.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
@@ -57,12 +58,12 @@ namespace TRADEMGEN {
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
 
-    /** Store the cabin code. */
-    struct storeCabin : public ParserSemanticAction {
+    /** Store the passenger_type code. */
+    struct storePassengerType : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeCabin (DemandStruct_T&);
+      storePassengerType (DemandStruct_T&);
       /** Actor Function (functor). */
-      void operator() (char iChar) const;
+      void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
 
     /** Store the demand mean value. */
@@ -248,12 +249,12 @@ namespace TRADEMGEN {
     //
     /////////////////////////////////////////////////////////////////////////
     /**
-       PrefDepDate; Origin; Destination; Cabin; Mean; StdDev;
+       PrefDepDate; Origin; Destination; PassengerType; Mean; StdDev;
        PosDist; ChannelDist; TripTypeDist; StayDurationDist;
        FrequentFlyerDist; PrefDepTimeDist; WTPDist;
        (PrefArrivalDate; PrefArrivalTime;) TimeValueDist; 
        ValueOfTimeDist; ArrivalPatternDist;
-       2010-02-08; SIN; BKK; M; 10.0; 1.0;
+       2010-02-08; SIN; BKK; L; 10.0; 1.0;
        SIN:0.7, BKK:0.2, row:0.1; DF:0.1, DN:0.3, IF:0.4, IN:0.2;
        RO:0.6, RI:0.2, OW:0.2;
        0:0.1, 1:0.1, 2:0.15, 3:0.15, 4:0.15, 5:0.35;
@@ -267,7 +268,7 @@ namespace TRADEMGEN {
         Prefered departure date (yyyy-mm-dd)
         Origin (3-char airport code)
         Destination (3-char airport code)
-        Cabin (1-char cabin code)
+        PassengerType (1-char, e.g., 'L' for Leisure, 'B' for Business)
       Observable:
         Mean
         StdDev
@@ -292,12 +293,13 @@ namespace TRADEMGEN {
     The meaning of probability is P(random variable <= value) = probability.
 
     Grammar:
-      Demand ::= PrefDepDate ';' Origin ';' Destination ';' Cabin
+      Demand ::= PrefDepDate ';' Origin ';' Destination ';' PassengerType
          ';' DemandParams ';' PosDist ';' ChannelDist ';'  TripDist
          ';' StayDist ';' FfDist ';'  PrefDepTimeDist
          ';' WtpDist ';' TimeValueDist ';'  DtdDist
          EndOfDemand
       PrefDepDate ::= date
+      PassengerType ::= 'L' | 'B' | 'F'
       DemandParams ::= DemandMean ';' DemandStdDev
       PosDist ::= PosPair (',' PosPair)*
       PosPair ::= PosCode ':' PosShare
@@ -333,7 +335,7 @@ namespace TRADEMGEN {
       EndOfDemand ::= ';'
      */
 
-    /** Grammar for the Flight-Period parser. */
+    /** Grammar for the demand parser. */
     struct DemandParser : 
       public boost::spirit::classic::grammar<DemandParser> {
 
@@ -345,7 +347,8 @@ namespace TRADEMGEN {
         
         // Instantiation of rules
         boost::spirit::classic::rule<ScannerT> demand_list, demand, demand_end,
-          pref_dep_date, date, origin, destination, cabin, demand_params,
+          pref_dep_date, date, origin, destination, passenger_type,
+          demand_params,
           pos_dist, pos_pair, pos_code, pos_share,
           channel_dist, channel_pair, channel_code, channel_share,
           trip_dist, trip_pair, trip_code, trip_share,
@@ -402,10 +405,10 @@ namespace TRADEMGEN {
     /** End iterator for the parser. */
     iterator_t _endIterator;
       
-    /** stdair::BomRoot. */
+    /** Root of the BOM tree. */
     stdair::BomRoot& _bomRoot;
 
-    /** Flight-Period Structure. */
+    /** Demand Structure. */
     DemandStruct_T _demand;
   };
     

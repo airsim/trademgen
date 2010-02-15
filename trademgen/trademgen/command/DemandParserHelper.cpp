@@ -8,7 +8,7 @@
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/command/DemandParserHelper.hpp>
-//#include <trademgen/command/DemandGenerator.hpp>
+#include <trademgen/command/DemandGenerator.hpp>
 
 namespace TRADEMGEN {
 
@@ -62,14 +62,17 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeCabin::storeCabin (DemandStruct_T& ioDemand)
+    storePassengerType::storePassengerType (DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
     // //////////////////////////////////////////////////////////////////
-    void storeCabin::operator() (char iChar) const { 
-      _demand._cabinCode = iChar; 
-      //STDAIR_LOG_DEBUG ("Cabin code: " << iChar);
+    void storePassengerType::operator() (iterator_t iStr,
+                                         iterator_t iStrEnd) const {
+      const std::string oneChar (iStr, iStrEnd);
+      const stdair::PassengerType lPaxType (oneChar.at(0));
+      _demand._paxType = lPaxType; 
+      //STDAIR_LOG_DEBUG ("Passenger type: " << lPaxType);
     }
     
     // //////////////////////////////////////////////////////////////////
@@ -407,7 +410,8 @@ namespace TRADEMGEN {
       STDAIR_LOG_DEBUG ("Demand: " << _demand.describe());
 
       // Create the Demand BOM objects
-      //DemandGenerator::generateDemandCharacteristicObjects (_bomRoot, _demand);
+      DemandGenerator::createDemandCharacteristics (_bomRoot, _demand);
+                                 
 
       // Clean the lists
       _demand._posProbDist.clear();
@@ -475,8 +479,8 @@ namespace TRADEMGEN {
     /** Second Parser: limit_d(0u, 59u)[uint2_p] */
     bounded2_p_t seconds_p (uint2_p.derived(), 0u, 59u);
 
-    /** Cabin Code Parser: chset_p("A-Z") */
-    chset_t cabin_code_p ("A-Z");
+    /** Passenger type parser: chset_p("A-Z") */
+    chset_t passenger_type_code_p ("A-Z");
 
     /** Family code parser */
     int1_p_t family_code_p;
@@ -509,7 +513,9 @@ namespace TRADEMGEN {
         ;
 
       demand =
-        pref_dep_date >> ';' >> origin >> ';' >> destination  >> ';' >> cabin
+        pref_dep_date
+        >> ';' >> origin >> ';' >> destination
+        >> ';' >> passenger_type[storePassengerType(self._demand)]
         >> ';' >> demand_params
         >> ';' >> pos_dist
         >> ';' >> channel_dist
@@ -549,8 +555,10 @@ namespace TRADEMGEN {
         (airport_p)[storeDestination(self._demand)]
         ;
 
-      cabin =
-        (cabin_code_p)[storeCabin(self._demand)]
+      passenger_type =
+        boost::spirit::classic::ch_p('L')
+        | boost::spirit::classic::ch_p('B')
+        | boost::spirit::classic::ch_p('F')
         ;
 
       demand_params =
@@ -718,7 +726,7 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (date);
       BOOST_SPIRIT_DEBUG_NODE (origin);
       BOOST_SPIRIT_DEBUG_NODE (destination);
-      BOOST_SPIRIT_DEBUG_NODE (cabin);
+      BOOST_SPIRIT_DEBUG_NODE (passenger_type);
       BOOST_SPIRIT_DEBUG_NODE (demand_params);
       BOOST_SPIRIT_DEBUG_NODE (pos_dist);
       BOOST_SPIRIT_DEBUG_NODE (pos_pair);
@@ -771,8 +779,9 @@ namespace TRADEMGEN {
   /////////////////////////////////////////////////////////////////////////
 
   // //////////////////////////////////////////////////////////////////////
-  DemandFileParser::DemandFileParser (stdair::BomRoot& ioBomRoot,
-                                      const std::string& iFilename)
+  DemandFileParser::
+  DemandFileParser (stdair::BomRoot& ioBomRoot,
+                    const std::string& iFilename)
     : _filename (iFilename), _bomRoot (ioBomRoot) {
     init();
   }

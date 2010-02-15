@@ -15,7 +15,9 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   DemandStruct_T::DemandStruct_T ()
-    : _prefDepDate (stdair::DEFAULT_DATE), _itMinutes (0), _itSeconds (0),
+    : _prefDepDate (stdair::DEFAULT_DATE), _prefArrDate (stdair::DEFAULT_DATE),
+      _paxType (stdair::PassengerType::LEISURE),
+      _itHours (0), _itMinutes (0), _itSeconds (0),
       _itFFCode (FFCode::NONE) {
   }
 
@@ -36,7 +38,7 @@ namespace TRADEMGEN {
     std::ostringstream ostr;
     ostr << _prefDepDate << " -> " << _prefArrDate
          << " " << _origin << "-" << _destination
-         << " " << _cabinCode
+         << " " << _paxType
          << ", N(" << _demandMean << ", " << _demandStdDev << "); ";
 
     unsigned short idx = 0;

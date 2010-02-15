@@ -10,13 +10,13 @@
 // Trademgen
 #include <trademgen/command/DemandParserHelper.hpp>
 #include <trademgen/command/DemandParser.hpp>
-//#include <trademgen/command/DemandGenerator.hpp>
 
 namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
-  void DemandParser::generateDemand (const stdair::Filename_T& iFilename,
-                                     stdair::BomRoot& ioBomRoot) {
+  void DemandParser::
+  generateDemand (const stdair::Filename_T& iFilename,
+                  stdair::BomRoot& ioBomRoot) {
 
     // Initialise the demand file parser.
     DemandFileParser lDemandParser (ioBomRoot, iFilename);
