@@ -44,9 +44,14 @@ namespace TRADEMGEN {
       const stdair::DayDuration_T& lDTD = it->first;
       const DTDProbMass_T& lDTDProbMass = it->second;
 
+      const stdair::FloatDuration_T lZeroDTDFloat = 0.0;
+      stdair::FloatDuration_T lDTDFloat =
+        static_cast<stdair::FloatDuration_T> (lDTD);
+      lDTDFloat = lZeroDTDFloat - lDTD;
+
       arrivalPatternCumulativeDistribution.
         insert (stdair::ArrivalPatternCumulativeDistribution_T::
-                value_type (lDTD, lDTDProbMass));
+                value_type (lDTDFloat, lDTDProbMass));
     }
     
     const stdair::ContinuousFloatDuration_T lArrivalPattern (arrivalPatternCumulativeDistribution);
