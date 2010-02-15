@@ -68,7 +68,7 @@ namespace TRADEMGEN {
     stdair::RandomSeed_T lDemandCharacteristicsSeed = 2;
   
     stdair::DemandStreamList_T& lDemandStreamList =
-      ioBomRoot.getDemandStreamListRef();
+      ioBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
     DemandManager::addDemandStream (lDemandStreamList, lDemandStreamKey,

@@ -226,66 +226,13 @@ int main (int argc, char* argv[]) {
     const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
     TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
 
-    // ////////////////////////////////////
-
-    /** Origin. */
-    const stdair::AirportCode_T lSIN ("SIN");
-    /** Destination. */
-    const stdair::AirportCode_T lBKK ("BKK");
-    const stdair::AirportCode_T lHND ("HND");
-    /** Preferred departure date. */
-    const stdair::Date_T lPreferredDepartureDate (2010, 2, 8);
-    /** Passenger type. */
-    const stdair::PassengerType lLeisurePax ('L');
-    
-    // Demand characteristics
-    const stdair::DemandStreamKey_T key1 (lSIN, lBKK, lPreferredDepartureDate,
-                                          lLeisurePax);
-    const stdair::DemandStreamKey_T key2 (lSIN, lHND, lPreferredDepartureDate,
-                                          lLeisurePax);
-  
-    // Get the total number of requests to be generated
-    stdair::NbOfRequests_T totalNumberOfRequestsToBeGenerated1 =
-      trademgenService.getTotalNumberOfRequestsToBeGenerated (key1);
-    stdair::NbOfRequests_T totalNumberOfRequestsToBeGenerated2 =
-      trademgenService.getTotalNumberOfRequestsToBeGenerated (key2);
-
-    STDAIR_LOG_DEBUG ("Number of requests to be generated (demand 1): "
-                      << totalNumberOfRequestsToBeGenerated1 << std::endl);
-    STDAIR_LOG_DEBUG ("Number of requests to be generated (demand 2): "
-                      << totalNumberOfRequestsToBeGenerated2 << std::endl);
-
     // /////////////////////////////////////////////////////
     // Event queue
     stdair::EventQueue lEventQueue = stdair::EventQueue ();
-  
-    // Initialize by adding one request of each type
-    const bool stillHavingRequestsToBeGenerated1 = 
-      trademgenService.stillHavingRequestsToBeGenerated (key1);
-    if (stillHavingRequestsToBeGenerated1) {
-      stdair::BookingRequestPtr_T lRequest1 =
-        trademgenService.generateNextRequest (key1);
-      assert (lRequest1 != NULL);
-
-      const stdair::DateTime_T& lRequestDateTime=lRequest1->getRequestDateTime();
-      stdair::EventStruct lEventStruct ("Request", lRequestDateTime, key1,
-                                        lRequest1);
-      lEventQueue.addEvent (lEventStruct);
-    }
-  
-    const bool stillHavingRequestsToBeGenerated2 = 
-      trademgenService.stillHavingRequestsToBeGenerated (key2);
-    if (stillHavingRequestsToBeGenerated2) {
-      stdair::BookingRequestPtr_T lRequest2 =
-        trademgenService.generateNextRequest (key2);
-      assert (lRequest2 != NULL);
-      
-      const stdair::DateTime_T& lRequestDateTime=lRequest2->getRequestDateTime();
-      stdair::EventStruct lEventStruct ("Request", lRequestDateTime, key2,
-                                        lRequest2);
-      lEventQueue.addEvent (lEventStruct);
-    }
-  
+    // Browse the list of DemandStreams and Generate the first event for each
+    // DemandStream.
+    trademgenService.generateFirstRequests (lEventQueue);
+    
     // Pop requests, get type, and generate next request of same type
     int i = 0;
     while (lEventQueue.isQueueDone() == false && i < 20) {
@@ -310,7 +257,7 @@ int main (int argc, char* argv[]) {
       STDAIR_LOG_DEBUG (lPoppedRequest.describe());
     
       // Retrieve the corresponding demand stream
-      const stdair::DemandStreamKey_T& lDemandStreamKey =
+      const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
         lEventStruct.getDemandStreamKey ();
       // generate next request
       bool stillHavingRequestsToBeGenerated = 

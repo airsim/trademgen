@@ -15,8 +15,9 @@
 // Forward declarations
 namespace stdair {
   class BomRoot;
-  class DemandCharacteristics;
-  class DemandDistribution;
+  struct DemandCharacteristics;
+  struct DemandDistribution;
+  struct EventQueue;
 }
 
 namespace TRADEMGEN {
@@ -44,13 +45,19 @@ namespace TRADEMGEN {
         the demand stream which corresponds to the given key. */
     static const bool
     stillHavingRequestsToBeGenerated (const stdair::DemandStreamList_T&,
-                                      const stdair::DemandStreamKey_T&);
+                                      const stdair::DemandStreamKeyStr_T&);
+
+    /** Browse the list of demand streams and generate the first
+        request of each stream. */
+    static void generateFirstRequests (stdair::EventQueue&,
+                                       stdair::DemandStreamList_T&);
+
 
     /** Generate a request with the demand stream which corresponds to
         the given key. */
     static stdair::BookingRequestPtr_T
     generateNextRequest (stdair::DemandStreamList_T&,
-                         const stdair::DemandStreamKey_T&);
+                         const stdair::DemandStreamKeyStr_T&);
   };
 
 }

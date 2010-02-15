@@ -7,8 +7,11 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/DemandCharacteristics.hpp>
 #include <stdair/basic/DemandDistribution.hpp>
+#include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/bom/DemandStream.hpp>
+#include <stdair/bom/BookingRequestStruct.hpp>
+#include <stdair/bom/EventQueue.hpp>
 #include <stdair/factory/FacBomContent.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
@@ -68,9 +71,9 @@ namespace TRADEMGEN {
   // ////////////////////////////////////////////////////////////////////
   const bool DemandManager::
   stillHavingRequestsToBeGenerated (const stdair::DemandStreamList_T& iDemandStreamList,
-                                    const stdair::DemandStreamKey_T& iKey) {
+                                    const stdair::DemandStreamKeyStr_T& iKey) {
     stdair::DemandStreamList_T::const_iterator itDemandStream =
-      iDemandStreamList.find (iKey.describe());
+      iDemandStreamList.find (iKey);
     // TODO
     assert (itDemandStream != iDemandStreamList.end());
     const stdair::DemandStream* lDemandStream_ptr = itDemandStream->second;
@@ -84,15 +87,42 @@ namespace TRADEMGEN {
   // ////////////////////////////////////////////////////////////////////
   stdair::BookingRequestPtr_T DemandManager::
   generateNextRequest (stdair::DemandStreamList_T& ioDemandStreamList,
-                       const stdair::DemandStreamKey_T& iKey) {
+                       const stdair::DemandStreamKeyStr_T& iKey) {
     stdair::DemandStreamList_T::iterator itDemandStream =
-      ioDemandStreamList.find (iKey.describe());
+      ioDemandStreamList.find (iKey);
     // TODO
     assert (itDemandStream != ioDemandStreamList.end());
     stdair::DemandStream* lDemandStream_ptr = itDemandStream->second;
     assert (lDemandStream_ptr != NULL);
 
     return DemandStream::generateNextRequest (*lDemandStream_ptr);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  void DemandManager::
+  generateFirstRequests (stdair::EventQueue& ioEventQueue,
+                         stdair::DemandStreamList_T& ioDemandStreamList) {
+    for (stdair::DemandStreamList_T::iterator itDemandStream =
+           ioDemandStreamList.begin();
+         itDemandStream != ioDemandStreamList.end(); ++itDemandStream) {
+      stdair::DemandStream* lDemandStream_ptr = itDemandStream->second;
+      assert (lDemandStream_ptr != NULL);
+
+      const bool stillHavingRequestsToBeGenerated =
+        DemandStream::stillHavingRequestsToBeGenerated(*lDemandStream_ptr);
+   
+      if (stillHavingRequestsToBeGenerated) {
+        stdair::BookingRequestPtr_T lFirstRequest =
+          DemandStream::generateNextRequest (*lDemandStream_ptr);
+        
+        const stdair::DemandStreamKeyStr_T& lKey = itDemandStream->first;
+        const stdair::DateTime_T& lRequestDateTime =
+          lFirstRequest->getRequestDateTime();
+        stdair::EventStruct lEventStruct ("Request", lRequestDateTime, lKey,
+                                          lFirstRequest);
+        ioEventQueue.addEvent (lEventStruct);
+      }
+    }
   }
 
 }

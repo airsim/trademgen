@@ -249,38 +249,6 @@ namespace TRADEMGEN {
       throw TrademgenGenerationException();
     }
   }
-  
-  // ////////////////////////////////////////////////////////////////////
-  void TRADEMGEN_Service::
-  addDemandStream (const stdair::DemandStreamKey_T& iKey,
-                   const stdair::DemandCharacteristics& iDemandCharacteristics,
-                   const stdair::DemandDistribution& iDemandDistribution,
-                   const stdair::RandomSeed_T& iNumberOfRequestsSeed,
-                   const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                   const stdair::RandomSeed_T& iDemandCharacteristicsSeed) const{
-    // Retrieve the Trademgen service context
-    assert (_trademgenServiceContext != NULL);
-    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
-      *_trademgenServiceContext;
-
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-    
-    // Get the root of the BOM tree, on which all of the other BOM objects
-    // will be attached
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
-    stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamListRef();
-
-    // Delegate the call to the dedicated command
-    DemandManager::addDemandStream (lDemandStreamList, iKey,
-                                    iDemandCharacteristics,
-                                    iDemandDistribution,
-                                    iNumberOfRequestsSeed,
-                                    iRequestDateTimeSeed,
-                                    iDemandCharacteristicsSeed);
-  }
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::NbOfRequests_T& TRADEMGEN_Service::
@@ -298,7 +266,7 @@ namespace TRADEMGEN {
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
     stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamListRef();
+      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
     return DemandManager::getTotalNumberOfRequestsToBeGenerated (lDemandStreamList,
@@ -307,7 +275,7 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   const bool TRADEMGEN_Service::
-  stillHavingRequestsToBeGenerated(const stdair::DemandStreamKey_T& iKey) const {
+  stillHavingRequestsToBeGenerated (const stdair::DemandStreamKeyStr_T& iKey) const {
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
@@ -321,7 +289,7 @@ namespace TRADEMGEN {
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
     stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamListRef();
+      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
     return DemandManager::stillHavingRequestsToBeGenerated (lDemandStreamList,
@@ -330,7 +298,7 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   stdair::BookingRequestPtr_T TRADEMGEN_Service::
-  generateNextRequest (const stdair::DemandStreamKey_T& iKey) const {
+  generateNextRequest (const stdair::DemandStreamKeyStr_T& iKey) const {
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
@@ -344,10 +312,32 @@ namespace TRADEMGEN {
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
     stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamListRef();
+      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
     return DemandManager::generateNextRequest (lDemandStreamList, iKey);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::
+  generateFirstRequests (stdair::EventQueue& ioQueue) const {
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the StdAir service context
+    stdair::STDAIR_Service& lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    
+    // Get the root of the BOM tree, on which all of the other BOM objects
+    // will be attached
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::DemandStreamList_T& lDemandStreamList =
+      lBomRoot.getDemandStreamList();
+
+    // Delegate the call to the dedicated command
+    DemandManager::generateFirstRequests (ioQueue, lDemandStreamList);
   }
 
 }

@@ -48,7 +48,7 @@ namespace TRADEMGEN {
     const stdair::Count_T lRemainingNumberOfRequestsToBeGenerated =
       iDemandStream.getTotalNumberOfRequestsToBeGenerated ()
       - lNbOfRequestsGeneratedSoFar;
-
+    
     if (lRemainingNumberOfRequestsToBeGenerated <= 0) {
       return false;
     }
@@ -132,14 +132,12 @@ namespace TRADEMGEN {
     ioDemandStream.setCumulativeProbabilitySoFar (lCumulativeProbabilityThisRequest);
     ioDemandStream.incrementGeneratedRequestsCounter ();
 
-
     // Create the booking request with a hardcoded party size.
     stdair::BookingRequestPtr_T oBookingRequest_ptr = stdair::BookingRequestPtr_T
       (new stdair::BookingRequestStruct (lOrigin, lDestination,
                                          lPreferredDepartureDate,
                                          lDateTimeThisRequest,
                                          lPassengerType, 1));
-    assert (oBookingRequest_ptr != NULL);
     return oBookingRequest_ptr;
   }
 
