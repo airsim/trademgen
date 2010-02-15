@@ -17,6 +17,7 @@
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/bom/AirlineStruct.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
+#include <stdair/bom/DemandStreamKey.hpp>
 #include <stdair/factory/FacBomContent.hpp>
 #include <stdair/command/DBManagerForAirlines.hpp>
 #include <stdair/service/Logger.hpp>
@@ -181,10 +182,10 @@ namespace TRADEMGEN {
     DemandParser::generateDemand (iDemandInputFilename, lBomRoot);
 
     // DEBUG
-    STDAIR_LOG_DEBUG ("Generated BomRoot:");
-    std::ostringstream oStream;
-    stdair::BomManager::display (oStream, lBomRoot);
-    STDAIR_LOG_DEBUG (oStream.str());
+    //STDAIR_LOG_DEBUG ("Generated BomRoot:");
+    //std::ostringstream oStream;
+    //stdair::BomManager::display (oStream, lBomRoot);
+    //STDAIR_LOG_DEBUG (oStream.str());
   }
   
   // //////////////////////////////////////////////////////////////////////
@@ -265,12 +266,10 @@ namespace TRADEMGEN {
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
-    stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
-    return DemandManager::getTotalNumberOfRequestsToBeGenerated (lDemandStreamList,
-                                                                 iKey);
+    return DemandManager::getTotalNumberOfRequestsToBeGenerated(lBomRoot,
+                                                                iKey.describe());
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -288,12 +287,9 @@ namespace TRADEMGEN {
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
-    stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
-    return DemandManager::stillHavingRequestsToBeGenerated (lDemandStreamList,
-                                                            iKey);
+    return DemandManager::stillHavingRequestsToBeGenerated (lBomRoot, iKey);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -311,11 +307,9 @@ namespace TRADEMGEN {
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
-    stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
-    return DemandManager::generateNextRequest (lDemandStreamList, iKey);
+    return DemandManager::generateNextRequest (lBomRoot, iKey);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -333,11 +327,9 @@ namespace TRADEMGEN {
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
-    stdair::DemandStreamList_T& lDemandStreamList =
-      lBomRoot.getDemandStreamList();
 
     // Delegate the call to the dedicated command
-    DemandManager::generateFirstRequests (ioQueue, lDemandStreamList);
+    DemandManager::generateFirstRequests (ioQueue, lBomRoot);
   }
 
 }

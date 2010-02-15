@@ -29,10 +29,12 @@ namespace TRADEMGEN {
                 const stdair::DemandDistribution& iDemandDistribution,
                 const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                 const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                const stdair::RandomSeed_T& iDemandCharacteristicsSeed)
+                const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
+                BomStructure_T& ioBomStructure)
     : stdair::DemandStream (iKey, iDemandCharacteristics,
                             iDemandDistribution, iNumberOfRequestsSeed,
-                            iRequestDateTimeSeed, iDemandCharacteristicsSeed) {
+                            iRequestDateTimeSeed, iDemandCharacteristicsSeed,
+                            ioBomStructure) {
   }
 
   // //////////////////////////////////////////////////////////////////////

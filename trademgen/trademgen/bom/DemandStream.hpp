@@ -27,6 +27,11 @@ namespace TRADEMGEN {
   class DemandStream  : public stdair::DemandStream {
     friend class TRADEMGEN_ServiceContext;
     friend class DemandManager;
+    
+  public:
+    /** Definition allowing to retrieve the associated BOM structure type. */
+    typedef stdair::DemandStreamStructure_T BomStructure_T;
+
   private:
     // /////////////// Business Methods //////////////
     /** Check whether enough requests have already been generated. */
@@ -48,7 +53,8 @@ namespace TRADEMGEN {
                   const stdair::DemandDistribution&,
                   const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                   const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                  const stdair::RandomSeed_T& iDemandCharacteristicsSeed);
+                  const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
+                  BomStructure_T&);
     /** Destructor. */
     ~DemandStream ();
 

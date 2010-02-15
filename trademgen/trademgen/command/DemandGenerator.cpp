@@ -10,7 +10,6 @@
 #include <stdair/basic/DemandCharacteristics.hpp>
 #include <stdair/basic/DemandDistribution.hpp>
 #include <stdair/bom/BomRoot.hpp>
-#include <stdair/bom/DemandStream.hpp>
 #include <stdair/factory/FacBomContent.hpp>
 #include <stdair/command/CmdBomManager.hpp>
 #include <stdair/service/Logger.hpp>
@@ -67,11 +66,8 @@ namespace TRADEMGEN {
     stdair::RandomSeed_T lRequestDateTimeSeed = 2;
     stdair::RandomSeed_T lDemandCharacteristicsSeed = 2;
   
-    stdair::DemandStreamList_T& lDemandStreamList =
-      ioBomRoot.getDemandStreamList();
-
     // Delegate the call to the dedicated command
-    DemandManager::addDemandStream (lDemandStreamList, lDemandStreamKey,
+    DemandManager::addDemandStream (ioBomRoot, lDemandStreamKey,
                                     lDemandCharacteristics, lDemandDistribution,
                                     lNumberOfRequestsSeed, lRequestDateTimeSeed,
                                     lDemandCharacteristicsSeed);
