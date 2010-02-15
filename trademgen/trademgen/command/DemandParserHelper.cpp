@@ -517,7 +517,6 @@ namespace TRADEMGEN {
         pref_dep_date
         >> ';' >> origin >> ';' >> destination
         >> ';' >> pref_cabin[storePrefCabin(self._demand)]
-        >> ';' >> demand_params
         >> ';' >> pos_dist
         >> ';' >> channel_dist
         >> ';' >> trip_dist
@@ -527,6 +526,7 @@ namespace TRADEMGEN {
         >> ';' >> wtp_dist
         >> ';' >> time_value_dist
         >> ';' >> dtd_dist
+        >> ';' >> demand_params
         >> demand_end[doEndDemand(self._bomRoot, self._demand)]
         ;
 
@@ -562,12 +562,6 @@ namespace TRADEMGEN {
         | boost::spirit::classic::ch_p('Y')
         ;
 
-      demand_params =
-        (boost::spirit::classic::ureal_p)[storeDemandMean(self._demand)]
-        >> ';'
-        >> (boost::spirit::classic::ureal_p)[storeDemandStdDev(self._demand)]
-        ;
-      
       pos_dist =
         pos_pair >> *( ',' >> pos_pair )
         ;
@@ -719,6 +713,14 @@ namespace TRADEMGEN {
         (boost::spirit::classic::ureal_p)[storeDTDProbMass(self._demand)]
         ;
 
+      demand_params =
+        boost::spirit::classic::ch_p('N')
+        >> ','
+        >> (boost::spirit::classic::ureal_p)[storeDemandMean(self._demand)]
+        >> ','
+        >> (boost::spirit::classic::ureal_p)[storeDemandStdDev(self._demand)]
+        ;
+      
       // BOOST_SPIRIT_DEBUG_NODE (DemandParser);
       BOOST_SPIRIT_DEBUG_NODE (demand_list);
       BOOST_SPIRIT_DEBUG_NODE (demand);
@@ -728,7 +730,6 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (origin);
       BOOST_SPIRIT_DEBUG_NODE (destination);
       BOOST_SPIRIT_DEBUG_NODE (pref_cabin);
-      BOOST_SPIRIT_DEBUG_NODE (demand_params);
       BOOST_SPIRIT_DEBUG_NODE (pos_dist);
       BOOST_SPIRIT_DEBUG_NODE (pos_pair);
       BOOST_SPIRIT_DEBUG_NODE (pos_code);
@@ -761,6 +762,7 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (dtd_dist);
       BOOST_SPIRIT_DEBUG_NODE (dtd_pair);
       BOOST_SPIRIT_DEBUG_NODE (dtd_share);
+      BOOST_SPIRIT_DEBUG_NODE (demand_params);
     }
 
     // //////////////////////////////////////////////////////////////////
