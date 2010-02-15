@@ -29,7 +29,7 @@ namespace TRADEMGEN {
     const stdair::DemandStreamKey_T lDemandStreamKey (iDemand._origin,
                                                       iDemand._destination,
                                                       iDemand._prefDepDate,
-                                                      iDemand._paxType);
+                                                      iDemand._prefCabin);
 
     stdair::DemandCharacteristics lDemandCharacteristics (lDemandStreamKey);
 

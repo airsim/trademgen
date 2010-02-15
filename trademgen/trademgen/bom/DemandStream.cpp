@@ -82,8 +82,9 @@ namespace TRADEMGEN {
     // Preferred departure date
     const stdair::Date_T& lPreferredDepartureDate =
       ioDemandStream.getPreferredDepartureDate ();
-    // Passenger type.
-    const stdair::PassengerType& lPassengerType = ioDemandStream.getPaxType();
+    // Preferred cabin
+    const stdair::CabinCode_T& lPreferredCabin =
+      ioDemandStream.getPreferredCabin();
     
     // Request datetime, determined from departure date and arrival pattern
     // Sequential generation
@@ -137,7 +138,7 @@ namespace TRADEMGEN {
       (new stdair::BookingRequestStruct (lOrigin, lDestination,
                                          lPreferredDepartureDate,
                                          lDateTimeThisRequest,
-                                         lPassengerType, 1));
+                                         lPreferredCabin, 1));
     return oBookingRequest_ptr;
   }
 

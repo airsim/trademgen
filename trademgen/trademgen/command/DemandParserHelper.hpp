@@ -58,10 +58,10 @@ namespace TRADEMGEN {
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
 
-    /** Store the passenger_type code. */
-    struct storePassengerType : public ParserSemanticAction {
+    /** Store the preferred cabin. */
+    struct storePrefCabin : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePassengerType (DemandStruct_T&);
+      storePrefCabin (DemandStruct_T&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -347,7 +347,7 @@ namespace TRADEMGEN {
         
         // Instantiation of rules
         boost::spirit::classic::rule<ScannerT> demand_list, demand, demand_end,
-          pref_dep_date, date, origin, destination, passenger_type,
+          pref_dep_date, date, origin, destination, pref_cabin,
           demand_params,
           pos_dist, pos_pair, pos_code, pos_share,
           channel_dist, channel_pair, channel_code, channel_share,

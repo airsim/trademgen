@@ -62,17 +62,15 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePassengerType::storePassengerType (DemandStruct_T& ioDemand)
+    storePrefCabin::storePrefCabin (DemandStruct_T& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
     // //////////////////////////////////////////////////////////////////
-    void storePassengerType::operator() (iterator_t iStr,
-                                         iterator_t iStrEnd) const {
-      const std::string oneChar (iStr, iStrEnd);
-      const stdair::PassengerType lPaxType (oneChar.at(0));
-      _demand._paxType = lPaxType; 
-      //STDAIR_LOG_DEBUG ("Passenger type: " << lPaxType);
+    void storePrefCabin::operator() (iterator_t iStr, iterator_t iStrEnd) const {
+      stdair::CabinCode_T lPrefCabin  (iStr, iStrEnd);
+      _demand._prefCabin = lPrefCabin; 
+      //STDAIR_LOG_DEBUG ("Preferred cabin: " << lPrefCabin);
     }
     
     // //////////////////////////////////////////////////////////////////
@@ -479,8 +477,11 @@ namespace TRADEMGEN {
     /** Second Parser: limit_d(0u, 59u)[uint2_p] */
     bounded2_p_t seconds_p (uint2_p.derived(), 0u, 59u);
 
+    /** Cabin code parser: chset_p("A-Z") */
+    chset_t cabin_code_p ("A-Z");
+
     /** Passenger type parser: chset_p("A-Z") */
-    chset_t passenger_type_code_p ("A-Z");
+    chset_t passenger_type_p ("A-Z");
 
     /** Family code parser */
     int1_p_t family_code_p;
@@ -515,7 +516,7 @@ namespace TRADEMGEN {
       demand =
         pref_dep_date
         >> ';' >> origin >> ';' >> destination
-        >> ';' >> passenger_type[storePassengerType(self._demand)]
+        >> ';' >> pref_cabin[storePrefCabin(self._demand)]
         >> ';' >> demand_params
         >> ';' >> pos_dist
         >> ';' >> channel_dist
@@ -555,10 +556,10 @@ namespace TRADEMGEN {
         (airport_p)[storeDestination(self._demand)]
         ;
 
-      passenger_type =
-        boost::spirit::classic::ch_p('L')
-        | boost::spirit::classic::ch_p('B')
-        | boost::spirit::classic::ch_p('F')
+      pref_cabin =
+        boost::spirit::classic::ch_p('F')
+        | boost::spirit::classic::ch_p('C')
+        | boost::spirit::classic::ch_p('Y')
         ;
 
       demand_params =
@@ -726,7 +727,7 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (date);
       BOOST_SPIRIT_DEBUG_NODE (origin);
       BOOST_SPIRIT_DEBUG_NODE (destination);
-      BOOST_SPIRIT_DEBUG_NODE (passenger_type);
+      BOOST_SPIRIT_DEBUG_NODE (pref_cabin);
       BOOST_SPIRIT_DEBUG_NODE (demand_params);
       BOOST_SPIRIT_DEBUG_NODE (pos_dist);
       BOOST_SPIRIT_DEBUG_NODE (pos_pair);
