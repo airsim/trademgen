@@ -9,7 +9,7 @@
 // STDAIR
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/PassengerType.hpp>
-#include <stdair/bom/StructAbstract.hpp>
+#include <stdair/basic/StructAbstract.hpp>
 // TraDemGen
 #include <trademgen/basic/StayDurationTypes.hpp>
 #include <trademgen/basic/PosCodeTypes.hpp>

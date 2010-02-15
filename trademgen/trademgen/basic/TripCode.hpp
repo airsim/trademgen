@@ -7,7 +7,7 @@
 // STL
 #include <string>
 // StdAir
-#include <stdair/bom/StructAbstract.hpp>
+#include <stdair/basic/StructAbstract.hpp>
 
 namespace TRADEMGEN {
 
