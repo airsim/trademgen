@@ -9,6 +9,7 @@
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/StructAbstract.hpp>
+#include <stdair/basic/DemandCharacteristicTypes.hpp>
 // TraDemGen
 #include <trademgen/basic/StayDurationTypes.hpp>
 #include <trademgen/basic/PosCodeTypes.hpp>
@@ -25,12 +26,33 @@ namespace TRADEMGEN {
   /** Utility Structure for the parsing of Demand structures. */
   struct DemandStruct_T : public stdair::StructAbstract {
     
-    /** Set the date from the staging details. */
+    /** Get the date from the staging details. */
     stdair::Date_T getDate() const;
 
-    /** Set the time from the staging details. */
+    /** Get the time from the staging details. */
     stdair::Duration_T getTime() const;
-  
+
+    /** Build the arrival pattern. */
+    const stdair::ContinuousFloatDuration_T getArrivalPattern () const;
+
+    /** Build the channel probabilty mass. */
+    const stdair::ChannelProbabilityMass_T getChannelProbabilityMass () const;
+
+    /** Build the trip type probabilty mass. */
+    const stdair::TripTypeProbabilityMass_T getTripTypeProbabilityMass () const;
+    
+    /** Build the stay duration probabilty mass. */
+    const stdair::StayDurationProbabilityMass_T getStayDurationProbabilityMass () const;
+    
+    /** Build the frequent flyer probabilty mass. */
+    const stdair::FrequentFlyerProbabilityMass_T getFrequentFlyerProbabilityMass () const;
+    
+    /** Build the preferred departure time cumulative distribition. */
+    const stdair::PreferredDepartureTimeCumulativeDistribution_T getPreferredDepartureTimeCumulativeDistribution () const;
+    
+    /** Build the WTP cumulative distribition. */
+    const stdair::WTPCumulativeDistribution_T getWTPCumulativeDistribution () const;
+    
     /** Give a description of the structure (for display purposes). */
     const std::string describe() const;
 

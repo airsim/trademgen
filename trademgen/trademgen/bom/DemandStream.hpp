@@ -37,6 +37,34 @@ namespace TRADEMGEN {
     /** Check whether enough requests have already been generated. */
     static const bool stillHavingRequestsToBeGenerated (const stdair::DemandStream&);
     const bool stillHavingRequestsToBeGenerated () const;
+
+    /** Generate the time of the next request. */
+    static const stdair::DateTime_T generateTimeOfRequest(stdair::DemandStream&);
+    const stdair::DateTime_T generateTimeOfRequest ();
+
+    /** Generate the reservation channel. */
+    static const stdair::ChannelLabel_T generateChannel (stdair::DemandStream&);
+    const stdair::ChannelLabel_T generateChannel ();
+
+    /** Generate the trip type. */
+    static const stdair::TripType_T generateTripType (stdair::DemandStream&);
+    const stdair::TripType_T generateTripType ();
+
+    /** Generate the stay duration. */
+    static const stdair::DayDuration_T generateStayDuration (stdair::DemandStream&);
+    const stdair::DayDuration_T generateStayDuration ();
+
+    /** Generate the frequent flyer type. */
+    static const stdair::FrequentFlyer_T generateFrequentFlyer (stdair::DemandStream&);
+    const stdair::FrequentFlyer_T generateFrequentFlyer ();
+
+    /** Generate the preferred departure time. */
+    static const stdair::Duration_T generatePreferredDepartureTime (stdair::DemandStream&);
+    const stdair::Duration_T generatePreferredDepartureTime ();
+    
+    /** Generate the WTP. */
+    static const stdair::WTP_T generateWTP (stdair::DemandStream&);
+    const stdair::WTP_T generateWTP ();
     
     /** Generate the next request. */
     static stdair::BookingRequestPtr_T generateNextRequest (stdair::DemandStream&);

@@ -54,7 +54,7 @@ namespace TRADEMGEN {
 
   private:
     // //////// Attributes /////////
-    /** Frequent flyer code. */
+    /** Channel code. */
     EN_ChannelCode _code;
   };
 

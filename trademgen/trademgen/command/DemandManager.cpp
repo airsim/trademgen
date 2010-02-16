@@ -43,8 +43,9 @@ namespace TRADEMGEN {
     // Insert the reference on the given DemandStream object into the
     // dedicated list
       // DEBUG
-    STDAIR_LOG_DEBUG ("Add DemandStream: "
-                      << lDemandStream.getKey().describe());
+    STDAIR_LOG_DEBUG ("Add DemandStream: \n"
+                      << lDemandStream.getDemandCharacteristics().display()
+                      << lDemandStream.getDemandDistribution().display());
       
     const bool hasInsertBeenSuccessfull = stdair::FacBomContent::
       addDemandStream<stdair::DemandStream> (ioBomRoot, lDemandStream);

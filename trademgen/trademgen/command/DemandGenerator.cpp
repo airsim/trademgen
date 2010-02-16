@@ -29,38 +29,40 @@ namespace TRADEMGEN {
                                                       iDemand._destination,
                                                       iDemand._prefDepDate,
                                                       iDemand._prefCabin);
+    // Arrival pattern
+    const stdair::ContinuousFloatDuration_T lArrivalPattern =
+      iDemand.getArrivalPattern ();
+    // Channel probability mass.
+    const stdair::ChannelProbabilityMass_T lChannelProbMass =
+      iDemand.getChannelProbabilityMass ();
+    // Trip type probability mass.
+    const stdair::TripTypeProbabilityMass_T lTripTypeProbMass =
+      iDemand.getTripTypeProbabilityMass ();
+    // Stay duration probability mass.
+    const stdair::StayDurationProbabilityMass_T lStayDurationProbMass =
+      iDemand.getStayDurationProbabilityMass ();
+    // Frequent flyer probability mass.
+    const stdair::FrequentFlyerProbabilityMass_T lFrequentFlyerProbMass =
+      iDemand.getFrequentFlyerProbabilityMass ();
+    // Preferred departure time cumulative distribution.
+    const stdair::PreferredDepartureTimeCumulativeDistribution_T lPreferredDepartureTimeCumulativeDistribution =
+      iDemand.getPreferredDepartureTimeCumulativeDistribution ();
+    // WTP cumulative distribution.
+    const stdair::WTPCumulativeDistribution_T lWTPCumulativeDistribution =
+      iDemand.getWTPCumulativeDistribution ();
 
-    stdair::DemandCharacteristics lDemandCharacteristics (lDemandStreamKey);
+    stdair::DemandCharacteristics lDemandCharacteristics (lDemandStreamKey,
+                                                          lArrivalPattern,
+                                                          lChannelProbMass,
+                                                          lTripTypeProbMass,
+                                                          lStayDurationProbMass,
+                                                          lFrequentFlyerProbMass,
+                                                          lPreferredDepartureTimeCumulativeDistribution,
+                                                          lWTPCumulativeDistribution);
 
     const stdair::DemandDistribution lDemandDistribution (iDemand._demandMean,
                                                           iDemand._demandStdDev);
-
-    // Arrival pattern
-    stdair::ArrivalPatternCumulativeDistribution_T arrivalPatternCumulativeDistribution;
     
-    for (DTDProbDist_T::const_iterator it = iDemand._dtdProbDist.begin();
-         it != iDemand._dtdProbDist.end(); ++it) {
-      const stdair::DayDuration_T& lDTD = it->first;
-      const DTDProbMass_T& lDTDProbMass = it->second;
-
-      const stdair::FloatDuration_T lZeroDTDFloat = 0.0;
-      stdair::FloatDuration_T lDTDFloat =
-        static_cast<stdair::FloatDuration_T> (lDTD);
-      lDTDFloat = lZeroDTDFloat - lDTD;
-
-      arrivalPatternCumulativeDistribution.
-        insert (stdair::ArrivalPatternCumulativeDistribution_T::
-                value_type (lDTDFloat, lDTDProbMass));
-    }
-    
-    const stdair::ContinuousFloatDuration_T lArrivalPattern (arrivalPatternCumulativeDistribution);
-    lDemandCharacteristics.setArrivalPattern (lArrivalPattern);
-
-    // Display
-    STDAIR_LOG_DEBUG ("Demand: " << std::endl
-                      << lDemandCharacteristics.display()
-                      << lDemandDistribution.display());
-
     // Seed
     stdair::RandomSeed_T lNumberOfRequestsSeed = 2;
     stdair::RandomSeed_T lRequestDateTimeSeed = 2;

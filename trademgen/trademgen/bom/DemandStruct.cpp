@@ -9,30 +9,173 @@
 #include <stdair/service/Logger.hpp>
 // TRADEMGEN
 #include <trademgen/TRADEMGEN_Types.hpp>
+#include <trademgen/basic/ChannelCode.hpp>
 #include <trademgen/bom/DemandStruct.hpp>
 
 namespace TRADEMGEN {
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   DemandStruct_T::DemandStruct_T ()
     : _prefDepDate (stdair::DEFAULT_DATE), _prefArrDate (stdair::DEFAULT_DATE),
       _prefCabin (""), _itHours (0), _itMinutes (0), _itSeconds (0),
       _itFFCode (FFCode::NONE) {
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   stdair::Date_T DemandStruct_T::getDate() const {
     return stdair::Date_T (_itYear, _itMonth, _itDay);
   }
 
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   stdair::Duration_T DemandStruct_T::getTime() const {
     return boost::posix_time::hours (_itHours)
       + boost::posix_time::minutes (_itMinutes)
       + boost::posix_time::seconds (_itSeconds);
   }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::ContinuousFloatDuration_T DemandStruct_T::
+  getArrivalPattern () const {
+    stdair::ArrivalPatternCumulativeDistribution_T arrivalPatternCumulativeDistribution;
+    
+    for (DTDProbDist_T::const_iterator it = _dtdProbDist.begin();
+         it != _dtdProbDist.end(); ++it) {
+      const stdair::DayDuration_T& lDTD = it->first;
+      const DTDProbMass_T& lDTDProbMass = it->second;
+      
+      const stdair::FloatDuration_T lZeroDTDFloat = 0.0;
+      stdair::FloatDuration_T lDTDFloat =
+        static_cast<stdair::FloatDuration_T> (lDTD);
+      lDTDFloat = lZeroDTDFloat - lDTD;
+
+      arrivalPatternCumulativeDistribution.
+        insert (stdair::ArrivalPatternCumulativeDistribution_T::
+                value_type (lDTDFloat, lDTDProbMass));
+    }
+    
+    return stdair::ContinuousFloatDuration_T (arrivalPatternCumulativeDistribution);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::ChannelProbabilityMass_T DemandStruct_T::
+  getChannelProbabilityMass () const {
+    stdair::ChannelProbabilityMassFunction_T lChannelProbabilityMassFuction;
+
+    for (ChannelProbDist_T::const_iterator it = _channelProbDist.begin();
+         it != _channelProbDist.end(); ++it) {
+      const ChannelCode& lChannelCode = it->first;
+      const ChannelCode::EN_ChannelCode& lENChannelCode = lChannelCode.getCode();
+      const stdair::ChannelLabel_T lLabel =
+        ChannelCode::getLabel (lENChannelCode);
+      const stdair::Probability_T& lProbability = it->second;
+
+      lChannelProbabilityMassFuction.
+        insert (stdair::ChannelProbabilityMassFunction_T::
+                value_type (lLabel, lProbability));
+    }
+
+    return stdair::ChannelProbabilityMass_T (lChannelProbabilityMassFuction);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::TripTypeProbabilityMass_T DemandStruct_T::
+  getTripTypeProbabilityMass () const {
+    stdair::TripTypeProbabilityMassFunction_T lTripTypeProbabilityMassFuction;
+
+    for (TripProbDist_T::const_iterator it = _tripProbDist.begin();
+         it != _tripProbDist.end(); ++it) {
+      const TripCode& lTripCode = it->first;
+      const TripCode::EN_TripCode& lENTripCode = lTripCode.getCode();
+      const stdair::TripType_T lLabel =
+        TripCode::getLabel (lENTripCode);
+      const stdair::Probability_T& lProbability = it->second;
+
+      lTripTypeProbabilityMassFuction.
+        insert (stdair::TripTypeProbabilityMassFunction_T::
+                value_type (lLabel, lProbability));
+    }
+
+    return stdair::TripTypeProbabilityMass_T (lTripTypeProbabilityMassFuction);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::StayDurationProbabilityMass_T DemandStruct_T::
+  getStayDurationProbabilityMass () const {
+    stdair::StayDurationProbabilityMassFunction_T lStayDurationProbabilityMassFuction;
+
+    for (StayProbDist_T::const_iterator it = _stayProbDist.begin();
+         it != _stayProbDist.end(); ++it) {
+      const stdair::DayDuration_T& lDuration = it->first;
+      const stdair::Probability_T& lProbability = it->second;
+
+      lStayDurationProbabilityMassFuction.
+        insert (stdair::StayDurationProbabilityMassFunction_T::
+                value_type (lDuration, lProbability));
+    }
+
+    return stdair::StayDurationProbabilityMass_T (lStayDurationProbabilityMassFuction);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::FrequentFlyerProbabilityMass_T DemandStruct_T::
+  getFrequentFlyerProbabilityMass () const {
+    stdair::FrequentFlyerProbabilityMassFunction_T lFrequentFlyerProbabilityMassFuction;
+
+    for (FFProbDist_T::const_iterator it = _ffProbDist.begin();
+         it != _ffProbDist.end(); ++it) {
+      const FFCode& lFFCode = it->first;
+      const FFCode::EN_FFCode& lENFFCode = lFFCode.getCode();
+      const stdair::FrequentFlyer_T lLabel = FFCode::getLabel (lENFFCode);
+      const stdair::Probability_T& lProbability = it->second;
+
+      lFrequentFlyerProbabilityMassFuction.
+        insert (stdair::FrequentFlyerProbabilityMassFunction_T::
+                value_type (lLabel, lProbability));
+    }
+
+    return stdair::FrequentFlyerProbabilityMass_T (lFrequentFlyerProbabilityMassFuction);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::PreferredDepartureTimeCumulativeDistribution_T DemandStruct_T::
+  getPreferredDepartureTimeCumulativeDistribution () const {
+
+    stdair::PreferredDepartureTimeContinuousDistribution_T preferredDepartureTimeContinuousDistribution;
+
+    for (PrefDepTimeProbDist_T::const_iterator it = _prefDepTimeProbDist.begin();
+         it != _prefDepTimeProbDist.end(); ++it) {
+      const stdair::Duration_T& lTime = it->first;
+      const stdair::IntDuration_T lIntDuration = lTime.total_seconds();
+      const PrefDepTimeProbMass_T& lPrefDepTimeProbMass = it->second;
+      
+      preferredDepartureTimeContinuousDistribution.
+        insert (stdair::PreferredDepartureTimeContinuousDistribution_T::
+                value_type (lIntDuration, lPrefDepTimeProbMass));
+    }
+
+    return stdair::PreferredDepartureTimeCumulativeDistribution_T (preferredDepartureTimeContinuousDistribution);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::WTPCumulativeDistribution_T DemandStruct_T::
+  getWTPCumulativeDistribution () const {
+
+    stdair::WTPContinuousDistribution_T wtpContinuousDistribution;
+
+    for (WTPProbDist_T::const_iterator it = _wtpProbDist.begin();
+         it != _wtpProbDist.end(); ++it) {
+      const stdair::WTP_T& lWTP = it->first;
+      const WTPProbMass_T& lWTPProMass = it->second;
+
+      wtpContinuousDistribution.
+        insert (stdair::WTPContinuousDistribution_T::
+                value_type (lWTP, lWTPProMass));
+    }
+
+    return stdair::WTPCumulativeDistribution_T (wtpContinuousDistribution);
+  }
   
-  // //////////////////////////////////////////////////////////////////////
+  // ////////////////////////////////////////////////////////////////////
   const std::string DemandStruct_T::describe() const {
     std::ostringstream ostr;
     ostr << _prefDepDate << " -> " << _prefArrDate
