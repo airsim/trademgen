@@ -345,7 +345,7 @@ namespace TRADEMGEN {
                                          lFrequentFlyer, lPreferredDepartureTime,
                                          lWTP, lValueOfTime));
     // DEBUG
-    STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
+    // STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
     
     return oBookingRequest_ptr;
   }

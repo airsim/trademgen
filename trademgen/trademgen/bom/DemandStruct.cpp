@@ -84,7 +84,7 @@ namespace TRADEMGEN {
       const ChannelCode& lChannelCode = it->first;
       const ChannelCode::EN_ChannelCode& lENChannelCode = lChannelCode.getCode();
       const stdair::ChannelLabel_T lLabel =
-        ChannelCode::getLabel (lENChannelCode);
+        ChannelCode::getCodeLabel (lENChannelCode);
       const stdair::Probability_T& lProbability = it->second;
 
       lChannelProbabilityMassFuction.
@@ -105,7 +105,7 @@ namespace TRADEMGEN {
       const TripCode& lTripCode = it->first;
       const TripCode::EN_TripCode& lENTripCode = lTripCode.getCode();
       const stdair::TripType_T lLabel =
-        TripCode::getLabel (lENTripCode);
+        TripCode::getCodeLabel (lENTripCode);
       const stdair::Probability_T& lProbability = it->second;
 
       lTripTypeProbabilityMassFuction.
@@ -143,7 +143,8 @@ namespace TRADEMGEN {
          it != _ffProbDist.end(); ++it) {
       const FFCode& lFFCode = it->first;
       const FFCode::EN_FFCode& lENFFCode = lFFCode.getCode();
-      const stdair::FrequentFlyer_T lLabel = FFCode::getLabel (lENFFCode);
+      std::stringstream ss; ss << FFCode::getCodeLabel (lENFFCode);
+      const stdair::FrequentFlyer_T lLabel = ss.str();
       const stdair::Probability_T& lProbability = it->second;
 
       lFrequentFlyerProbabilityMassFuction.

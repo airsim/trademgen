@@ -20,6 +20,7 @@
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
+#include <stdair/bom/BomManager.hpp>
 #include <stdair/service/Logger.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Service.hpp>
@@ -36,6 +37,9 @@ const std::string K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
 
 /** Default name and location for the (CSV) input file. */
 const std::string K_TRADEMGEN_DEFAULT_INPUT_FILENAME ("../../test/samples/demand01.csv");
+
+/** Default name and location for the (CSV) output file. */
+const std::string K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME ("request.csv");
 
 /** Default query string. */
 const std::string K_TRADEMGEN_DEFAULT_QUERY_STRING ("my good old query");
@@ -96,6 +100,7 @@ const int K_TRADEMGEN_EARLY_RETURN_STATUS = 99;
 int readConfiguration (int argc, char* argv[], 
                        std::string& ioQueryString,
                        stdair::Filename_T& ioInputFilename,
+                       stdair::Filename_T& ioOutputFilename,
                        std::string& ioLogFilename) {
 
   // Initialise the travel query string, if that one is empty
@@ -121,6 +126,9 @@ int readConfiguration (int argc, char* argv[],
     ("input,i",
      boost::program_options::value< std::string >(&ioInputFilename)->default_value(K_TRADEMGEN_DEFAULT_INPUT_FILENAME),
      "(CVS) input file for the demand distributions")
+    ("output,o",
+     boost::program_options::value< std::string >(&ioOutputFilename)->default_value(K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME),
+     "(CVS) output file for the generated requests")
     ("log,l",
      boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_TRADEMGEN_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
@@ -179,6 +187,11 @@ int readConfiguration (int argc, char* argv[],
     std::cout << "Input filename is: " << ioInputFilename << std::endl;
   }
 
+  if (vm.count ("output")) {
+    ioOutputFilename = vm["output"].as< std::string >();
+    std::cout << "Output filename is: " << ioOutputFilename << std::endl;
+  }
+
   if (vm.count ("log")) {
     ioLogFilename = vm["log"].as< std::string >();
     std::cout << "Log filename is: " << ioLogFilename << std::endl;
@@ -202,20 +215,29 @@ int main (int argc, char* argv[]) {
     // Input file name
     stdair::Filename_T lInputFilename;
 
+    // Output file name
+    stdair::Filename_T lOutputFilename;
+
     // Output log File
     std::string lLogFilename;
 
     // Call the command-line option parser
     const int lOptionParserStatus = 
-      readConfiguration (argc, argv, lQuery, lInputFilename, lLogFilename);
+      readConfiguration (argc, argv, lQuery, lInputFilename,
+                         lOutputFilename, lLogFilename);
 
     if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
       return 0;
     }
+
+    // Open and clean the .csv output file
+    std::ofstream output;
+    output.open (lOutputFilename.c_str());
+    output.clear();
     
     // Set the log parameters
     std::ofstream logOutputFile;
-    // open and clean the log outputfile
+    // Open and clean the log outputfile
     logOutputFile.open (lLogFilename.c_str());
     logOutputFile.clear();
 
@@ -229,13 +251,19 @@ int main (int argc, char* argv[]) {
     // Browse the list of DemandStreams and Generate the first event for each
     // DemandStream.
     trademgenService.generateFirstRequests (lEventQueue);
+
+    unsigned int id = 1;
     
     // Pop requests, get type, and generate next request of same type
     while (lEventQueue.isQueueDone() == false) {
       stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
       const stdair::BookingRequestStruct& lPoppedRequest =
         lEventStruct.getBookingRequest ();
-        
+
+      // Output the request.
+      output << id << ", "; ++id;
+      stdair::BomManager::csvDisplay (output, lPoppedRequest);
+      
       // Retrieve the corresponding demand stream
       const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
         lEventStruct.getDemandStreamKey ();
