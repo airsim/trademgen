@@ -34,7 +34,10 @@ namespace TRADEMGEN {
 
     /** Build the arrival pattern. */
     const stdair::ContinuousFloatDuration_T getArrivalPattern () const;
-
+    
+    /** Build the POS probabilty mass. */
+    const stdair::POSProbabilityMass_T getPOSProbabilityMass () const;
+    
     /** Build the channel probabilty mass. */
     const stdair::ChannelProbabilityMass_T getChannelProbabilityMass () const;
 
@@ -52,6 +55,9 @@ namespace TRADEMGEN {
     
     /** Build the WTP cumulative distribition. */
     const stdair::WTPCumulativeDistribution_T getWTPCumulativeDistribution () const;
+
+    /** Build the value of time cumulative distribition. */
+    const stdair::ValueOfTimeCumulativeDistribution_T getValueOfTimeCumulativeDistribution () const;
     
     /** Give a description of the structure (for display purposes). */
     const std::string describe() const;

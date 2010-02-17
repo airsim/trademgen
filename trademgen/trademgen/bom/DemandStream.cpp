@@ -141,6 +141,25 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
+  const stdair::AirportCode_T DemandStream::
+  generatePOS (stdair::DemandStream& ioDemandStream) {
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
+    
+    const stdair::POSProbabilityMass_T& lPOSProbMass =
+      ioDemandStream.getPOSProbabilityMass ();
+
+    return lPOSProbMass.getValue (lVariate);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::AirportCode_T DemandStream::generatePOS () {
+    // Forward the business the the corresponding static function.
+    return generatePOS (*this);        
+  }
+
+  // ////////////////////////////////////////////////////////////////////
   const stdair::ChannelLabel_T DemandStream::
   generateChannel (stdair::DemandStream& ioDemandStream) {
     // Generate a random number between 0 and 1.
@@ -258,6 +277,25 @@ namespace TRADEMGEN {
     // Forward the business the the corresponding static function.
     return generateWTP (*this);        
   }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::PriceValue_T DemandStream::
+  generateValueOfTime (stdair::DemandStream& ioDemandStream) {
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
+    
+    const stdair::ValueOfTimeCumulativeDistribution_T& lValueOfTimeCumulativeDistribution =
+      ioDemandStream.getValueOfTimeCumulativeDistribution ();
+
+    return lValueOfTimeCumulativeDistribution.getValue (lVariate);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::PriceValue_T DemandStream::generateValueOfTime () {
+    // Forward the business the the corresponding static function.
+    return generateValueOfTime (*this);        
+  }
   
   // ////////////////////////////////////////////////////////////////////
   stdair::BookingRequestPtr_T DemandStream::
@@ -272,6 +310,8 @@ namespace TRADEMGEN {
     // Preferred cabin
     const stdair::CabinCode_T& lPreferredCabin =
       ioDemandStream.getPreferredCabin();
+    // POS
+    const stdair::AirportCode_T lPOS = generatePOS (ioDemandStream);
     // Time of request.    
     const stdair::DateTime_T lDateTimeThisRequest =
       generateTimeOfRequest (ioDemandStream);
@@ -290,17 +330,20 @@ namespace TRADEMGEN {
       generatePreferredDepartureTime (ioDemandStream);
     // WTP
     const stdair::WTP_T lWTP = generateWTP (ioDemandStream);
+    // Value of time
+    const stdair::PriceValue_T lValueOfTime =
+      generateValueOfTime (ioDemandStream);
     
     // Create the booking request with a hardcoded party size.
     stdair::BookingRequestPtr_T oBookingRequest_ptr = stdair::BookingRequestPtr_T
-      (new stdair::BookingRequestStruct (lOrigin, lDestination,
+      (new stdair::BookingRequestStruct (lOrigin, lDestination, lPOS,
                                          lPreferredDepartureDate,
                                          lDateTimeThisRequest,
                                          lPreferredCabin,
                                          stdair::DEFAULT_PARTY_SIZE,
                                          lChannelLabel, lTripType, lStayDuration,
                                          lFrequentFlyer, lPreferredDepartureTime,
-                                         lWTP));
+                                         lWTP, lValueOfTime));
     // DEBUG
     STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
     

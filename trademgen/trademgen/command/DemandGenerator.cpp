@@ -32,6 +32,9 @@ namespace TRADEMGEN {
     // Arrival pattern
     const stdair::ContinuousFloatDuration_T lArrivalPattern =
       iDemand.getArrivalPattern ();
+    // POS probability mass.
+    const stdair::POSProbabilityMass_T lPOSProbMass =
+      iDemand.getPOSProbabilityMass ();
     // Channel probability mass.
     const stdair::ChannelProbabilityMass_T lChannelProbMass =
       iDemand.getChannelProbabilityMass ();
@@ -50,15 +53,19 @@ namespace TRADEMGEN {
     // WTP cumulative distribution.
     const stdair::WTPCumulativeDistribution_T lWTPCumulativeDistribution =
       iDemand.getWTPCumulativeDistribution ();
+    // Value of time cumulative distribution.
+    const stdair::ValueOfTimeCumulativeDistribution_T lValueOfTimeCumulativeDistribution = iDemand.getValueOfTimeCumulativeDistribution ();
 
     stdair::DemandCharacteristics lDemandCharacteristics (lDemandStreamKey,
                                                           lArrivalPattern,
+                                                          lPOSProbMass,
                                                           lChannelProbMass,
                                                           lTripTypeProbMass,
                                                           lStayDurationProbMass,
                                                           lFrequentFlyerProbMass,
                                                           lPreferredDepartureTimeCumulativeDistribution,
-                                                          lWTPCumulativeDistribution);
+                                                          lWTPCumulativeDistribution,
+                                                          lValueOfTimeCumulativeDistribution);
 
     const stdair::DemandDistribution lDemandDistribution (iDemand._demandMean,
                                                           iDemand._demandStdDev);

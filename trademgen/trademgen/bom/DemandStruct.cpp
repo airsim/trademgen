@@ -57,6 +57,24 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
+  const stdair::POSProbabilityMass_T DemandStruct_T::
+  getPOSProbabilityMass () const {
+    stdair::POSProbabilityMassFunction_T lPOSProbabilityMassFuction;
+
+    for (PosProbDist_T::const_iterator it = _posProbDist.begin();
+         it != _posProbDist.end(); ++it) {
+      const stdair::AirportCode_T& lPOS = it->first;
+      const PosProbMass_T& lProbability = it->second;
+
+      lPOSProbabilityMassFuction.
+        insert (stdair::POSProbabilityMassFunction_T::
+                value_type (lPOS, lProbability));
+    }
+
+    return stdair::POSProbabilityMass_T (lPOSProbabilityMassFuction);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
   const stdair::ChannelProbabilityMass_T DemandStruct_T::
   getChannelProbabilityMass () const {
     stdair::ChannelProbabilityMassFunction_T lChannelProbabilityMassFuction;
@@ -173,6 +191,25 @@ namespace TRADEMGEN {
     }
 
     return stdair::WTPCumulativeDistribution_T (wtpContinuousDistribution);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::ValueOfTimeCumulativeDistribution_T DemandStruct_T::
+  getValueOfTimeCumulativeDistribution () const {
+
+    stdair::ValueOfTimeContinuousDistribution_T valueOfTimeContinuousDistribution;
+
+    for (TimeValueProbDist_T::const_iterator it = _timeValueProbDist.begin();
+         it != _timeValueProbDist.end(); ++it) {
+      const stdair::PriceValue_T& lValueOfTime = it->first;
+      const TimeValueProbMass_T& lValueOfTimeProMass = it->second;
+
+      valueOfTimeContinuousDistribution.
+        insert (stdair::ValueOfTimeContinuousDistribution_T::
+                value_type (lValueOfTime, lValueOfTimeProMass));
+    }
+
+    return stdair::ValueOfTimeCumulativeDistribution_T (valueOfTimeContinuousDistribution);
   }
   
   // ////////////////////////////////////////////////////////////////////

@@ -42,6 +42,10 @@ namespace TRADEMGEN {
     static const stdair::DateTime_T generateTimeOfRequest(stdair::DemandStream&);
     const stdair::DateTime_T generateTimeOfRequest ();
 
+    /** Generate the POS. */
+    static const stdair::AirportCode_T generatePOS (stdair::DemandStream&);
+    const stdair::AirportCode_T generatePOS ();
+
     /** Generate the reservation channel. */
     static const stdair::ChannelLabel_T generateChannel (stdair::DemandStream&);
     const stdair::ChannelLabel_T generateChannel ();
@@ -65,6 +69,10 @@ namespace TRADEMGEN {
     /** Generate the WTP. */
     static const stdair::WTP_T generateWTP (stdair::DemandStream&);
     const stdair::WTP_T generateWTP ();
+
+    /** Generate the value of time. */
+    static const stdair::PriceValue_T generateValueOfTime (stdair::DemandStream&);
+    const stdair::PriceValue_T generateValueOfTime ();
     
     /** Generate the next request. */
     static stdair::BookingRequestPtr_T generateNextRequest (stdair::DemandStream&);
