@@ -337,10 +337,9 @@ namespace TRADEMGEN {
     }
     
     // //////////////////////////////////////////////////////////////////
-    void storeTimeValue::operator() (unsigned int iInteger) const {
-      const stdair::Duration_T lTimeValue (iInteger, 0, 0);
-      _demand._itTimeValue = lTimeValue;
-      //STDAIR_LOG_DEBUG ("Time value: " << lTimeDuration);
+    void storeTimeValue::operator() (double iReal) const {
+      _demand._itTimeValue = iReal;
+      //STDAIR_LOG_DEBUG ("Time value: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -692,7 +691,7 @@ namespace TRADEMGEN {
         ;
 
       time_value_pair =
-        (uint1_2_p)[storeTimeValue(self._demand)]
+        (boost::spirit::classic::ureal_p)[storeTimeValue(self._demand)]
         >> ':' >> time_value_share
         ;
 

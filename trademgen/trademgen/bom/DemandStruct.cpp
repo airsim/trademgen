@@ -270,7 +270,7 @@ namespace TRADEMGEN {
     idx = 0;
     for (TimeValueProbDist_T::const_iterator it = _timeValueProbDist.begin();
          it != _timeValueProbDist.end(); ++it, ++idx) {
-      const stdair::Duration_T& lTimeValue = it->first;
+      const stdair::PriceValue_T& lTimeValue = it->first;
       const TimeValueProbMass_T& lTimeValueProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";

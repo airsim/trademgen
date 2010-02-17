@@ -109,7 +109,7 @@ namespace TRADEMGEN {
     stdair::WTP_T _itWTP;
     
     /** Staging time value. */
-    stdair::Duration_T _itTimeValue;
+    stdair::PriceValue_T _itTimeValue;
 
     /** Staging DTD (Days-To-Departure). */
     stdair::DayDuration_T _itDTD;

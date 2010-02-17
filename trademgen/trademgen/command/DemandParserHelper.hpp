@@ -203,7 +203,7 @@ namespace TRADEMGEN {
       /** Actor Constructor. */
       storeTimeValue (DemandStruct_T&);
       /** Actor Function (functor). */
-      void operator() (unsigned int iInteger) const;
+      void operator() (double iReal) const;
     };
   
     /** Store the time value probability mass. */
