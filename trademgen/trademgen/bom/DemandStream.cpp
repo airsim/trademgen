@@ -51,6 +51,7 @@ namespace TRADEMGEN {
     const stdair::Count_T lRemainingNumberOfRequestsToBeGenerated =
       iDemandStream.getTotalNumberOfRequestsToBeGenerated ()
       - lNbOfRequestsGeneratedSoFar;
+
     
     if (lRemainingNumberOfRequestsToBeGenerated <= 0) {
       return false;
@@ -130,7 +131,6 @@ namespace TRADEMGEN {
     ioDemandStream.
       setCumulativeProbabilitySoFar (lCumulativeProbabilityThisRequest);
     ioDemandStream.incrementGeneratedRequestsCounter ();
-
     return oDateTimeThisRequest;
   }
 
@@ -301,6 +301,9 @@ namespace TRADEMGEN {
                                          lChannelLabel, lTripType, lStayDuration,
                                          lFrequentFlyer, lPreferredDepartureTime,
                                          lWTP));
+    // DEBUG
+    STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
+    
     return oBookingRequest_ptr;
   }
 

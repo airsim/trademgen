@@ -205,9 +205,6 @@ int main (int argc, char* argv[]) {
     // Output log File
     std::string lLogFilename;
 
-    // Airline code
-    stdair::AirlineCode_T lAirlineCode ("BA");
-    
     // Call the command-line option parser
     const int lOptionParserStatus = 
       readConfiguration (argc, argv, lQuery, lInputFilename, lLogFilename);
@@ -234,41 +231,21 @@ int main (int argc, char* argv[]) {
     trademgenService.generateFirstRequests (lEventQueue);
     
     // Pop requests, get type, and generate next request of same type
-    int i = 0;
-    while (lEventQueue.isQueueDone() == false && i < 20) {
-      // DEBUG
-      STDAIR_LOG_DEBUG ("Before popping (" << i << ")" );
-      STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize () );
-      STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone () );
-    
+    while (lEventQueue.isQueueDone() == false) {
       stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
-
-      // DEBUG
-      STDAIR_LOG_DEBUG ("After popping" );
-      STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
-      STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
-
-      STDAIR_LOG_DEBUG ("Popped request " << i );
-    
       const stdair::BookingRequestStruct& lPoppedRequest =
         lEventStruct.getBookingRequest ();
-    
-      // DEBUG
-      STDAIR_LOG_DEBUG (lPoppedRequest.describe());
-    
+        
       // Retrieve the corresponding demand stream
       const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
         lEventStruct.getDemandStreamKey ();
       // generate next request
       bool stillHavingRequestsToBeGenerated = 
         trademgenService.stillHavingRequestsToBeGenerated(lDemandStreamKey);
-      STDAIR_LOG_DEBUG ("stillHavingRequestsToBeGenerated: " << stillHavingRequestsToBeGenerated );
       if (stillHavingRequestsToBeGenerated) {
         stdair::BookingRequestPtr_T lNextRequest =
           trademgenService.generateNextRequest (lDemandStreamKey);
         assert (lNextRequest != NULL);
-        // DEBUG
-        STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->describe());
       
         stdair::DateTime_T lNextRequestDateTime =
           lNextRequest->getRequestDateTime ();
@@ -276,21 +253,9 @@ int main (int argc, char* argv[]) {
                                               lNextRequestDateTime,
                                               lDemandStreamKey,
                                               lNextRequest);
-        lEventQueue.eraseLastUsedEvent ();
         lEventQueue.addEvent (lNextEventStruct);
-      
-        // DEBUG
-        STDAIR_LOG_DEBUG ("After adding");
-        STDAIR_LOG_DEBUG ("Queue size: " << lEventQueue.getQueueSize ());
-        STDAIR_LOG_DEBUG ("Is queue done? " << lEventQueue.isQueueDone ());
-    
       }
-
-      // DEBUG
-      STDAIR_LOG_DEBUG (std::endl);
-    
-      // Iterate
-      ++i;
+      lEventQueue.eraseLastUsedEvent ();
     }
   
     // Close the Log outputFile

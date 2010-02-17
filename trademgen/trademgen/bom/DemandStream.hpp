@@ -86,32 +86,6 @@ namespace TRADEMGEN {
     /** Destructor. */
     ~DemandStream ();
 
-    
-  private:
-    // ////////// Attributes //////////
-    /** Key. */
-    stdair::DemandStreamKey_T _key;
-    
-    /** Demand characteristics. */
-    stdair::DemandCharacteristics _demandCharacteristics;
-
-    /** Demand distribution. */
-    stdair::DemandDistribution _demandDistribution;
-    
-    /** Total number of requests to be generated. */
-    stdair::NbOfRequests_T _totalNumberOfRequestsToBeGenerated;
-
-    /** Random generation context. */
-    stdair::RandomGenerationContext _randomGenerationContext;
-  
-    /** Random generator for number of requests. */
-    stdair::RandomGeneration _numberOfRequestsRandomGenerator;
-    
-    /** Random generator for request datetime. */
-    stdair::RandomGeneration _requestDateTimeRandomGenerator;
-    
-    /** Random generator for demand characteristics. */
-    stdair::RandomGeneration _demandCharacteristicsRandomGenerator;
   };
 
 }
