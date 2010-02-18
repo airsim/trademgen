@@ -205,7 +205,7 @@ namespace TRADEMGEN {
     void storeStayCode::operator() (unsigned int iInteger) const {
       const stdair::DayDuration_T lStayDuration (iInteger);
       _demand._itStayDuration = lStayDuration;
-      //STDAIR_LOG_DEBUG ("Stay duration: " << lStayDuration);
+      // STDAIR_LOG_DEBUG ("Stay duration: " << lStayDuration);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ namespace TRADEMGEN {
         throw CodeDuplicationException();
       }
       
-      //STDAIR_LOG_DEBUG ("StayProbMass: " << iReal);
+      // STDAIR_LOG_DEBUG ("StayProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -409,7 +409,6 @@ namespace TRADEMGEN {
       // Create the Demand BOM objects
       DemandGenerator::createDemandCharacteristics (_bomRoot, _demand);
                                  
-
       // Clean the lists
       _demand._posProbDist.clear();
       _demand._channelProbDist.clear();
@@ -489,7 +488,7 @@ namespace TRADEMGEN {
     repeat_p_t class_code_list_p (chset_t("A-Z").derived(), 1, 26);
 
     /** Stay duration Parser: limit_d(0u, 999u)[uint3_p] */
-    bounded1_3_p_t stay_duration_p (uint1_3_p.derived(), 0u, 23u);
+    bounded1_3_p_t stay_duration_p (uint1_3_p.derived(), 0u, 999u);
 
 
     // //////////////////////////////////////////////////////////////////

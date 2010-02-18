@@ -24,11 +24,14 @@ namespace TRADEMGEN {
   void DemandGenerator::
   createDemandCharacteristics (stdair::BomRoot& ioBomRoot,
                                const DemandStruct_T& iDemand) {
-
+    
     const stdair::DemandStreamKey_T lDemandStreamKey (iDemand._origin,
                                                       iDemand._destination,
                                                       iDemand._prefDepDate,
                                                       iDemand._prefCabin);
+    // DEBUG
+    STDAIR_LOG_DEBUG ("Demand stream key: " << lDemandStreamKey.describe());
+    
     // Arrival pattern
     const stdair::ContinuousFloatDuration_T lArrivalPattern =
       iDemand.getArrivalPattern ();
@@ -43,7 +46,8 @@ namespace TRADEMGEN {
       iDemand.getTripTypeProbabilityMass ();
     // Stay duration probability mass.
     const stdair::StayDurationProbabilityMass_T lStayDurationProbMass =
-      iDemand.getStayDurationProbabilityMass ();
+       iDemand.getStayDurationProbabilityMass ();
+    //    const stdair::StayDurationProbabilityMass_T lStayDurationProbMass;
     // Frequent flyer probability mass.
     const stdair::FrequentFlyerProbabilityMass_T lFrequentFlyerProbMass =
       iDemand.getFrequentFlyerProbabilityMass ();
