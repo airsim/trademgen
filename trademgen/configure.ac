@@ -112,7 +112,7 @@ fi
 # -----------------------------------------------------------------------------
 # Support for ExtraCC (Extra-CruiseControl): http://sf.net/projects/extracc
 # -----------------------------------------------------------------------------
-AM_PATH_EXTRACC
+#AM_PATH_EXTRACC
 #AC_SUBST(EXTRACC_VERSION)
 #AC_SUBST(EXTRACC_CFLAGS)
 #AC_SUBST(EXTRACC_LIBS)
