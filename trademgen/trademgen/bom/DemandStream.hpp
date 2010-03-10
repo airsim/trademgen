@@ -85,7 +85,15 @@ namespace TRADEMGEN {
     DemandStream ();
     DemandStream (const DemandStream&);
     DemandStream (const stdair::DemandStreamKey_T&,
-                  const stdair::DemandCharacteristics&,
+                  const stdair::ArrivalPatternCumulativeDistribution_T&,
+                  const stdair::POSProbabilityMassFunction_T&,
+                  const stdair::ChannelProbabilityMassFunction_T&,
+                  const stdair::TripTypeProbabilityMassFunction_T&,
+                  const stdair::StayDurationProbabilityMassFunction_T&,
+                  const stdair::FrequentFlyerProbabilityMassFunction_T&,
+                  const stdair::PreferredDepartureTimeContinuousDistribution_T&,
+                  const stdair::WTPContinuousDistribution_T&,
+                  const stdair::ValueOfTimeContinuousDistribution_T&,
                   const stdair::DemandDistribution&,
                   const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                   const stdair::RandomSeed_T& iRequestDateTimeSeed,

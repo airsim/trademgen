@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <list>
 #include <string>
 // Boost (Extended STL)
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -14,9 +15,11 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/STDAIR_Service.hpp>
 #include <stdair/basic/DemandCharacteristics.hpp>
+#include <stdair/basic/DemandCharacteristicTypes.hpp>
 #include <stdair/basic/DemandDistribution.hpp>
-#include <stdair/basic/CategoricalAttribute.hpp>
-#include <stdair/basic/ContinuousAttribute.hpp>
+#include <stdair/basic/RandomGeneration.hpp>
+#include <stdair/basic/RandomGenerationContext.hpp>
+#include <stdair/basic/DictionaryManager.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
@@ -203,7 +206,6 @@ int readConfiguration (int argc, char* argv[],
   return 0;
 }
 
-
 // /////////////// M A I N /////////////////
 int main (int argc, char* argv[]) {
 
@@ -245,6 +247,9 @@ int main (int argc, char* argv[]) {
     const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
     TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
 
+    // DEBUG
+    return 0;
+    
     // /////////////////////////////////////////////////////
     // Event queue
     stdair::EventQueue lEventQueue = stdair::EventQueue ();
@@ -300,6 +305,6 @@ int main (int argc, char* argv[]) {
   } catch (...) {
     return -1;
   }
-  
+
   return 0;
 }

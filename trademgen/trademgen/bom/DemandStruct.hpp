@@ -33,31 +33,31 @@ namespace TRADEMGEN {
     stdair::Duration_T getTime() const;
 
     /** Build the arrival pattern. */
-    const stdair::ContinuousFloatDuration_T getArrivalPattern () const;
+    void buildArrivalPattern (stdair::ArrivalPatternCumulativeDistribution_T&) const;
     
     /** Build the POS probabilty mass. */
-    const stdair::POSProbabilityMass_T getPOSProbabilityMass () const;
+    void buildPOSProbabilityMass (stdair::POSProbabilityMassFunction_T&) const;
     
     /** Build the channel probabilty mass. */
-    const stdair::ChannelProbabilityMass_T getChannelProbabilityMass () const;
+    void buildChannelProbabilityMass (stdair::ChannelProbabilityMassFunction_T&) const;
 
     /** Build the trip type probabilty mass. */
-    const stdair::TripTypeProbabilityMass_T getTripTypeProbabilityMass () const;
+    void buildTripTypeProbabilityMass (stdair::TripTypeProbabilityMassFunction_T&) const;
     
     /** Build the stay duration probabilty mass. */
-    const stdair::StayDurationProbabilityMass_T getStayDurationProbabilityMass () const;
+    void buildStayDurationProbabilityMass (stdair::StayDurationProbabilityMassFunction_T&) const;
     
     /** Build the frequent flyer probabilty mass. */
-    const stdair::FrequentFlyerProbabilityMass_T getFrequentFlyerProbabilityMass () const;
+    void buildFrequentFlyerProbabilityMass (stdair::FrequentFlyerProbabilityMassFunction_T&) const;
     
     /** Build the preferred departure time cumulative distribition. */
-    const stdair::PreferredDepartureTimeCumulativeDistribution_T getPreferredDepartureTimeCumulativeDistribution () const;
+    void buildPreferredDepartureTimeContinuousDistribution (stdair::PreferredDepartureTimeContinuousDistribution_T&) const;
     
     /** Build the WTP cumulative distribition. */
-    const stdair::WTPCumulativeDistribution_T getWTPCumulativeDistribution () const;
+    void buildWTPContinuousDistribution (stdair::WTPContinuousDistribution_T&) const;
 
     /** Build the value of time cumulative distribition. */
-    const stdair::ValueOfTimeCumulativeDistribution_T getValueOfTimeCumulativeDistribution () const;
+    void buildValueOfTimeContinuousDistribution (stdair::ValueOfTimeContinuousDistribution_T&) const;
     
     /** Give a description of the structure (for display purposes). */
     const std::string describe() const;

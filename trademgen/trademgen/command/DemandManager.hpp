@@ -6,6 +6,7 @@
 // //////////////////////////////////////////////////////////////////////
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
+#include <stdair/basic/DemandCharacteristicTypes.hpp>
 #include <stdair/bom/DemandStreamTypes.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/command/CmdAbstract.hpp>
@@ -29,7 +30,15 @@ namespace TRADEMGEN {
     /** Add a demand stream into the context. */
     static void addDemandStream (stdair::BomRoot&,
                                  const stdair::DemandStreamKey_T&,
-                                 const stdair::DemandCharacteristics&,
+                                 const stdair::ArrivalPatternCumulativeDistribution_T&,
+                                 const stdair::POSProbabilityMassFunction_T&,
+                                 const stdair::ChannelProbabilityMassFunction_T&,
+                                 const stdair::TripTypeProbabilityMassFunction_T&,
+                                 const stdair::StayDurationProbabilityMassFunction_T&,
+                                 const stdair::FrequentFlyerProbabilityMassFunction_T&,
+                                 const stdair::PreferredDepartureTimeContinuousDistribution_T&,
+                                 const stdair::WTPContinuousDistribution_T&,
+                                 const stdair::ValueOfTimeContinuousDistribution_T&,
                                  const stdair::DemandDistribution&,
                                  const stdair::RandomSeed_T&,
                                  const stdair::RandomSeed_T&,

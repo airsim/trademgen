@@ -404,7 +404,7 @@ namespace TRADEMGEN {
     void doEndDemand::operator() (iterator_t iStr, iterator_t iStrEnd) const {
         
       // DEBUG: Display the result
-      STDAIR_LOG_DEBUG ("Demand: " << _demand.describe());
+      // STDAIR_LOG_DEBUG ("Demand: " << _demand.describe());
 
       // Create the Demand BOM objects
       DemandGenerator::createDemandCharacteristics (_bomRoot, _demand);

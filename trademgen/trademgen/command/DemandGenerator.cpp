@@ -30,46 +30,35 @@ namespace TRADEMGEN {
                                                       iDemand._prefDepDate,
                                                       iDemand._prefCabin);
     // DEBUG
-    STDAIR_LOG_DEBUG ("Demand stream key: " << lDemandStreamKey.describe());
+    // STDAIR_LOG_DEBUG ("Demand stream key: " << lDemandStreamKey.describe());
     
     // Arrival pattern
-    const stdair::ContinuousFloatDuration_T lArrivalPattern =
-      iDemand.getArrivalPattern ();
+    stdair::ArrivalPatternCumulativeDistribution_T lArrivalPattern;
+    iDemand.buildArrivalPattern (lArrivalPattern);
     // POS probability mass.
-    const stdair::POSProbabilityMass_T lPOSProbMass =
-      iDemand.getPOSProbabilityMass ();
+    stdair::POSProbabilityMassFunction_T lPOSProbMass;
+    iDemand.buildPOSProbabilityMass (lPOSProbMass);
     // Channel probability mass.
-    const stdair::ChannelProbabilityMass_T lChannelProbMass =
-      iDemand.getChannelProbabilityMass ();
+    stdair::ChannelProbabilityMassFunction_T lChannelProbMass;
+    iDemand.buildChannelProbabilityMass (lChannelProbMass);
     // Trip type probability mass.
-    const stdair::TripTypeProbabilityMass_T lTripTypeProbMass =
-      iDemand.getTripTypeProbabilityMass ();
+    stdair::TripTypeProbabilityMassFunction_T lTripTypeProbMass;
+    iDemand.buildTripTypeProbabilityMass (lTripTypeProbMass);
     // Stay duration probability mass.
-    const stdair::StayDurationProbabilityMass_T lStayDurationProbMass =
-       iDemand.getStayDurationProbabilityMass ();
-    //    const stdair::StayDurationProbabilityMass_T lStayDurationProbMass;
+    stdair::StayDurationProbabilityMassFunction_T lStayDurationProbMass;
+    iDemand.buildStayDurationProbabilityMass (lStayDurationProbMass);
     // Frequent flyer probability mass.
-    const stdair::FrequentFlyerProbabilityMass_T lFrequentFlyerProbMass =
-      iDemand.getFrequentFlyerProbabilityMass ();
+    stdair::FrequentFlyerProbabilityMassFunction_T lFrequentFlyerProbMass;
+    iDemand.buildFrequentFlyerProbabilityMass (lFrequentFlyerProbMass);
     // Preferred departure time cumulative distribution.
-    const stdair::PreferredDepartureTimeCumulativeDistribution_T lPreferredDepartureTimeCumulativeDistribution =
-      iDemand.getPreferredDepartureTimeCumulativeDistribution ();
+    stdair::PreferredDepartureTimeContinuousDistribution_T lPreferredDepartureTimeContinuousDistribution;
+    iDemand.buildPreferredDepartureTimeContinuousDistribution (lPreferredDepartureTimeContinuousDistribution);
     // WTP cumulative distribution.
-    const stdair::WTPCumulativeDistribution_T lWTPCumulativeDistribution =
-      iDemand.getWTPCumulativeDistribution ();
+    stdair::WTPContinuousDistribution_T lWTPContinuousDistribution;
+    iDemand.buildWTPContinuousDistribution (lWTPContinuousDistribution);
     // Value of time cumulative distribution.
-    const stdair::ValueOfTimeCumulativeDistribution_T lValueOfTimeCumulativeDistribution = iDemand.getValueOfTimeCumulativeDistribution ();
-
-    stdair::DemandCharacteristics lDemandCharacteristics (lDemandStreamKey,
-                                                          lArrivalPattern,
-                                                          lPOSProbMass,
-                                                          lChannelProbMass,
-                                                          lTripTypeProbMass,
-                                                          lStayDurationProbMass,
-                                                          lFrequentFlyerProbMass,
-                                                          lPreferredDepartureTimeCumulativeDistribution,
-                                                          lWTPCumulativeDistribution,
-                                                          lValueOfTimeCumulativeDistribution);
+    stdair::ValueOfTimeContinuousDistribution_T lValueOfTimeContinuousDistribution;
+    iDemand.buildValueOfTimeContinuousDistribution (lValueOfTimeContinuousDistribution);
 
     const stdair::DemandDistribution lDemandDistribution (iDemand._demandMean,
                                                           iDemand._demandStdDev);
@@ -80,10 +69,18 @@ namespace TRADEMGEN {
     stdair::RandomSeed_T lDemandCharacteristicsSeed = 2;
   
     // Delegate the call to the dedicated command
-    DemandManager::addDemandStream (ioBomRoot, lDemandStreamKey,
-                                    lDemandCharacteristics, lDemandDistribution,
-                                    lNumberOfRequestsSeed, lRequestDateTimeSeed,
-                                    lDemandCharacteristicsSeed);
-  }
-    
+    DemandManager::addDemandStream(ioBomRoot, lDemandStreamKey,
+                                   lArrivalPattern,
+                                   lPOSProbMass,
+                                   lChannelProbMass,
+                                   lTripTypeProbMass,
+                                   lStayDurationProbMass,
+                                   lFrequentFlyerProbMass,
+                                   lPreferredDepartureTimeContinuousDistribution,
+                                   lWTPContinuousDistribution,
+                                   lValueOfTimeContinuousDistribution,
+                                   lDemandDistribution,
+                                   lNumberOfRequestsSeed, lRequestDateTimeSeed,
+                                   lDemandCharacteristicsSeed);
+  }    
 }

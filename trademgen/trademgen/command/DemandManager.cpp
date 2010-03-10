@@ -26,26 +26,38 @@ namespace TRADEMGEN {
   void DemandManager::
   addDemandStream (stdair::BomRoot& ioBomRoot,
                    const stdair::DemandStreamKey_T& iKey,
-                   const stdair::DemandCharacteristics& iDemandCharacteristics,
+                   const stdair::ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
+                   const stdair::POSProbabilityMassFunction_T& iPOSProbMass,
+                   const stdair::ChannelProbabilityMassFunction_T& iChannelProbMass,
+                   const stdair::TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
+                   const stdair::StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
+                   const stdair::FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+                   const stdair::PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
+                   const stdair::WTPContinuousDistribution_T& iWTPContinuousDistribution,
+                   const stdair::ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
                    const stdair::DemandDistribution& iDemandDistribution,
                    const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                    const stdair::RandomSeed_T& iRequestDateTimeSeed,
                    const stdair::RandomSeed_T& iDemandCharacteristicsSeed) {
 
     stdair::DemandStream& lDemandStream =
-      stdair::FacBomContent::
-      instance().create<stdair::DemandStream> (iKey, iDemandCharacteristics,
-                                               iDemandDistribution,
-                                               iNumberOfRequestsSeed,
-                                               iRequestDateTimeSeed,
-                                               iDemandCharacteristicsSeed);
-
+      stdair::FacBomContent::instance().
+      create<stdair::DemandStream>(iKey, iArrivalPattern, iPOSProbMass,
+                                   iChannelProbMass, iTripTypeProbMass,
+                                   iStayDurationProbMass, iFrequentFlyerProbMass,
+                                   iPreferredDepartureTimeContinuousDistribution,
+                                   iWTPContinuousDistribution,
+                                   iValueOfTimeContinuousDistribution,
+                                   iDemandDistribution, iNumberOfRequestsSeed,
+                                   iRequestDateTimeSeed,
+                                   iDemandCharacteristicsSeed);
+    
     // Insert the reference on the given DemandStream object into the
     // dedicated list
       // DEBUG
-    STDAIR_LOG_DEBUG ("Add DemandStream: \n"
-                      << lDemandStream.getDemandCharacteristics().display()
-                      << lDemandStream.getDemandDistribution().display());
+    // STDAIR_LOG_DEBUG ("Add DemandStream: \n"
+    //                   << lDemandStream.getDemandCharacteristics().display()
+    //                   << lDemandStream.getDemandDistribution().display());
       
     const bool hasInsertBeenSuccessfull = stdair::FacBomContent::
       addDemandStream<stdair::DemandStream> (ioBomRoot, lDemandStream);

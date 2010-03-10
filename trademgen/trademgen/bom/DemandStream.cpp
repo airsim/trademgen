@@ -26,13 +26,26 @@ namespace TRADEMGEN {
   // ////////////////////////////////////////////////////////////////////
   DemandStream::
   DemandStream (const stdair::DemandStreamKey_T& iKey,
-                const stdair::DemandCharacteristics& iDemandCharacteristics,
+                const stdair::ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
+                const stdair::POSProbabilityMassFunction_T& iPOSProbMass,
+                const stdair::ChannelProbabilityMassFunction_T& iChannelProbMass,
+                const stdair::TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
+                const stdair::StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
+                const stdair::FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+                const stdair::PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
+                const stdair::WTPContinuousDistribution_T& iWTPContinuousDistribution,
+                const stdair::ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
                 const stdair::DemandDistribution& iDemandDistribution,
                 const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                 const stdair::RandomSeed_T& iRequestDateTimeSeed,
                 const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
                 BomStructure_T& ioBomStructure)
-    : stdair::DemandStream (iKey, iDemandCharacteristics,
+    : stdair::DemandStream (iKey, iArrivalPattern, iPOSProbMass,
+                            iChannelProbMass, iTripTypeProbMass,
+                            iStayDurationProbMass, iFrequentFlyerProbMass,
+                            iPreferredDepartureTimeContinuousDistribution,
+                            iWTPContinuousDistribution,
+                            iValueOfTimeContinuousDistribution,
                             iDemandDistribution, iNumberOfRequestsSeed,
                             iRequestDateTimeSeed, iDemandCharacteristicsSeed,
                             ioBomStructure) {
