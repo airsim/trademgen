@@ -160,7 +160,7 @@ namespace TRADEMGEN {
     const bool doesExistAndIsReadable =
       stdair::BasFileMgr::doesExistAndIsReadable (iDemandInputFilename);
     if (doesExistAndIsReadable == false) {
-      STDAIR_LOG_ERROR ("The schedule input file, '" << iDemandInputFilename
+      STDAIR_LOG_ERROR ("The demand input file, '" << iDemandInputFilename
                         << "', can not be retrieved on the file-system");
       throw stdair::FileNotFoundException();
     }
@@ -171,12 +171,13 @@ namespace TRADEMGEN {
       *_trademgenServiceContext;
 
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+    assert (lSTDAIR_Service != NULL);
     
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
 
     // Initialise the demand generators
     DemandParser::generateDemand (iDemandInputFilename, lBomRoot);
@@ -260,12 +261,13 @@ namespace TRADEMGEN {
       *_trademgenServiceContext;
 
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+    assert (lSTDAIR_Service != NULL);
     
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
 
     // Delegate the call to the dedicated command
     return DemandManager::getTotalNumberOfRequestsToBeGenerated(lBomRoot,
@@ -281,12 +283,13 @@ namespace TRADEMGEN {
       *_trademgenServiceContext;
 
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+    assert (lSTDAIR_Service != NULL);
     
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
 
     // Delegate the call to the dedicated command
     return DemandManager::stillHavingRequestsToBeGenerated (lBomRoot, iKey);
@@ -301,12 +304,13 @@ namespace TRADEMGEN {
       *_trademgenServiceContext;
 
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+    assert (lSTDAIR_Service != NULL);
     
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
 
     // Delegate the call to the dedicated command
     return DemandManager::generateNextRequest (lBomRoot, iKey);
@@ -321,12 +325,13 @@ namespace TRADEMGEN {
       *_trademgenServiceContext;
 
     // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+    assert (lSTDAIR_Service != NULL);
     
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
 
     // Delegate the call to the dedicated command
     DemandManager::generateFirstRequests (ioQueue, lBomRoot);

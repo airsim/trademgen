@@ -122,9 +122,8 @@ namespace TRADEMGEN {
     void initStdAirService (const stdair::BasLogParams&);
     
     /** Initialise.
-        <br>The CSV file, describing the airline schedules for the
-        simulator, is parsed and the inventories are generated accordingly.
-        @param const stdair::AirlineFeatureSet& Set of airline features.
+        <br>The CSV file, describing the characteristics of the demand for the
+        simulator, is parsed and the demand streams are generated accordingly.
         @param const stdair::Filename_T& Filename of the input demand file. */
     void init (const stdair::Filename_T& iDemandInputFilename);
     

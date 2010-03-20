@@ -25,25 +25,11 @@ namespace TRADEMGEN {
 
   /** Class holding the context of the Trademgen services. */
   class TRADEMGEN_ServiceContext : public ServiceAbstract {
+    /** The TRADEMGEN_Service class should be the sole class to get access to
+        ServiceContext content: general users do not want to bother
+        with a context interface. */
+    friend class TRADEMGEN_Service;
     friend class FacTRADEMGENServiceContext;
-  public:
-    // ///////// Getters //////////
-    /** Get the pointer on the STDAIR service handler. */
-    stdair::STDAIR_Service& getSTDAIR_Service () const;
-
-  public:
-    // ///////// Setters //////////
-    /** Set the pointer on the STDAIR service handler. */
-    void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T);
-
-  public:
-    // ///////// Display Methods //////////
-    /** Display the short TRADEMGEN_ServiceContext content. */
-    const std::string shortDisplay() const;
-    
-    /** Display the full TRADEMGEN_ServiceContext content. */
-    const std::string display() const;
-
     
   private:
     // /////// Construction / initialisation ////////
@@ -55,6 +41,29 @@ namespace TRADEMGEN {
     /** Destructor. */
     ~TRADEMGEN_ServiceContext();
       
+  private:
+    // ///////// Getters //////////
+    /** Get the pointer on the STDAIR service handler. */
+    stdair::STDAIR_ServicePtr_T getSTDAIR_ServicePtr () const {
+      return _stdairService;
+    }
+
+  private:
+    // ///////// Setters //////////
+    /** Set the pointer on the STDAIR service handler. */
+    void setSTDAIR_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr) {
+      _stdairService = ioSTDAIR_ServicePtr;
+    }
+
+  private:
+    // ///////// Display Methods //////////
+    /** Display the short TRADEMGEN_ServiceContext content. */
+    const std::string shortDisplay() const;
+    
+    /** Display the full TRADEMGEN_ServiceContext content. */
+    const std::string display() const;
+
+    
   private:
     // ///////////// Children ////////////
     /** Standard Airline (StdAir) Service Handler. */

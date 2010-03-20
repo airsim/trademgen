@@ -25,18 +25,6 @@ namespace TRADEMGEN {
   }
   
   // //////////////////////////////////////////////////////////////////////
-  stdair::STDAIR_Service& TRADEMGEN_ServiceContext::getSTDAIR_Service() const {
-    assert (_stdairService != NULL);
-    return *_stdairService;
-  }
-  
-  // //////////////////////////////////////////////////////////////////////
-  void TRADEMGEN_ServiceContext::
-  setSTDAIR_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr) {
-    _stdairService = ioSTDAIR_ServicePtr;
-  }
-  
-  // //////////////////////////////////////////////////////////////////////
   const std::string TRADEMGEN_ServiceContext::shortDisplay() const {
     std::ostringstream oStr;
     oStr << "TRADEMGEN_ServiceContext: " << std::endl
