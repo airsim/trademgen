@@ -248,7 +248,7 @@ int main (int argc, char* argv[]) {
     TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
 
     // DEBUG
-    return 0;
+    //return 0;
     
     // /////////////////////////////////////////////////////
     // Event queue
