@@ -64,9 +64,9 @@ namespace TRADEMGEN {
                                                           iDemand._demandStdDev);
     
     // Seed
-    stdair::RandomSeed_T lNumberOfRequestsSeed = 2;
-    stdair::RandomSeed_T lRequestDateTimeSeed = 2;
-    stdair::RandomSeed_T lDemandCharacteristicsSeed = 2;
+    stdair::RandomSeed_T lNumberOfRequestsSeed = 120765987;
+    stdair::RandomSeed_T lRequestDateTimeSeed = 120765987;
+    stdair::RandomSeed_T lDemandCharacteristicsSeed = 120765987;
   
     // Delegate the call to the dedicated command
     DemandManager::addDemandStream(ioBomRoot, lDemandStreamKey,
