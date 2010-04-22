@@ -271,7 +271,7 @@ namespace TRADEMGEN {
 
     // Delegate the call to the dedicated command
     return DemandManager::getTotalNumberOfRequestsToBeGenerated(lBomRoot,
-                                                                iKey.describe());
+                                                                iKey.toString());
   }
 
   // ////////////////////////////////////////////////////////////////////
