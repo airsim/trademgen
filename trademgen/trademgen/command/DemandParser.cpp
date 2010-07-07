@@ -7,7 +7,6 @@
 // StdAir
 #include <stdair/basic/DictionaryManager.hpp>
 #include <stdair/bom/Inventory.hpp>
-#include <stdair/bom/Network.hpp>
 // Trademgen
 #include <trademgen/command/DemandParserHelper.hpp>
 #include <trademgen/command/DemandParser.hpp>
