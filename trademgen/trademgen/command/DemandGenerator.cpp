@@ -7,6 +7,7 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/BasConst_BookingClass.hpp>
 #include <stdair/basic/BasConst_Yield.hpp>
+#include <stdair/basic/BasConst_General.hpp>
 #include <stdair/basic/DemandCharacteristics.hpp>
 #include <stdair/basic/DemandDistribution.hpp>
 #include <stdair/bom/BomRoot.hpp>
@@ -64,9 +65,9 @@ namespace TRADEMGEN {
                                                           iDemand._demandStdDev);
     
     // Seed
-    stdair::RandomSeed_T lNumberOfRequestsSeed = 120765987;
-    stdair::RandomSeed_T lRequestDateTimeSeed = 120765987;
-    stdair::RandomSeed_T lDemandCharacteristicsSeed = 120765987;
+    stdair::RandomSeed_T lNumberOfRequestsSeed = stdair::DEFAULT_RANDOM_SEED;
+    stdair::RandomSeed_T lRequestDateTimeSeed =  stdair::DEFAULT_RANDOM_SEED;
+    stdair::RandomSeed_T lDemandCharacteristicsSeed =stdair::DEFAULT_RANDOM_SEED;
   
     // Delegate the call to the dedicated command
     DemandManager::addDemandStream(ioBomRoot, lDemandStreamKey,
