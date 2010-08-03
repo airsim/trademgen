@@ -337,4 +337,23 @@ namespace TRADEMGEN {
     DemandManager::generateFirstRequests (ioQueue, lBomRoot);
   }
 
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::reset () {
+    // Retrieve the Trademgen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+    
+    // Retrieve the StdAir service context
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+    assert (lSTDAIR_Service != NULL);
+
+    // Get the root of the BOM tree, on which all of the other BOM objects
+    // will be attached
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
+
+    // Delegate the call to the dedicated command
+    DemandManager::reset (lBomRoot);
+  }
 }

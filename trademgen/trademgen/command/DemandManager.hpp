@@ -61,12 +61,15 @@ namespace TRADEMGEN {
     static void generateFirstRequests (stdair::EventQueue&,
                                        const stdair::BomRoot&);
 
-
     /** Generate a request with the demand stream which corresponds to
         the given key. */
     static stdair::BookingRequestPtr_T
     generateNextRequest (const stdair::BomRoot&,
                          const stdair::DemandStreamKeyStr_T&);
+
+    /** Reset the context of the demand streams for another demand generation
+        without having to reparse the demand input file. */
+    static void reset (const stdair::BomRoot&);
   };
 
 }

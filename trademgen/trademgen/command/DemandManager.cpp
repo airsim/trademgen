@@ -127,4 +127,15 @@ namespace TRADEMGEN {
     }
   }
 
+  // ////////////////////////////////////////////////////////////////////
+  void DemandManager::reset (const stdair::BomRoot& iBomRoot) {
+    const stdair::DemandStreamList_T lDemandStreamList =
+      iBomRoot.getDemandStreamList ();
+    for (stdair::DemandStreamList_T::iterator itDS = lDemandStreamList.begin();
+         itDS != lDemandStreamList.end(); ++itDS) {
+      stdair::DemandStream& lCurrentDS = *itDS;
+      lCurrentDS.reset();
+    }
+  }
+
 }

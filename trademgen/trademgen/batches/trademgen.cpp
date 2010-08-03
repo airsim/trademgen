@@ -231,6 +231,9 @@ int main (int argc, char* argv[]) {
       return 0;
     }
 
+    // Number of generations.
+    const int lNbOfRuns = 10;
+
     // Open and clean the .csv output file
     std::ofstream output;
     output.open (lOutputFilename.c_str());
@@ -248,46 +251,56 @@ int main (int argc, char* argv[]) {
 
     // DEBUG
     //return 0;
-    
-    // /////////////////////////////////////////////////////
-    // Event queue
-    stdair::EventQueue lEventQueue = stdair::EventQueue ();
-    // Browse the list of DemandStreams and Generate the first event for each
-    // DemandStream.
-    trademgenService.generateFirstRequests (lEventQueue);
 
-    unsigned int id = 1;
-    
-    // Pop requests, get type, and generate next request of same type
-    while (lEventQueue.isQueueDone() == false) {
-      stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
-      const stdair::BookingRequestStruct& lPoppedRequest =
-        lEventStruct.getBookingRequest ();
+    for (int i = 1; i <= lNbOfRuns; ++i) {
 
-      // Output the request.
-      output << id << ", "; ++id;
-      stdair::BomManager::csvDisplay (output, lPoppedRequest);
+      output << "Demand generation number " << i << std::endl;
       
-      // Retrieve the corresponding demand stream
-      const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
-        lEventStruct.getDemandStreamKey ();
-      // generate next request
-      bool stillHavingRequestsToBeGenerated = 
-        trademgenService.stillHavingRequestsToBeGenerated(lDemandStreamKey);
-      if (stillHavingRequestsToBeGenerated) {
-        stdair::BookingRequestPtr_T lNextRequest =
-          trademgenService.generateNextRequest (lDemandStreamKey);
-        assert (lNextRequest != NULL);
+      // /////////////////////////////////////////////////////
+      // Event queue
+      stdair::EventQueue lEventQueue = stdair::EventQueue ();
+      // Browse the list of DemandStreams and Generate the first event for each
+      // DemandStream.
+      trademgenService.generateFirstRequests (lEventQueue);
       
-        stdair::DateTime_T lNextRequestDateTime =
-          lNextRequest->getRequestDateTime ();
-        stdair::EventStruct lNextEventStruct ("Request",
-                                              lNextRequestDateTime,
-                                              lDemandStreamKey,
-                                              lNextRequest);
-        lEventQueue.addEvent (lNextEventStruct);
+      unsigned int id = 1;
+      
+      // Pop requests, get type, and generate next request of same type
+      while (lEventQueue.isQueueDone() == false) {
+        stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
+        const stdair::BookingRequestStruct& lPoppedRequest =
+          lEventStruct.getBookingRequest ();
+        
+        // Output the request.
+        output << id << ", "; ++id;
+        stdair::BomManager::csvDisplay (output, lPoppedRequest);
+        
+        // Retrieve the corresponding demand stream
+        const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
+          lEventStruct.getDemandStreamKey ();
+        // generate next request
+        bool stillHavingRequestsToBeGenerated = 
+          trademgenService.stillHavingRequestsToBeGenerated(lDemandStreamKey);
+        if (stillHavingRequestsToBeGenerated) {
+          stdair::BookingRequestPtr_T lNextRequest =
+            trademgenService.generateNextRequest (lDemandStreamKey);
+          assert (lNextRequest != NULL);
+          
+          stdair::DateTime_T lNextRequestDateTime =
+            lNextRequest->getRequestDateTime ();
+          stdair::EventStruct lNextEventStruct ("Request",
+                                                lNextRequestDateTime,
+                                                lDemandStreamKey,
+                                                lNextRequest);
+          lEventQueue.addEvent (lNextEventStruct);
+        }
+        lEventQueue.eraseLastUsedEvent ();
       }
-      lEventQueue.eraseLastUsedEvent ();
+
+      trademgenService.reset();
+      
+      // DEBUG
+      //std::cout << "Demand generation number " << i << ": " << id << std::endl;
     }
   
     // Close the Log outputFile

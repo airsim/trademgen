@@ -94,6 +94,9 @@ namespace TRADEMGEN {
         the given key. */
     stdair::BookingRequestPtr_T generateNextRequest (const stdair::DemandStreamKeyStr_T&) const;
 
+    /** Reset the context of the demand streams for another demand generation
+        without having to reparse the demand input file. */
+    void reset ();
     
   private:
     // ////////////////// Constructors and Destructors //////////////////    
