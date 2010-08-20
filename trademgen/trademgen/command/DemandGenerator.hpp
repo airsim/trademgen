@@ -18,7 +18,7 @@ namespace stdair {
 namespace TRADEMGEN {
 
   // Forward declarations
-  struct DemandStruct_T;
+  struct DemandStruct;
   namespace DemandParserHelper {
     struct doEndDemand;
   }
@@ -35,7 +35,7 @@ namespace TRADEMGEN {
     /** Generate the Demand objects corresponding to the given
         Flight-Period, and add them to the given BomRoot. */
     static void createDemandCharacteristics (stdair::BomRoot&,
-                                             const DemandStruct_T&);
+                                             const DemandStruct&);
   };
 
 }

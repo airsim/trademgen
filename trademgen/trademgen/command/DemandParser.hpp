@@ -6,9 +6,8 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
-// StdAir
+// STDAIR
 #include <stdair/STDAIR_Types.hpp>
-#include <stdair/bom/DemandStreamTypes.hpp>
 #include <stdair/command/CmdAbstract.hpp>
 
 // Forward declarations.

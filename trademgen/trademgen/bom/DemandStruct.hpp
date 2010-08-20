@@ -9,8 +9,8 @@
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/StructAbstract.hpp>
-#include <stdair/basic/DemandCharacteristicTypes.hpp>
 // TraDemGen
+#include <trademgen/basic/DemandCharacteristicTypes.hpp>
 #include <trademgen/basic/StayDurationTypes.hpp>
 #include <trademgen/basic/PosCodeTypes.hpp>
 #include <trademgen/basic/ChannelCodeTypes.hpp>
@@ -24,7 +24,7 @@
 namespace TRADEMGEN {
 
   /** Utility Structure for the parsing of Demand structures. */
-  struct DemandStruct_T : public stdair::StructAbstract {
+  struct DemandStruct : public stdair::StructAbstract {
     
     /** Get the date from the staging details. */
     stdair::Date_T getDate() const;
@@ -33,37 +33,37 @@ namespace TRADEMGEN {
     stdair::Duration_T getTime() const;
 
     /** Build the arrival pattern. */
-    void buildArrivalPattern (stdair::ArrivalPatternCumulativeDistribution_T&) const;
+    void buildArrivalPattern (ArrivalPatternCumulativeDistribution_T&) const;
     
     /** Build the POS probabilty mass. */
-    void buildPOSProbabilityMass (stdair::POSProbabilityMassFunction_T&) const;
+    void buildPOSProbabilityMass (POSProbabilityMassFunction_T&) const;
     
     /** Build the channel probabilty mass. */
-    void buildChannelProbabilityMass (stdair::ChannelProbabilityMassFunction_T&) const;
+    void buildChannelProbabilityMass (ChannelProbabilityMassFunction_T&) const;
 
     /** Build the trip type probabilty mass. */
-    void buildTripTypeProbabilityMass (stdair::TripTypeProbabilityMassFunction_T&) const;
+    void buildTripTypeProbabilityMass (TripTypeProbabilityMassFunction_T&) const;
     
     /** Build the stay duration probabilty mass. */
-    void buildStayDurationProbabilityMass (stdair::StayDurationProbabilityMassFunction_T&) const;
+    void buildStayDurationProbabilityMass (StayDurationProbabilityMassFunction_T&) const;
     
     /** Build the frequent flyer probabilty mass. */
-    void buildFrequentFlyerProbabilityMass (stdair::FrequentFlyerProbabilityMassFunction_T&) const;
+    void buildFrequentFlyerProbabilityMass (FrequentFlyerProbabilityMassFunction_T&) const;
     
     /** Build the preferred departure time cumulative distribition. */
-    void buildPreferredDepartureTimeContinuousDistribution (stdair::PreferredDepartureTimeContinuousDistribution_T&) const;
+    void buildPreferredDepartureTimeContinuousDistribution (PreferredDepartureTimeContinuousDistribution_T&) const;
     
     /** Build the WTP cumulative distribition. */
-    void buildWTPContinuousDistribution (stdair::WTPContinuousDistribution_T&) const;
+    void buildWTPContinuousDistribution (WTPContinuousDistribution_T&) const;
 
     /** Build the value of time cumulative distribition. */
-    void buildValueOfTimeContinuousDistribution (stdair::ValueOfTimeContinuousDistribution_T&) const;
+    void buildValueOfTimeContinuousDistribution (ValueOfTimeContinuousDistribution_T&) const;
     
     /** Give a description of the structure (for display purposes). */
     const std::string describe() const;
 
     /** Constructor. */
-    DemandStruct_T ();
+    DemandStruct ();
 
     // Attributes
     stdair::Date_T _prefDepDate;

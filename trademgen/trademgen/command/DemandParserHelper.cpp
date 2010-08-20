@@ -19,13 +19,13 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
 
     ParserSemanticAction::
-    ParserSemanticAction (DemandStruct_T& ioDemand)
+    ParserSemanticAction (DemandStruct& ioDemand)
       : _demand (ioDemand) {
     }      
 
     // //////////////////////////////////////////////////////////////////
     storePreferredDepartureDate::
-    storePreferredDepartureDate (DemandStruct_T& ioDemand)
+    storePreferredDepartureDate (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -39,7 +39,7 @@ namespace TRADEMGEN {
     }
       
     // //////////////////////////////////////////////////////////////////
-    storeOrigin::storeOrigin (DemandStruct_T& ioDemand)
+    storeOrigin::storeOrigin (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
 
@@ -50,7 +50,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeDestination::storeDestination (DemandStruct_T& ioDemand)
+    storeDestination::storeDestination (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
 
@@ -62,7 +62,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePrefCabin::storePrefCabin (DemandStruct_T& ioDemand)
+    storePrefCabin::storePrefCabin (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -74,7 +74,7 @@ namespace TRADEMGEN {
     }
     
     // //////////////////////////////////////////////////////////////////
-    storeDemandMean::storeDemandMean (DemandStruct_T& ioDemand)
+    storeDemandMean::storeDemandMean (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -85,7 +85,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeDemandStdDev::storeDemandStdDev (DemandStruct_T& ioDemand)
+    storeDemandStdDev::storeDemandStdDev (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -96,7 +96,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePosCode::storePosCode (DemandStruct_T& ioDemand)
+    storePosCode::storePosCode (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -108,7 +108,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePosProbMass::storePosProbMass (DemandStruct_T& ioDemand)
+    storePosProbMass::storePosProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -127,7 +127,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeChannelCode::storeChannelCode (DemandStruct_T& ioDemand)
+    storeChannelCode::storeChannelCode (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -141,7 +141,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeChannelProbMass::storeChannelProbMass (DemandStruct_T& ioDemand)
+    storeChannelProbMass::storeChannelProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -162,7 +162,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeTripCode::storeTripCode (DemandStruct_T& ioDemand)
+    storeTripCode::storeTripCode (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -176,7 +176,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeTripProbMass::storeTripProbMass (DemandStruct_T& ioDemand)
+    storeTripProbMass::storeTripProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -197,7 +197,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeStayCode::storeStayCode (DemandStruct_T& ioDemand)
+    storeStayCode::storeStayCode (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -209,7 +209,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeStayProbMass::storeStayProbMass (DemandStruct_T& ioDemand)
+    storeStayProbMass::storeStayProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -229,7 +229,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeFFCode::storeFFCode (DemandStruct_T& ioDemand)
+    storeFFCode::storeFFCode (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -242,7 +242,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeFFProbMass::storeFFProbMass (DemandStruct_T& ioDemand)
+    storeFFProbMass::storeFFProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -262,7 +262,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePrefDepTime::storePrefDepTime (DemandStruct_T& ioDemand)
+    storePrefDepTime::storePrefDepTime (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -282,7 +282,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storePrefDepTimeProbMass::storePrefDepTimeProbMass (DemandStruct_T& ioDemand)
+    storePrefDepTimeProbMass::storePrefDepTimeProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -302,7 +302,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeWTP::storeWTP (DemandStruct_T& ioDemand)
+    storeWTP::storeWTP (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -313,7 +313,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeWTPProbMass::storeWTPProbMass (DemandStruct_T& ioDemand)
+    storeWTPProbMass::storeWTPProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -332,7 +332,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeTimeValue::storeTimeValue (DemandStruct_T& ioDemand)
+    storeTimeValue::storeTimeValue (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -343,7 +343,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeTimeValueProbMass::storeTimeValueProbMass (DemandStruct_T& ioDemand)
+    storeTimeValueProbMass::storeTimeValueProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -363,7 +363,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeDTD::storeDTD (DemandStruct_T& ioDemand)
+    storeDTD::storeDTD (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -375,7 +375,7 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    storeDTDProbMass::storeDTDProbMass (DemandStruct_T& ioDemand)
+    storeDTDProbMass::storeDTDProbMass (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
     
@@ -395,7 +395,7 @@ namespace TRADEMGEN {
 
     // //////////////////////////////////////////////////////////////////
     doEndDemand::doEndDemand (stdair::BomRoot& ioBomRoot,
-                              DemandStruct_T& ioDemand)
+                              DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand), _bomRoot (ioBomRoot) {
     }
     
@@ -497,7 +497,7 @@ namespace TRADEMGEN {
 
     // //////////////////////////////////////////////////////////////////
     DemandParser::DemandParser (stdair::BomRoot& ioBomRoot,
-                                DemandStruct_T& ioDemand) 
+                                DemandStruct& ioDemand) 
       : _bomRoot (ioBomRoot), _demand (ioDemand) {
     }
 

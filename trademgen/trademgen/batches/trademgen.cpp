@@ -14,20 +14,20 @@
 // StdAir
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/STDAIR_Service.hpp>
-#include <stdair/basic/DemandCharacteristics.hpp>
-#include <stdair/basic/DemandCharacteristicTypes.hpp>
-#include <stdair/basic/DemandDistribution.hpp>
-#include <stdair/basic/RandomGeneration.hpp>
-#include <stdair/basic/RandomGenerationContext.hpp>
-#include <stdair/basic/DictionaryManager.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
-#include <stdair/bom/BomManager.hpp>
 #include <stdair/service/Logger.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Service.hpp>
 #include <trademgen/config/trademgen-paths.hpp>
+#include <trademgen/basic/DemandCharacteristics.hpp>
+#include <trademgen/basic/DemandCharacteristicTypes.hpp>
+#include <trademgen/basic/DemandDistribution.hpp>
+#include <trademgen/basic/RandomGeneration.hpp>
+#include <trademgen/basic/RandomGenerationContext.hpp>
+#include <trademgen/basic/DictionaryManager.hpp>
+#include <trademgen/bom/BomManager.hpp>
 
 
 // //////// Type definitions ///////
@@ -232,7 +232,7 @@ int main (int argc, char* argv[]) {
     }
 
     // Number of generations.
-    const int lNbOfRuns = 10;
+    const int lNbOfRuns = 1;
 
     // Open and clean the .csv output file
     std::ofstream output;
@@ -263,8 +263,6 @@ int main (int argc, char* argv[]) {
       // DemandStream.
       trademgenService.generateFirstRequests (lEventQueue);
       
-      unsigned int id = 1;
-      
       // Pop requests, get type, and generate next request of same type
       while (lEventQueue.isQueueDone() == false) {
         stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
@@ -272,8 +270,7 @@ int main (int argc, char* argv[]) {
           lEventStruct.getBookingRequest ();
         
         // Output the request.
-        output << id << ", "; ++id;
-        stdair::BomManager::csvDisplay (output, lPoppedRequest);
+        TRADEMGEN::BomManager::csvDisplay (output, lPoppedRequest);
         
         // Retrieve the corresponding demand stream
         const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
@@ -298,25 +295,12 @@ int main (int argc, char* argv[]) {
       }
 
       trademgenService.reset();
-      
-      // DEBUG
-      //std::cout << "Demand generation number " << i << ": " << id << std::endl;
     }
   
     // Close the Log outputFile
     logOutputFile.close();
 
-  } catch (const TRADEMGEN::RootException& otexp) {
-    std::cerr << "Standard exception: " << otexp.what() << std::endl;
-    return -1;
-    
-  } catch (const std::exception& stde) {
-    std::cerr << "Standard exception: " << stde.what() << std::endl;
-    return -1;
-    
-  } catch (...) {
-    return -1;
-  }
+  } CATCH
 
   return 0;
 }

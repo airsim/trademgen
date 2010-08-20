@@ -17,14 +17,13 @@
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/bom/AirlineStruct.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
-#include <stdair/bom/DemandStreamKey.hpp>
-#include <stdair/factory/FacBomContent.hpp>
 #include <stdair/command/DBManagerForAirlines.hpp>
 #include <stdair/service/Logger.hpp>
 #include <stdair/service/DBSessionManager.hpp>
 #include <stdair/STDAIR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
+#include <trademgen/bom/DemandStreamKey.hpp>
 #include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
 #include <trademgen/command/DemandParser.hpp>
 #include <trademgen/command/DemandManager.hpp>
@@ -254,7 +253,7 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::NbOfRequests_T& TRADEMGEN_Service::
-  getTotalNumberOfRequestsToBeGenerated (const stdair::DemandStreamKey_T& iKey) const {
+  getTotalNumberOfRequestsToBeGenerated (const DemandStreamKey& iKey) const {
     // Retrieve the Trademgen service context
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =

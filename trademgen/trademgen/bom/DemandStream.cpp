@@ -6,49 +6,46 @@
 #include <iosfwd>
 #include <ostream>
 #include <sstream>
+// Math
 #include <cmath>
-// Boost
-#include <boost/math/distributions/normal.hpp>
-// StdAir
+// STDAIR
 #include <stdair/basic/BasConst_General.hpp>
 #include <stdair/basic/BasConst_Request.hpp>
-#include <stdair/basic/DemandCharacteristics.hpp>
-#include <stdair/basic/DemandDistribution.hpp>
-#include <stdair/basic/RandomGeneration.hpp>
-#include <stdair/basic/RandomGenerationContext.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
-// TraDemGen
+// TRADEMGEN
 #include <trademgen/bom/DemandStream.hpp>
 
 namespace TRADEMGEN {
-
   // ////////////////////////////////////////////////////////////////////
   DemandStream::
-  DemandStream (const stdair::DemandStreamKey_T& iKey,
-                const stdair::ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
-                const stdair::POSProbabilityMassFunction_T& iPOSProbMass,
-                const stdair::ChannelProbabilityMassFunction_T& iChannelProbMass,
-                const stdair::TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
-                const stdair::StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
-                const stdair::FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
-                const stdair::PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
-                const stdair::WTPContinuousDistribution_T& iWTPContinuousDistribution,
-                const stdair::ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
-                const stdair::DemandDistribution& iDemandDistribution,
+  DemandStream (const Key_T& iKey,
+                const ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
+                const POSProbabilityMassFunction_T& iPOSProbMass,
+                const ChannelProbabilityMassFunction_T& iChannelProbMass,
+                const TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
+                const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
+                const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+                const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
+                const WTPContinuousDistribution_T& iWTPContinuousDistribution,
+                const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
+                const DemandDistribution& iDemandDistribution,
                 const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                 const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
-                BomStructure_T& ioBomStructure)
-    : stdair::DemandStream (iKey, iArrivalPattern, iPOSProbMass,
-                            iChannelProbMass, iTripTypeProbMass,
-                            iStayDurationProbMass, iFrequentFlyerProbMass,
-                            iPreferredDepartureTimeContinuousDistribution,
-                            iWTPContinuousDistribution,
-                            iValueOfTimeContinuousDistribution,
-                            iDemandDistribution, iNumberOfRequestsSeed,
-                            iRequestDateTimeSeed, iDemandCharacteristicsSeed,
-                            ioBomStructure) {
+                const stdair::RandomSeed_T& iDemandCharacteristicsSeed)
+    : _key (iKey),
+      _demandCharacteristics (iArrivalPattern, iPOSProbMass,
+                              iChannelProbMass, iTripTypeProbMass,
+                              iStayDurationProbMass, iFrequentFlyerProbMass,
+                              iPreferredDepartureTimeContinuousDistribution,
+                              iWTPContinuousDistribution,
+                              iValueOfTimeContinuousDistribution),
+      _demandDistribution (iDemandDistribution),
+      _totalNumberOfRequestsToBeGenerated (0),
+      _numberOfRequestsRandomGenerator (iNumberOfRequestsSeed),
+      _requestDateTimeRandomGenerator (iRequestDateTimeSeed),
+      _demandCharacteristicsRandomGenerator (iDemandCharacteristicsSeed) {
+    init();
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -56,56 +53,71 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  const bool DemandStream::
-  stillHavingRequestsToBeGenerated (const stdair::DemandStream& iDemandStream) {
-    // Check whether enough requests have already been generated
-    const stdair::Count_T lNbOfRequestsGeneratedSoFar =
-      iDemandStream.getNumberOfRequestsGeneratedSoFar();
-    const stdair::Count_T lRemainingNumberOfRequestsToBeGenerated =
-      iDemandStream.getTotalNumberOfRequestsToBeGenerated ()
-      - lNbOfRequestsGeneratedSoFar;
-
-    
-    if (lRemainingNumberOfRequestsToBeGenerated <= 0) {
-      return false;
-    }
-
-    return true;
-
+  std::string DemandStream::toString() const {
+    std::ostringstream oStr;
+    oStr << _key.toString();
+    return oStr.str();
   }
+
+  // ////////////////////////////////////////////////////////////////////
+  void DemandStream::init() {
+    // Generate the number of requests
+    const stdair::RealNumber_T lMu = _demandDistribution._meanNumberOfRequests;
+    const stdair::RealNumber_T lSigma =
+      _demandDistribution._stdDevNumberOfRequests;
+    
+    const stdair::RealNumber_T lRealNumberOfRequestsToBeGenerated =
+      _numberOfRequestsRandomGenerator.generateNormal (lMu, lSigma);
+
+    stdair::NbOfRequests_T lIntegerNumberOfRequestsToBeGenerated = 0;
+    if (lRealNumberOfRequestsToBeGenerated < 0.5) {
+    	lIntegerNumberOfRequestsToBeGenerated = 0;
+        
+    } else {
+      lIntegerNumberOfRequestsToBeGenerated =
+        static_cast<stdair::NbOfRequests_T> (lRealNumberOfRequestsToBeGenerated + 0.5);
+    }
+    
+    _totalNumberOfRequestsToBeGenerated = lIntegerNumberOfRequestsToBeGenerated;
+  }  
 
   // ////////////////////////////////////////////////////////////////////
   const bool DemandStream::stillHavingRequestsToBeGenerated () const {
-    // Forward the business the the corresponding static function.
-    return stillHavingRequestsToBeGenerated (*this);
+    // Check whether enough requests have already been generated
+    const stdair::Count_T lNbOfRequestsGeneratedSoFar =
+      _randomGenerationContext._numberOfRequestsGeneratedSoFar;
+    const stdair::Count_T lRemainingNumberOfRequestsToBeGenerated =
+      _totalNumberOfRequestsToBeGenerated - lNbOfRequestsGeneratedSoFar;
+
+    if (lRemainingNumberOfRequestsToBeGenerated <= 0) {
+      return false;
+    }
+    return true;
   }
 
   // ////////////////////////////////////////////////////////////////////
-  const stdair::DateTime_T DemandStream::
-  generateTimeOfRequest (stdair::DemandStream& ioDemandStream) {
+  const stdair::DateTime_T DemandStream::generateTimeOfRequest () {
     // Assert that there are requests to be generated.
     const stdair::Count_T lNbOfRequestsGeneratedSoFar =
-      ioDemandStream.getNumberOfRequestsGeneratedSoFar ();
+      _randomGenerationContext._numberOfRequestsGeneratedSoFar;
     const stdair::Count_T lRemainingNumberOfRequestsToBeGenerated =
-      ioDemandStream.getTotalNumberOfRequestsToBeGenerated()
-      - lNbOfRequestsGeneratedSoFar;
+      _totalNumberOfRequestsToBeGenerated - lNbOfRequestsGeneratedSoFar;
     assert (lRemainingNumberOfRequestsToBeGenerated > 0);
 
     // Request datetime, determined from departure date and arrival pattern
     // Sequential generation
     const stdair::Probability_T lCumulativeProbabilitySoFar =
-      ioDemandStream.getCumulativeProbabilitySoFar ();
+      _randomGenerationContext._cumulativeProbabilitySoFar;
 
     const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithRequestDateTimeRandomGenerator ();
+      _requestDateTimeRandomGenerator.generateUniform01();
 
     const stdair::Probability_T lCumulativeProbabilityThisRequest =
       1.0 - (1.0 - lCumulativeProbabilitySoFar)
       * pow(1 - lVariate, 1.0 / static_cast<float> (lRemainingNumberOfRequestsToBeGenerated));
 
     const stdair::FloatDuration_T lNumberOfDaysBetweenDepartureAndThisRequest =
-      ioDemandStream.
-      getArrivalPattern().getValue (lCumulativeProbabilityThisRequest);
+      _demandCharacteristics._arrivalPattern.getValue (lCumulativeProbabilityThisRequest);
 
     // convert the number of days in number of seconds + number of milliseconds
     const stdair::FloatDuration_T lNumberOfSeconds =
@@ -129,137 +141,72 @@ namespace TRADEMGEN {
     const stdair::Time_T lHardcodedReferenceDepartureTime =
       boost::posix_time::hours(8);
     
-    // Preferred departure date
-    const stdair::Date_T& lPreferredDepartureDate =
-      ioDemandStream.getPreferredDepartureDate ();
-    
     const stdair::DateTime_T lDepartureDateTime =
-      boost::posix_time::ptime (lPreferredDepartureDate,
+      boost::posix_time::ptime (_key.getPreferredDepartureDate(),
                                 lHardcodedReferenceDepartureTime);
 
     const stdair::DateTime_T oDateTimeThisRequest =
       lDepartureDateTime + lDifferenceBetweenDepartureAndThisRequest;
     
     // Update random generation context
-    ioDemandStream.
-      setCumulativeProbabilitySoFar (lCumulativeProbabilityThisRequest);
-    ioDemandStream.incrementGeneratedRequestsCounter ();
+    _randomGenerationContext._cumulativeProbabilitySoFar =
+      lCumulativeProbabilityThisRequest;
+    incrementGeneratedRequestsCounter ();
     return oDateTimeThisRequest;
   }
 
   // ////////////////////////////////////////////////////////////////////
-  const stdair::DateTime_T DemandStream::generateTimeOfRequest () {
-    // Forward the business the the corresponding static function.
-    return generateTimeOfRequest (*this);
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  const stdair::AirportCode_T DemandStream::
-  generatePOS (stdair::DemandStream& ioDemandStream) {
-    // Generate a random number between 0 and 1.
-    const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::POSProbabilityMass_T& lPOSProbMass =
-      ioDemandStream.getPOSProbabilityMass ();
-
-    return lPOSProbMass.getValue (lVariate);
-  }
-
-  // ////////////////////////////////////////////////////////////////////
   const stdair::AirportCode_T DemandStream::generatePOS () {
-    // Forward the business the the corresponding static function.
-    return generatePOS (*this);        
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  const stdair::ChannelLabel_T DemandStream::
-  generateChannel (stdair::DemandStream& ioDemandStream) {
     // Generate a random number between 0 and 1.
     const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::ChannelProbabilityMass_T& lChannelProbMass =
-      ioDemandStream.getChannelProbabilityMass ();
+      _demandCharacteristicsRandomGenerator.generateUniform01();
 
-    return lChannelProbMass.getValue (lVariate);
+    return _demandCharacteristics._posProbabilityMass.getValue (lVariate);
   }
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::ChannelLabel_T DemandStream::generateChannel () {
-    // Forward the business the the corresponding static function.
-    return generateChannel (*this);        
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  const stdair::TripType_T DemandStream::
-  generateTripType (stdair::DemandStream& ioDemandStream) {
     // Generate a random number between 0 and 1.
     const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::TripTypeProbabilityMass_T& lTripTypeProbMass =
-      ioDemandStream.getTripTypeProbabilityMass ();
+      _demandCharacteristicsRandomGenerator.generateUniform01();
 
-    return lTripTypeProbMass.getValue (lVariate);
+    return _demandCharacteristics._channelProbabilityMass.getValue (lVariate);
   }
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::TripType_T DemandStream::generateTripType () {
-    // Forward the business the the corresponding static function.
-    return generateTripType (*this);        
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  const stdair::DayDuration_T DemandStream::
-  generateStayDuration (stdair::DemandStream& ioDemandStream) {
     // Generate a random number between 0 and 1.
     const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::StayDurationProbabilityMass_T& lStayDurationProbMass =
-      ioDemandStream.getStayDurationProbabilityMass ();
+      _demandCharacteristicsRandomGenerator.generateUniform01(); 
 
-    return lStayDurationProbMass.getValue (lVariate);
+    return _demandCharacteristics._tripTypeProbabilityMass.getValue (lVariate);
   }
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::DayDuration_T DemandStream::generateStayDuration () {
-    // Forward the business the the corresponding static function.
-    return generateStayDuration (*this);        
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      _demandCharacteristicsRandomGenerator.generateUniform01();    
+
+    return _demandCharacteristics._stayDurationProbabilityMass.getValue (lVariate);
   }
   
   // ////////////////////////////////////////////////////////////////////
-  const stdair::FrequentFlyer_T DemandStream::
-  generateFrequentFlyer (stdair::DemandStream& ioDemandStream) {
-    // Generate a random number between 0 and 1.
-    const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::FrequentFlyerProbabilityMass_T& lFrequentFlyerProbMass =
-      ioDemandStream.getFrequentFlyerProbabilityMass ();
-
-    return lFrequentFlyerProbMass.getValue (lVariate);
-  }
-
-  // ////////////////////////////////////////////////////////////////////
   const stdair::FrequentFlyer_T DemandStream::generateFrequentFlyer () {
-    // Forward the business the the corresponding static function.
-    return generateFrequentFlyer (*this);        
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      _demandCharacteristicsRandomGenerator.generateUniform01();       
+
+    return _demandCharacteristics._frequentFlyerProbabilityMass.getValue (lVariate);
   }
 
   // ////////////////////////////////////////////////////////////////////
-  const stdair::Duration_T DemandStream::
-  generatePreferredDepartureTime (stdair::DemandStream& ioDemandStream) {
+  const stdair::Duration_T DemandStream::generatePreferredDepartureTime () {
     // Generate a random number between 0 and 1.
     const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::PreferredDepartureTimeCumulativeDistribution_T& lPreferredDepartureTimeCumulativeDistribution =
-      ioDemandStream.getPreferredDepartureTimeCumulativeDistribution ();
-    
-    const stdair::IntDuration_T lNbOfSeconds =
-      lPreferredDepartureTimeCumulativeDistribution.getValue (lVariate);
+      _demandCharacteristicsRandomGenerator.generateUniform01();     
+    const stdair::IntDuration_T lNbOfSeconds = _demandCharacteristics.
+      _preferredDepartureTimeCumulativeDistribution.getValue (lVariate);
 
     const stdair::Duration_T oTime = boost::posix_time::seconds (lNbOfSeconds);
 
@@ -267,85 +214,53 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  const stdair::Duration_T DemandStream::generatePreferredDepartureTime () {
-    // Forward the business the the corresponding static function.
-    return generatePreferredDepartureTime (*this);        
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  const stdair::WTP_T DemandStream::
-  generateWTP (stdair::DemandStream& ioDemandStream) {
-    // Generate a random number between 0 and 1.
-    const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::WTPCumulativeDistribution_T& lWTPCumulativeDistribution =
-      ioDemandStream.getWTPCumulativeDistribution ();
-
-    return lWTPCumulativeDistribution.getValue (lVariate);
-  }
-
-  // ////////////////////////////////////////////////////////////////////
   const stdair::WTP_T DemandStream::generateWTP () {
-    // Forward the business the the corresponding static function.
-    return generateWTP (*this);        
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  const stdair::PriceValue_T DemandStream::
-  generateValueOfTime (stdair::DemandStream& ioDemandStream) {
     // Generate a random number between 0 and 1.
     const stdair::Probability_T lVariate =
-      ioDemandStream.generateUniform01WithDemandCharacteristicsRandomGenerator();
-    
-    const stdair::ValueOfTimeCumulativeDistribution_T& lValueOfTimeCumulativeDistribution =
-      ioDemandStream.getValueOfTimeCumulativeDistribution ();
+      _demandCharacteristicsRandomGenerator.generateUniform01();  
 
-    return lValueOfTimeCumulativeDistribution.getValue (lVariate);
+    return _demandCharacteristics._wtpCumulativeDistribution.getValue (lVariate);
   }
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::PriceValue_T DemandStream::generateValueOfTime () {
-    // Forward the business the the corresponding static function.
-    return generateValueOfTime (*this);        
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      _demandCharacteristicsRandomGenerator.generateUniform01();    
+
+    return _demandCharacteristics._valueOfTimeCumulativeDistribution.getValue (lVariate);
   }
   
   // ////////////////////////////////////////////////////////////////////
-  stdair::BookingRequestPtr_T DemandStream::
-  generateNextRequest (stdair::DemandStream& ioDemandStream) {
+  stdair::BookingRequestPtr_T DemandStream::generateNextRequest () {
     // Origin
-    const stdair::AirportCode_T& lOrigin = ioDemandStream.getOrigin ();
+    const stdair::AirportCode_T& lOrigin = _key.getOrigin();
     // Destination
-    const stdair::AirportCode_T& lDestination = ioDemandStream.getDestination ();
+    const stdair::AirportCode_T& lDestination = _key.getDestination();
     // Preferred departure date
-    const stdair::Date_T& lPreferredDepartureDate =
-      ioDemandStream.getPreferredDepartureDate ();
+    const stdair::Date_T& lPreferredDepartureDate = 
+      _key.getPreferredDepartureDate();
     // Preferred cabin
-    const stdair::CabinCode_T& lPreferredCabin =
-      ioDemandStream.getPreferredCabin();
+    const stdair::CabinCode_T& lPreferredCabin = _key.getPreferredCabin();
     // POS
-    const stdair::AirportCode_T lPOS = generatePOS (ioDemandStream);
+    const stdair::AirportCode_T lPOS = generatePOS ();
     // Time of request.    
-    const stdair::DateTime_T lDateTimeThisRequest =
-      generateTimeOfRequest (ioDemandStream);
+    const stdair::DateTime_T lDateTimeThisRequest =  generateTimeOfRequest ();
     // Booking channel.
-    const stdair::ChannelLabel_T lChannelLabel = generateChannel(ioDemandStream);
+    const stdair::ChannelLabel_T lChannelLabel = generateChannel ();
     // Trip type.
-    const stdair::TripType_T lTripType = generateTripType (ioDemandStream);
+    const stdair::TripType_T lTripType = generateTripType ();
     // Stay duration.
-    const stdair::DayDuration_T lStayDuration =
-      generateStayDuration (ioDemandStream);
+    const stdair::DayDuration_T lStayDuration = generateStayDuration ();
     // Frequet flyer type.
-    const stdair::FrequentFlyer_T lFrequentFlyer =
-      generateFrequentFlyer (ioDemandStream);
+    const stdair::FrequentFlyer_T lFrequentFlyer = generateFrequentFlyer ();
     // Preferred departure time.
     const stdair::Duration_T lPreferredDepartureTime =
-      generatePreferredDepartureTime (ioDemandStream);
+      generatePreferredDepartureTime ();
     // WTP
-    const stdair::WTP_T lWTP = generateWTP (ioDemandStream);
+    const stdair::WTP_T lWTP = generateWTP ();
     // Value of time
-    const stdair::PriceValue_T lValueOfTime =
-      generateValueOfTime (ioDemandStream);
+    const stdair::PriceValue_T lValueOfTime = generateValueOfTime ();
     
     // Create the booking request with a hardcoded party size.
     stdair::BookingRequestPtr_T oBookingRequest_ptr = stdair::BookingRequestPtr_T
@@ -364,9 +279,9 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  stdair::BookingRequestPtr_T DemandStream::generateNextRequest () {
-    // Forward the business the the corresponding static function.
-    return generateNextRequest (*this);
-  }
+  void DemandStream::reset () {
+    init ();
+    _randomGenerationContext.reset();
+  }  
 
 }

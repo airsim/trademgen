@@ -15,27 +15,27 @@
 namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
-  DemandStruct_T::DemandStruct_T ()
+  DemandStruct::DemandStruct ()
     : _prefDepDate (stdair::DEFAULT_DATE), _prefArrDate (stdair::DEFAULT_DATE),
       _prefCabin (""), _itHours (0), _itMinutes (0), _itSeconds (0),
       _itFFCode (FFCode::NONE) {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  stdair::Date_T DemandStruct_T::getDate() const {
+  stdair::Date_T DemandStruct::getDate() const {
     return stdair::Date_T (_itYear, _itMonth, _itDay);
   }
 
   // ////////////////////////////////////////////////////////////////////
-  stdair::Duration_T DemandStruct_T::getTime() const {
+  stdair::Duration_T DemandStruct::getTime() const {
     return boost::posix_time::hours (_itHours)
       + boost::posix_time::minutes (_itMinutes)
       + boost::posix_time::seconds (_itSeconds);
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildArrivalPattern (stdair::ArrivalPatternCumulativeDistribution_T& ioArrivalPatternCumulativeDistribution) const {
+  void DemandStruct::
+  buildArrivalPattern (ArrivalPatternCumulativeDistribution_T& ioArrivalPatternCumulativeDistribution) const {
     for (DTDProbDist_T::const_iterator it = _dtdProbDist.begin();
          it != _dtdProbDist.end(); ++it) {
       const stdair::DayDuration_T& lDTD = it->first;
@@ -47,28 +47,28 @@ namespace TRADEMGEN {
       lDTDFloat = lZeroDTDFloat - lDTD;
 
       ioArrivalPatternCumulativeDistribution.
-        insert (stdair::ArrivalPatternCumulativeDistribution_T::
+        insert (ArrivalPatternCumulativeDistribution_T::
                 value_type (lDTDFloat, lDTDProbMass));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildPOSProbabilityMass (stdair::POSProbabilityMassFunction_T& ioPOSProbabilityMassFuction) const {
+  void DemandStruct::
+  buildPOSProbabilityMass (POSProbabilityMassFunction_T& ioPOSProbabilityMassFuction) const {
     for (PosProbDist_T::const_iterator it = _posProbDist.begin();
          it != _posProbDist.end(); ++it) {
       const stdair::AirportCode_T& lPOS = it->first;
       const PosProbMass_T& lProbability = it->second;
 
       ioPOSProbabilityMassFuction.
-        insert (stdair::POSProbabilityMassFunction_T::
+        insert (POSProbabilityMassFunction_T::
                 value_type (lPOS, lProbability));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildChannelProbabilityMass (stdair::ChannelProbabilityMassFunction_T& ioChannelProbabilityMassFuction) const {
+  void DemandStruct::
+  buildChannelProbabilityMass (ChannelProbabilityMassFunction_T& ioChannelProbabilityMassFuction) const {
     
     for (ChannelProbDist_T::const_iterator it = _channelProbDist.begin();
          it != _channelProbDist.end(); ++it) {
@@ -79,14 +79,14 @@ namespace TRADEMGEN {
       const stdair::Probability_T& lProbability = it->second;
 
       ioChannelProbabilityMassFuction.
-        insert (stdair::ChannelProbabilityMassFunction_T::
+        insert (ChannelProbabilityMassFunction_T::
                 value_type (lLabel, lProbability));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildTripTypeProbabilityMass (stdair::TripTypeProbabilityMassFunction_T& ioTripTypeProbabilityMassFuction) const {
+  void DemandStruct::
+  buildTripTypeProbabilityMass (TripTypeProbabilityMassFunction_T& ioTripTypeProbabilityMassFuction) const {
     
     for (TripProbDist_T::const_iterator it = _tripProbDist.begin();
          it != _tripProbDist.end(); ++it) {
@@ -97,14 +97,14 @@ namespace TRADEMGEN {
       const stdair::Probability_T& lProbability = it->second;
 
       ioTripTypeProbabilityMassFuction.
-        insert (stdair::TripTypeProbabilityMassFunction_T::
+        insert (TripTypeProbabilityMassFunction_T::
                 value_type (lLabel, lProbability));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildStayDurationProbabilityMass (stdair::StayDurationProbabilityMassFunction_T& ioStayDurationProbabilityMassFuction) const {
+  void DemandStruct::
+  buildStayDurationProbabilityMass (StayDurationProbabilityMassFunction_T& ioStayDurationProbabilityMassFuction) const {
     
     for (StayProbDist_T::const_iterator it = _stayProbDist.begin();
          it != _stayProbDist.end(); ++it) {
@@ -112,14 +112,14 @@ namespace TRADEMGEN {
       const stdair::Probability_T& lProbability = it->second;
 
       ioStayDurationProbabilityMassFuction.
-        insert (stdair::StayDurationProbabilityMassFunction_T::
+        insert (StayDurationProbabilityMassFunction_T::
                 value_type (lDuration, lProbability));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildFrequentFlyerProbabilityMass (stdair::FrequentFlyerProbabilityMassFunction_T& ioFrequentFlyerProbabilityMassFuction) const {
+  void DemandStruct::
+  buildFrequentFlyerProbabilityMass (FrequentFlyerProbabilityMassFunction_T& ioFrequentFlyerProbabilityMassFuction) const {
     
     for (FFProbDist_T::const_iterator it = _ffProbDist.begin();
          it != _ffProbDist.end(); ++it) {
@@ -130,14 +130,14 @@ namespace TRADEMGEN {
       const stdair::Probability_T& lProbability = it->second;
 
       ioFrequentFlyerProbabilityMassFuction.
-        insert (stdair::FrequentFlyerProbabilityMassFunction_T::
+        insert (FrequentFlyerProbabilityMassFunction_T::
                 value_type (lLabel, lProbability));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildPreferredDepartureTimeContinuousDistribution (stdair::PreferredDepartureTimeContinuousDistribution_T& ioPreferredDepartureTimeContinuousDistribution) const {
+  void DemandStruct::
+  buildPreferredDepartureTimeContinuousDistribution (PreferredDepartureTimeContinuousDistribution_T& ioPreferredDepartureTimeContinuousDistribution) const {
 
     for (PrefDepTimeProbDist_T::const_iterator it = _prefDepTimeProbDist.begin();
          it != _prefDepTimeProbDist.end(); ++it) {
@@ -146,14 +146,14 @@ namespace TRADEMGEN {
       const PrefDepTimeProbMass_T& lPrefDepTimeProbMass = it->second;
       
       ioPreferredDepartureTimeContinuousDistribution.
-        insert (stdair::PreferredDepartureTimeContinuousDistribution_T::
+        insert (PreferredDepartureTimeContinuousDistribution_T::
                 value_type (lIntDuration, lPrefDepTimeProbMass));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildWTPContinuousDistribution (stdair::WTPContinuousDistribution_T& ioWTPContinuousDistribution) const {
+  void DemandStruct::
+  buildWTPContinuousDistribution (WTPContinuousDistribution_T& ioWTPContinuousDistribution) const {
 
     for (WTPProbDist_T::const_iterator it = _wtpProbDist.begin();
          it != _wtpProbDist.end(); ++it) {
@@ -161,14 +161,14 @@ namespace TRADEMGEN {
       const WTPProbMass_T& lWTPProMass = it->second;
 
       ioWTPContinuousDistribution.
-        insert (stdair::WTPContinuousDistribution_T::
+        insert (WTPContinuousDistribution_T::
                 value_type (lWTP, lWTPProMass));
     }
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStruct_T::
-  buildValueOfTimeContinuousDistribution (stdair::ValueOfTimeContinuousDistribution_T& ioValueOfTimeContinuousDistribution) const {
+  void DemandStruct::
+  buildValueOfTimeContinuousDistribution (ValueOfTimeContinuousDistribution_T& ioValueOfTimeContinuousDistribution) const {
 
     for (TimeValueProbDist_T::const_iterator it = _timeValueProbDist.begin();
          it != _timeValueProbDist.end(); ++it) {
@@ -176,13 +176,13 @@ namespace TRADEMGEN {
       const TimeValueProbMass_T& lValueOfTimeProMass = it->second;
 
       ioValueOfTimeContinuousDistribution.
-        insert (stdair::ValueOfTimeContinuousDistribution_T::
+        insert (ValueOfTimeContinuousDistribution_T::
                 value_type (lValueOfTime, lValueOfTimeProMass));
     }
   }
   
   // ////////////////////////////////////////////////////////////////////
-  const std::string DemandStruct_T::describe() const {
+  const std::string DemandStruct::describe() const {
     std::ostringstream ostr;
     ostr << _prefDepDate << " -> " << _prefArrDate
          << " " << _origin << "-" << _destination

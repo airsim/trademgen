@@ -4,24 +4,24 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// StdAir
+// STDAIR
 #include <stdair/STDAIR_Types.hpp>
-#include <stdair/basic/DemandCharacteristicTypes.hpp>
-#include <stdair/bom/DemandStreamTypes.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/command/CmdAbstract.hpp>
-// Trademgen
+// TRADEMGEN
 #include <trademgen/TRADEMGEN_Types.hpp>
+#include <trademgen/basic/DemandCharacteristicTypes.hpp>
 
 // Forward declarations
 namespace stdair {
   class BomRoot;
-  struct DemandCharacteristics;
-  struct DemandDistribution;
   struct EventQueue;
 }
 
 namespace TRADEMGEN {
+  // Forward declarations
+  struct DemandCharacteristics;
+  struct DemandDistribution;
 
   /** Utility class for Demand and DemandStream objects. */
   class DemandManager : public stdair::CmdAbstract {
@@ -29,17 +29,17 @@ namespace TRADEMGEN {
     // //////// Business methodes //////////
     /** Add a demand stream into the context. */
     static void addDemandStream (stdair::BomRoot&,
-                                 const stdair::DemandStreamKey_T&,
-                                 const stdair::ArrivalPatternCumulativeDistribution_T&,
-                                 const stdair::POSProbabilityMassFunction_T&,
-                                 const stdair::ChannelProbabilityMassFunction_T&,
-                                 const stdair::TripTypeProbabilityMassFunction_T&,
-                                 const stdair::StayDurationProbabilityMassFunction_T&,
-                                 const stdair::FrequentFlyerProbabilityMassFunction_T&,
-                                 const stdair::PreferredDepartureTimeContinuousDistribution_T&,
-                                 const stdair::WTPContinuousDistribution_T&,
-                                 const stdair::ValueOfTimeContinuousDistribution_T&,
-                                 const stdair::DemandDistribution&,
+                                 const DemandStreamKey&,
+                                 const ArrivalPatternCumulativeDistribution_T&,
+                                 const POSProbabilityMassFunction_T&,
+                                 const ChannelProbabilityMassFunction_T&,
+                                 const TripTypeProbabilityMassFunction_T&,
+                                 const StayDurationProbabilityMassFunction_T&,
+                                 const FrequentFlyerProbabilityMassFunction_T&,
+                                 const PreferredDepartureTimeContinuousDistribution_T&,
+                                 const WTPContinuousDistribution_T&,
+                                 const ValueOfTimeContinuousDistribution_T&,
+                                 const DemandDistribution&,
                                  const stdair::RandomSeed_T&,
                                  const stdair::RandomSeed_T&,
                                  const stdair::RandomSeed_T&);

@@ -4,10 +4,10 @@
 // STL
 #include <cassert>
 #include <string>
-// StdAir
-#include <stdair/basic/DictionaryManager.hpp>
+// STDAIR
 #include <stdair/bom/Inventory.hpp>
-// Trademgen
+// TRADEMGEN
+#include <trademgen/basic/DictionaryManager.hpp>
 #include <trademgen/command/DemandParserHelper.hpp>
 #include <trademgen/command/DemandParser.hpp>
 

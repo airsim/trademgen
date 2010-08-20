@@ -6,10 +6,9 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
-// StdAir
-#include <stdair/bom/DemandStreamTypes.hpp>
+// STDAIR
 #include <stdair/command/CmdAbstract.hpp>
-// TraDemGen
+// TRADEMGEN
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/BasParserTypes.hpp>
 #include <trademgen/bom/DemandStruct.hpp>
@@ -29,15 +28,15 @@ namespace TRADEMGEN {
     /** Generic Semantic Action (Actor / Functor) for the Demand Parser. */
     struct ParserSemanticAction {
       /** Actor Constructor. */
-      ParserSemanticAction (DemandStruct_T&);
+      ParserSemanticAction (DemandStruct&);
       /** Actor Context. */
-      DemandStruct_T& _demand;
+      DemandStruct& _demand;
     };
       
     /** Store the preferred departure date. */
     struct storePreferredDepartureDate : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePreferredDepartureDate (DemandStruct_T&);
+      storePreferredDepartureDate (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -45,7 +44,7 @@ namespace TRADEMGEN {
     /** Store the origin. */
     struct storeOrigin : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeOrigin (DemandStruct_T&);
+      storeOrigin (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -53,7 +52,7 @@ namespace TRADEMGEN {
     /** Store the destination. */
     struct storeDestination : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeDestination (DemandStruct_T&);
+      storeDestination (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -61,7 +60,7 @@ namespace TRADEMGEN {
     /** Store the preferred cabin. */
     struct storePrefCabin : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePrefCabin (DemandStruct_T&);
+      storePrefCabin (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -69,7 +68,7 @@ namespace TRADEMGEN {
     /** Store the demand mean value. */
     struct storeDemandMean : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeDemandMean (DemandStruct_T&);
+      storeDemandMean (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -77,7 +76,7 @@ namespace TRADEMGEN {
     /** Store the demand stdandard deviation value. */
     struct storeDemandStdDev : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeDemandStdDev (DemandStruct_T&);
+      storeDemandStdDev (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -85,7 +84,7 @@ namespace TRADEMGEN {
     /** Store the pos type code. */
     struct storePosCode : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePosCode (DemandStruct_T&);
+      storePosCode (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -93,7 +92,7 @@ namespace TRADEMGEN {
     /** Store the pos type probability mass. */
     struct storePosProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePosProbMass (DemandStruct_T&);
+      storePosProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -101,7 +100,7 @@ namespace TRADEMGEN {
     /** Store the channel type code. */
     struct storeChannelCode : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeChannelCode (DemandStruct_T&);
+      storeChannelCode (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -109,7 +108,7 @@ namespace TRADEMGEN {
     /** Store the channel type probability mass. */
     struct storeChannelProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeChannelProbMass (DemandStruct_T&);
+      storeChannelProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -117,7 +116,7 @@ namespace TRADEMGEN {
     /** Store the trip type code. */
     struct storeTripCode : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeTripCode (DemandStruct_T&);
+      storeTripCode (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -125,7 +124,7 @@ namespace TRADEMGEN {
     /** Store the trip type probability mass. */
     struct storeTripProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeTripProbMass (DemandStruct_T&);
+      storeTripProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -133,7 +132,7 @@ namespace TRADEMGEN {
     /** Store the stay type code. */
     struct storeStayCode : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeStayCode (DemandStruct_T&);
+      storeStayCode (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (unsigned int iInteger) const;
     };
@@ -141,7 +140,7 @@ namespace TRADEMGEN {
     /** Store the stay type probability mass. */
     struct storeStayProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeStayProbMass (DemandStruct_T&);
+      storeStayProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -149,7 +148,7 @@ namespace TRADEMGEN {
     /** Store the frequent flyer code. */
     struct storeFFCode : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeFFCode (DemandStruct_T&);
+      storeFFCode (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };
@@ -157,7 +156,7 @@ namespace TRADEMGEN {
     /** Store the frequent flyer probability mass. */
     struct storeFFProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeFFProbMass (DemandStruct_T&);
+      storeFFProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -166,7 +165,7 @@ namespace TRADEMGEN {
         continuous probability distribution. */
     struct storePrefDepTime : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePrefDepTime (DemandStruct_T&);
+      storePrefDepTime (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
     };    
@@ -175,7 +174,7 @@ namespace TRADEMGEN {
         probability distribution. */
     struct storePrefDepTimeProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storePrefDepTimeProbMass (DemandStruct_T&);
+      storePrefDepTimeProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -184,7 +183,7 @@ namespace TRADEMGEN {
         continuous probability distribution. */
     struct storeWTP : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeWTP (DemandStruct_T&);
+      storeWTP (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };    
@@ -193,7 +192,7 @@ namespace TRADEMGEN {
         probability distribution. */
     struct storeWTPProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeWTPProbMass (DemandStruct_T&);
+      storeWTPProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -201,7 +200,7 @@ namespace TRADEMGEN {
     /** Store the time value. */
     struct storeTimeValue : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeTimeValue (DemandStruct_T&);
+      storeTimeValue (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -209,7 +208,7 @@ namespace TRADEMGEN {
     /** Store the time value probability mass. */
     struct storeTimeValueProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeTimeValueProbMass (DemandStruct_T&);
+      storeTimeValueProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -218,7 +217,7 @@ namespace TRADEMGEN {
         continuous probability distribution. */
     struct storeDTD : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeDTD (DemandStruct_T&);
+      storeDTD (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (unsigned int iInteger) const;
     };    
@@ -227,7 +226,7 @@ namespace TRADEMGEN {
         continuous probability distribution. */
     struct storeDTDProbMass : public ParserSemanticAction {
       /** Actor Constructor. */
-      storeDTDProbMass (DemandStruct_T&);
+      storeDTDProbMass (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -235,7 +234,7 @@ namespace TRADEMGEN {
     /** Mark the end of the demand parsing. */
     struct doEndDemand : public ParserSemanticAction {
       /** Actor Constructor. */
-      doEndDemand (stdair::BomRoot&, DemandStruct_T&);
+      doEndDemand (stdair::BomRoot&, DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
       /** Actor Specific Context. */
@@ -339,7 +338,7 @@ namespace TRADEMGEN {
     struct DemandParser : 
       public boost::spirit::classic::grammar<DemandParser> {
 
-      DemandParser (stdair::BomRoot&, DemandStruct_T&);
+      DemandParser (stdair::BomRoot&, DemandStruct&);
 
       template <typename ScannerT>
       struct definition {
@@ -365,7 +364,7 @@ namespace TRADEMGEN {
 
       // Parser Context
       stdair::BomRoot& _bomRoot;
-      DemandStruct_T& _demand;
+      DemandStruct& _demand;
     };
 
   }
@@ -409,7 +408,7 @@ namespace TRADEMGEN {
     stdair::BomRoot& _bomRoot;
 
     /** Demand Structure. */
-    DemandStruct_T _demand;
+    DemandStruct _demand;
   };
     
 }
