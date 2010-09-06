@@ -16,10 +16,10 @@ XFAIL_TESTS = #
 DemandGenerationTestSuite_SOURCES = \
 	DemandGenerationTestSuite.hpp DemandGenerationTestSuite.cpp
 # test.cpp 
-DemandGenerationTestSuite_CXXFLAGS= $(BOOST_CFLAGS) $(CPPUNIT_CFLAGS)
+DemandGenerationTestSuite_CXXFLAGS = $(BOOST_CFLAGS) $(CPPUNIT_CFLAGS) \
+	$(EXTRACC_CFLAGS) $(STDAIR_CFLAGS)
 DemandGenerationTestSuite_LDADD = 
 DemandGenerationTestSuite_LDFLAGS = $(BOOST_LIBS) $(CPPUNIT_LIBS) \
-	$(top_builddir)/extracppunit/libextracppunit.la \
-	$(top_builddir)/stdair/core/libstdair.la \
+	$(EXTRACC_LIBS) $(STDAIR_LIBS) \
 	$(top_builddir)/trademgen/core/libtrademgen.la
 

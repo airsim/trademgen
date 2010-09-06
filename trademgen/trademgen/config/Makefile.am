@@ -23,3 +23,4 @@ trademgen-paths.hpp: Makefile
 	@echo '#define DATADIR "$(datadir)"' >> $@
 	@echo '#define DOCDIR "$(docdir)"' >> $@
 	@echo '#endif // __@PACKAGE_NAME@_PATHS_HPP' >> $@
+

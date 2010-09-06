@@ -1,13 +1,15 @@
-## command sub-directory
+## trademgen/command sub-directory
 include $(top_srcdir)/Makefile.common
 include $(srcdir)/sources.mk
 
 #
-noinst_LTLIBRARIES= libcmd.la
+noinst_LTLIBRARIES = libtrademgencmd.la
 
-libcmd_la_SOURCES= $(cmd_h_sources) $(cmd_cc_sources) 
-libcmd_la_CXXFLAGS = $(SOCI_CFLAGS) $(MYSQL_CFLAGS)
-libcmd_la_LDFLAGS = $(SOCI_LIBS) $(MYSQL_LIBS)
+libtrademgencmd_la_SOURCES = $(cmd_h_sources) $(cmd_cc_sources) 
+libtrademgencmd_la_CXXFLAGS = $(SOCI_CFLAGS) $(STDAIR_CFLAGS)
+libtrademgencmd_la_LDFLAGS =
 
+#
 #pkgincludedir = $(includedir)/@PACKAGE@/command
 #pkginclude_HEADERS = $(cmd_h_sources)
+

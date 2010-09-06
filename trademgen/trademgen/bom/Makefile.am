@@ -1,12 +1,15 @@
-## bom sub-directory
+## trademgen/bom sub-directory
 include $(top_srcdir)/Makefile.common
 include $(srcdir)/sources.mk
 
-noinst_LTLIBRARIES= libbom.la
+#
+noinst_LTLIBRARIES = libtrademgenbom.la
 
-libbom_la_SOURCES= $(bom_h_sources) $(bom_cc_sources) 
-libbom_la_CXXFLAGS = $(GSL_CFLAGS)
-libbom_la_LDFLAGS = $(GSL_LIBS)
+libtrademgenbom_la_SOURCES = $(bom_h_sources) $(bom_cc_sources) 
+libtrademgenbom_la_CXXFLAGS = $(STDAIR_CFLAGS)
+libtrademgenbom_la_LDFLAGS =
 
+#
 #pkgincludedir = $(includedir)/@PACKAGE@/bom
 #pkginclude_HEADERS = $(bom_h_sources)
+

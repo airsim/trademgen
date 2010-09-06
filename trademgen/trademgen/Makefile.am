@@ -12,5 +12,6 @@ EXTRA_DIST =
 
 
 # Header files
-nobase_pkginclude_HEADERS = $(service_h_sources)
+nobase_pkginclude_HEADERS = $(trademgen_service_h_sources)
 #nobase_nodist_pkginclude_HEADERS = $(top_builddir)/@PACKAGE@/config.h
+

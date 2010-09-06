@@ -1,11 +1,15 @@
-## basic sub-directory
+## trademgen/basic sub-directory
 include $(top_srcdir)/Makefile.common
 include $(srcdir)/sources.mk
 
-noinst_LTLIBRARIES= libbas.la
+#
+noinst_LTLIBRARIES = libtrademgenbas.la
 
-libbas_la_SOURCES= $(bas_h_sources) $(bas_cc_sources) 
-libbas_la_CXXFLAGS =
+libtrademgenbas_la_SOURCES = $(bas_h_sources) $(bas_cc_sources) 
+libtrademgenbas_la_CXXFLAGS = $(STDAIR_CFLAGS)
+libtrademgenbas_la_LDFLAGS =
 
+#
 #pkgincludedir = $(includedir)/@PACKAGE@/basic
-#pkginclude_HEADERS = $(bas_h_sources)
+#pkginclude_HEADERS = $(trademgen_bas_h_sources)
+

@@ -10,10 +10,6 @@ AM_INIT_AUTOMAKE
 AM_PATH_CPPUNIT(1.10)
 AM_CONDITIONAL([HAVE_CPPUNIT], [test "x$CPPUNIT_LIBS" != x])
 
-# RPM release number
-RPM_RELEASE="1"
-AC_SUBST(RPM_RELEASE)
-
 # Shared library versioning
 GENERIC_LIBRARY_VERSION="99:99:99"
 #                        | | |
@@ -116,10 +112,10 @@ fi
 #       thus directly accessible within the extracppunit directory.
 #       When that library will be widely avaible on Linux distributions,
 #       the external reference can be removed and the following line uncommented.
-#AM_PATH_EXTRACC
-#AC_SUBST(EXTRACC_VERSION)
-#AC_SUBST(EXTRACC_CFLAGS)
-#AC_SUBST(EXTRACC_LIBS)
+AM_PATH_EXTRACC
+AC_SUBST(EXTRACC_VERSION)
+AC_SUBST(EXTRACC_CFLAGS)
+AC_SUBST(EXTRACC_LIBS)
 
 # -----------------------------------------------------------
 # Python
@@ -180,6 +176,17 @@ AC_SUBST(SOCI_VERSION)
 AC_SUBST(SOCI_CFLAGS)
 AC_SUBST(SOCI_LIBS)
 
+# -----------------------------------------------------------------------------
+# Support for StdAir (): http://sf.net/projects/stdair
+# -----------------------------------------------------------------------------
+# Note: the StdAir is now imported as a Subversion external reference,
+#       thus directly accessible within the extracppunit directory.
+#       When that library will be widely avaible on Linux distributions,
+#       the external reference can be removed and the following line uncommented.
+AM_PATH_STDAIR
+AC_SUBST(STDAIR_VERSION)
+AC_SUBST(STDAIR_CFLAGS)
+AC_SUBST(STDAIR_LIBS)
 
 # -------------------------------------------------------------------
 # Support for documentation
@@ -334,18 +341,7 @@ AC_CONFIG_FILES(
 	Makefile
 	trademgen-config
 	trademgen.pc
-	trademgen.spec
 	trademgen.m4
-	stdair/Makefile
-	stdair/basic/Makefile
-	stdair/bom/Makefile
-	stdair/dbadaptor/Makefile
-	stdair/factory/Makefile
-	stdair/command/Makefile
-	stdair/config/Makefile
-	stdair/service/Makefile
-	stdair/core/Makefile
-	stdair/batches/Makefile
 	trademgen/Makefile
 	trademgen/basic/Makefile
 	trademgen/bom/Makefile
@@ -357,10 +353,8 @@ AC_CONFIG_FILES(
 	trademgen/config/Makefile
 	trademgen/batches/Makefile
 	trademgen/python/Makefile
-	extracppunit/Makefile
 	test/Makefile
 	test/samples/Makefile
-	test/stdair/Makefile
 	test/trademgen/Makefile
 )
 AC_OUTPUT
@@ -463,6 +457,11 @@ ${MPICH2_OUTPUT}
     o SOCI_CFLAGS ..... : ${SOCI_CFLAGS}
     o SOCI_LIBS ....... : ${SOCI_LIBS}
 
+  - StdAir ............ :
+    o STDAIR_VERSION .. : ${STDAIR_VERSION}
+    o STDAIR_CFLAGS ... : ${STDAIR_CFLAGS}
+    o STDAIR_LIBS ..... : ${STDAIR_LIBS}
+
   - ExtraCC ........... :
     o EXTRACC_VERSION . : ${EXTRACC_VERSION}
     o EXTRACC_CFLAGS .. : ${EXTRACC_CFLAGS}
@@ -477,3 +476,4 @@ ${MPICH2_OUTPUT}
 Now type 'make && make install' to build and install $PACKAGE-$VERSION library
 ------------------------------------------------------------------------------
 "
+
