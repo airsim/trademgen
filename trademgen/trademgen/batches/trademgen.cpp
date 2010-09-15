@@ -300,7 +300,7 @@ int main (int argc, char* argv[]) {
     // Close the Log outputFile
     logOutputFile.close();
 
-  } CATCH
+  } CATCH_ALL_EXCEPTIONS
 
   return 0;
 }

@@ -29,9 +29,7 @@ namespace TRADEMGEN {
   public:
     // ///////////// Getters ///////////
     /** Get the key */
-    const Key_T& getKey () const {
-      return _key;
-    }
+    const Key_T& getKey () const { return _key; }
     
     /** Get the total number of requests to be generated. */
     const stdair:: NbOfRequests_T& getTotalNumberOfRequestsToBeGenerated() const{

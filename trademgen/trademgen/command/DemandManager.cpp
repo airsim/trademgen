@@ -56,7 +56,7 @@ namespace TRADEMGEN {
     // STDAIR_LOG_DEBUG ("Add DemandStream: \n"
     //                   << lDemandStream.getDemandCharacteristics().display()
     //                   << lDemandStream.getDemandDistribution().display());
-    stdair::FacBomManager::addToListAndMap (ioBomRoot, lDemandStream);
+    stdair::FacBomManager::instance().addToListAndMap (ioBomRoot, lDemandStream);
   }
     
   // ////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ namespace TRADEMGEN {
                                          const stdair::DemandStreamKeyStr_T& iKey) {
     // Retrieve the DemandStream which corresponds to the given key.
     const DemandStream& lDemandStream =
-      stdair::BomManager::getChild<DemandStream> (iBomRoot, iKey);
+      stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
       
     return lDemandStream.getTotalNumberOfRequestsToBeGenerated ();
   }
@@ -76,7 +76,7 @@ namespace TRADEMGEN {
                                     const stdair::DemandStreamKeyStr_T& iKey) {
     // Retrieve the DemandStream which corresponds to the given key.
     const DemandStream& lDemandStream =
-      stdair::BomManager::getChild<DemandStream> (iBomRoot, iKey);
+      stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
     
     return lDemandStream.stillHavingRequestsToBeGenerated ();
   }
@@ -87,7 +87,7 @@ namespace TRADEMGEN {
                        const stdair::DemandStreamKeyStr_T& iKey) {
     // Retrieve the DemandStream which corresponds to the given key.
     DemandStream& lDemandStream = 
-      stdair::BomManager::getChild<DemandStream> (iBomRoot, iKey);
+      stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
     
     return lDemandStream.generateNextRequest ();
   }
@@ -125,9 +125,9 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   void DemandManager::reset (const stdair::BomRoot& iBomRoot) {
-    DemandStreamList_T& lDemandStreamList =
+    const DemandStreamList_T& lDemandStreamList =
       stdair::BomManager::getList<DemandStream> (iBomRoot);
-    for (DemandStreamList_T::iterator itDS = lDemandStreamList.begin();
+    for (DemandStreamList_T::const_iterator itDS = lDemandStreamList.begin();
          itDS != lDemandStreamList.end(); ++itDS) {
       DemandStream* lCurrentDS_ptr = *itDS;
       assert (lCurrentDS_ptr != NULL);
