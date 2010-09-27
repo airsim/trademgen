@@ -33,13 +33,16 @@ namespace TRADEMGEN {
 
       // Find the first cumulative probablity value greater or equal to lKey.
       for (; idx < _size; ++idx) {
-        if (_cumulativeDistribution[idx] >= lKey) {
+        if (_cumulativeDistribution[idx] > lKey) {
           break;
         }
       }
 
       if (idx == 0) {
         return _valueArray[idx];
+      }
+      if (idx == _size) {
+        return _valueArray[idx-1];
       }
 
       stdair::Probability_T lCumulativeCurrentPoint =
