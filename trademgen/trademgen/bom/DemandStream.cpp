@@ -152,6 +152,11 @@ namespace TRADEMGEN {
     _randomGenerationContext._cumulativeProbabilitySoFar =
       lCumulativeProbabilityThisRequest;
     incrementGeneratedRequestsCounter ();
+
+    // DEBUG
+    // STDAIR_LOG_DEBUG (lCumulativeProbabilityThisRequest << "; "
+    //                   << lNumberOfDaysBetweenDepartureAndThisRequest);
+    
     return oDateTimeThisRequest;
   }
 

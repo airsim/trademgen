@@ -7,6 +7,7 @@
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
+#include <trademgen/basic/DemandCharacteristicTypes.hpp>
 #include <trademgen/command/DemandParserHelper.hpp>
 #include <trademgen/command/DemandGenerator.hpp>
 
@@ -116,7 +117,8 @@ namespace TRADEMGEN {
     void storePosProbMass::operator() (double iReal) const {
       const bool hasInsertBeenSuccessfull = 
         _demand._posProbDist.
-        insert (PosProbDist_T::value_type (_demand._itPosCode, iReal)).second;
+        insert (POSProbabilityMassFunction_T::
+                value_type (_demand._itPosCode, iReal)).second;
       if (hasInsertBeenSuccessfull == false) {
         STDAIR_LOG_ERROR ("The same POS code ('" << _demand._itPosCode
                           << "') has probably been given twice");
@@ -134,10 +136,8 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
     void storeChannelCode::operator() (iterator_t iStr,
                                        iterator_t iStrEnd) const {
-      const std::string lChannelCodeStr (iStr, iStrEnd);
-      const ChannelCode lChannelCode (lChannelCodeStr);
-      _demand._itChannelCode = lChannelCode.getCode();
-      //STDAIR_LOG_DEBUG ("Channel code: " << lChannelCode);
+      _demand._itChannelCode = std::string (iStr, iStrEnd);
+      //STDAIR_LOG_DEBUG ("Channel code: " << _demand._itChannelCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -149,11 +149,11 @@ namespace TRADEMGEN {
     void storeChannelProbMass::operator() (double iReal) const {
       const bool hasInsertBeenSuccessfull = 
         _demand._channelProbDist.
-        insert (ChannelProbDist_T::value_type (_demand._itChannelCode,
-                                               iReal)).second;
+        insert (ChannelProbabilityMassFunction_T::
+                value_type (_demand._itChannelCode, iReal)).second;
       if (hasInsertBeenSuccessfull == false) {
         STDAIR_LOG_ERROR ("The same channel type code ('"
-                          << ChannelCode (_demand._itChannelCode)
+                          << _demand._itChannelCode
                           << "') has probably been given twice");
         throw CodeDuplicationException();
       }
@@ -169,10 +169,8 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
     void storeTripCode::operator() (iterator_t iStr,
                                        iterator_t iStrEnd) const {
-      const std::string lTripCodeStr (iStr, iStrEnd);
-      const TripCode lTripCode (lTripCodeStr);
-      _demand._itTripCode = lTripCode.getCode();
-      //STDAIR_LOG_DEBUG ("Trip code: " << lTripCode);
+      _demand._itTripCode = std::string (iStr, iStrEnd);
+      //STDAIR_LOG_DEBUG ("Trip code: " << _demand._itTripCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -184,11 +182,11 @@ namespace TRADEMGEN {
     void storeTripProbMass::operator() (double iReal) const {
       const bool hasInsertBeenSuccessfull = 
         _demand._tripProbDist.
-        insert (TripProbDist_T::value_type (_demand._itTripCode,
-                                               iReal)).second;
+        insert (TripTypeProbabilityMassFunction_T::
+                value_type (_demand._itTripCode, iReal)).second;
       if (hasInsertBeenSuccessfull == false) {
         STDAIR_LOG_ERROR ("The same trip type code ('"
-                          << TripCode (_demand._itTripCode)
+                          << _demand._itTripCode
                           << "') has probably been given twice");
         throw CodeDuplicationException();
       }
@@ -217,8 +215,8 @@ namespace TRADEMGEN {
     void storeStayProbMass::operator() (double iReal) const {
       const bool hasInsertBeenSuccessfull = 
         _demand._stayProbDist.
-        insert (StayProbDist_T::value_type (_demand._itStayDuration,
-                                            iReal)).second;
+        insert (StayDurationProbabilityMassFunction_T::
+                value_type (_demand._itStayDuration, iReal)).second;
       if (hasInsertBeenSuccessfull == false) {
         STDAIR_LOG_ERROR ("The same stay duration ('" << _demand._itStayDuration
                           << "') has probably been given twice");
@@ -235,10 +233,8 @@ namespace TRADEMGEN {
     
     // //////////////////////////////////////////////////////////////////
     void storeFFCode::operator() (iterator_t iStr, iterator_t iStrEnd) const {
-      const std::string oneChar (iStr, iStrEnd);
-      const FFCode lFFCode (oneChar.at(0));
-      _demand._itFFCode = lFFCode.getCode();
-      //STDAIR_LOG_DEBUG ("FF code: " << lFFCode);
+      _demand._itFFCode = std::string (iStr, iStrEnd);
+      //STDAIR_LOG_DEBUG ("FF code: " << _demand._itFFCode);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -249,11 +245,12 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
     void storeFFProbMass::operator() (double iReal) const {
       const bool hasInsertBeenSuccessfull = 
-        _demand._ffProbDist.insert (FFProbDist_T::value_type (_demand._itFFCode,
-                                                              iReal)).second;
+        _demand._ffProbDist.
+        insert (FrequentFlyerProbabilityMassFunction_T::
+                value_type (_demand._itFFCode, iReal)).second;
       if (hasInsertBeenSuccessfull == false) {
         STDAIR_LOG_ERROR ("The same Frequent Flyer code ('"
-                          << FFCode (_demand._itFFCode)
+                          << _demand._itFFCode
                           << "') has probably been given twice");
         throw CodeDuplicationException();
       }
@@ -288,16 +285,12 @@ namespace TRADEMGEN {
     
     // //////////////////////////////////////////////////////////////////
     void storePrefDepTimeProbMass::operator() (double iReal) const {
-      const bool hasInsertBeenSuccessfull = _demand._prefDepTimeProbDist.
-        insert (PrefDepTimeProbDist_T::value_type (_demand._itPrefDepTime,
-                                                   iReal)).second;
-      if (hasInsertBeenSuccessfull == false) {
-        STDAIR_LOG_ERROR ("The same preferred departure time ('"
-                          << _demand._itPrefDepTime
-                          << "') has probably been given twice");
-        throw CodeDuplicationException();
-      }
+      const stdair::IntDuration_T lIntDuration =
+        _demand._itPrefDepTime.total_seconds();
       
+      _demand._prefDepTimeProbDist.
+        insert (PreferredDepartureTimeContinuousDistribution_T::
+                value_type (lIntDuration, iReal));
       //STDAIR_LOG_DEBUG ("PrefDepTimeProbMass: " << iReal);
     }
 
@@ -319,15 +312,8 @@ namespace TRADEMGEN {
     
     // //////////////////////////////////////////////////////////////////
     void storeWTPProbMass::operator() (double iReal) const {
-      const bool hasInsertBeenSuccessfull =
-        _demand._wtpProbDist.insert (WTPProbDist_T::value_type (_demand._itWTP,
-                                                                iReal)).second;
-      if (hasInsertBeenSuccessfull == false) {
-        STDAIR_LOG_ERROR ("The same WTP ('" << _demand._itWTP
-                          << "') has probably been given twice");
-        throw CodeDuplicationException();
-      }
-      
+      _demand._wtpProbDist.insert (WTPContinuousDistribution_T::
+                                   value_type (_demand._itWTP,  iReal));
       //STDAIR_LOG_DEBUG ("WTPProbMass: " << iReal);
     }
 
@@ -349,16 +335,9 @@ namespace TRADEMGEN {
     
     // //////////////////////////////////////////////////////////////////
     void storeTimeValueProbMass::operator() (double iReal) const {
-      const bool hasInsertBeenSuccessfull = 
-        _demand._timeValueProbDist.
-        insert (TimeValueProbDist_T::value_type (_demand._itTimeValue,
-                                                 iReal)).second;
-      if (hasInsertBeenSuccessfull == false) {
-        STDAIR_LOG_ERROR ("The same time value ('" << _demand._itTimeValue
-                          << "') has probably been given twice");
-        throw CodeDuplicationException();
-      }
-      
+      _demand._timeValueProbDist.
+        insert (ValueOfTimeContinuousDistribution_T::
+                value_type (_demand._itTimeValue, iReal));
       //STDAIR_LOG_DEBUG ("TimeValueProbMass: " << iReal);
     }
 
@@ -381,15 +360,13 @@ namespace TRADEMGEN {
     
     // //////////////////////////////////////////////////////////////////
     void storeDTDProbMass::operator() (double iReal) const {
-      const bool hasInsertBeenSuccessfull =
-        _demand._dtdProbDist.insert (DTDProbDist_T::value_type (_demand._itDTD,
-                                                                iReal)).second;
-      if (hasInsertBeenSuccessfull == false) {
-        STDAIR_LOG_ERROR ("The same DTD ('" << _demand._itDTD
-                          << "') has probably been given twice");
-        throw CodeDuplicationException();
-      }
-      
+      const stdair::FloatDuration_T lZeroDTDFloat = 0.0;
+      stdair::FloatDuration_T lDTDFloat =
+        static_cast<stdair::FloatDuration_T> (_demand._itDTD);
+      lDTDFloat = lZeroDTDFloat - lDTDFloat;
+
+      _demand._dtdProbDist.insert (ArrivalPatternCumulativeDistribution_T::
+                                   value_type (lDTDFloat, iReal));
       //STDAIR_LOG_DEBUG ("DTDProbMass: " << iReal);
     }
 
@@ -555,9 +532,9 @@ namespace TRADEMGEN {
         ;
 
       pref_cabin =
-        boost::spirit::classic::ch_p('F')
-        | boost::spirit::classic::ch_p('C')
-        | boost::spirit::classic::ch_p('Y')
+        boost::spirit::classic::ch_p('Y')
+        | boost::spirit::classic::ch_p('P')
+        | boost::spirit::classic::ch_p('J')
         ;
 
       pos_dist =
@@ -640,10 +617,12 @@ namespace TRADEMGEN {
         ;
 
       ff_code =
-        boost::spirit::classic::ch_p('P')
+        boost::spirit::classic::ch_p('L')
+        | boost::spirit::classic::ch_p('T')
+        | boost::spirit::classic::ch_p('Q')
         | boost::spirit::classic::ch_p('G')
         | boost::spirit::classic::ch_p('S')
-        | boost::spirit::classic::ch_p('M')
+        | boost::spirit::classic::ch_p('K')
         | boost::spirit::classic::ch_p('N')
         ;
 

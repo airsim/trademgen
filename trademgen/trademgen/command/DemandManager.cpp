@@ -21,7 +21,7 @@
 #include <trademgen/command/DemandManager.hpp>
 
 namespace TRADEMGEN {
-
+  
   // //////////////////////////////////////////////////////////////////////
   void DemandManager::addDemandStream
   (stdair::BomRoot& ioBomRoot,
@@ -52,7 +52,7 @@ namespace TRADEMGEN {
     
     // Insert the reference on the given DemandStream object into the
     // dedicated list
-      // DEBUG
+    // DEBUG
     // STDAIR_LOG_DEBUG ("Add DemandStream: \n"
     //                   << lDemandStream.getDemandCharacteristics().display()
     //                   << lDemandStream.getDemandDistribution().display());
@@ -99,7 +99,7 @@ namespace TRADEMGEN {
     // Retrieve the DemandStream list.
     const DemandStreamList_T& lDemandStreamList =
       stdair::BomManager::getList<DemandStream> (iBomRoot);
-    
+
     for (DemandStreamList_T::const_iterator itDemandStream =
            lDemandStreamList.begin();
          itDemandStream != lDemandStreamList.end(); ++itDemandStream) {
@@ -114,9 +114,7 @@ namespace TRADEMGEN {
           lDemandStream_ptr->generateNextRequest ();
         
         const DemandStreamKey& lKey = lDemandStream_ptr->getKey();
-        const stdair::DateTime_T& lRequestDateTime =
-          lFirstRequest->getRequestDateTime();
-        stdair::EventStruct lEventStruct ("Request", lRequestDateTime,
+        stdair::EventStruct lEventStruct ("Request",
                                           lKey.toString(), lFirstRequest);
         ioEventQueue.addEvent (lEventStruct);
       }

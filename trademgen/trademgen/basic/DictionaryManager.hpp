@@ -10,7 +10,7 @@
 
 namespace TRADEMGEN {
     /** Dictionary key. */
-  typedef unsigned char DictionaryKey_T;
+  typedef unsigned short DictionaryKey_T;
   
   /** Class wrapper of dictionary business methods. */
   class DictionaryManager {

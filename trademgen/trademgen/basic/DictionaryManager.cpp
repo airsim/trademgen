@@ -8,12 +8,12 @@ namespace TRADEMGEN {
   // ////////////////////////////////////////////////////////////////////
   const stdair::Probability_T DictionaryManager::
   keyToValue (const DictionaryKey_T iKey) {
-    return static_cast<stdair::Probability_T>(iKey) / 200;
+    return static_cast<stdair::Probability_T>(iKey) / 1000;
   }
 
   // ////////////////////////////////////////////////////////////////////
   const DictionaryKey_T DictionaryManager::
   valueToKey (const stdair::Probability_T iValue) {
-    return iValue * 200;
+    return iValue * 1000;
   }
 }

@@ -11,15 +11,6 @@
 #include <stdair/basic/StructAbstract.hpp>
 // TraDemGen
 #include <trademgen/basic/DemandCharacteristicTypes.hpp>
-#include <trademgen/basic/StayDurationTypes.hpp>
-#include <trademgen/basic/PosCodeTypes.hpp>
-#include <trademgen/basic/ChannelCodeTypes.hpp>
-#include <trademgen/basic/TripCodeTypes.hpp>
-#include <trademgen/basic/FFCodeTypes.hpp>
-#include <trademgen/basic/PrefDepTimeTypes.hpp>
-#include <trademgen/basic/WTPTypes.hpp>
-#include <trademgen/basic/TimeValueTypes.hpp>
-#include <trademgen/basic/DTDTypes.hpp>
 
 namespace TRADEMGEN {
 
@@ -32,33 +23,6 @@ namespace TRADEMGEN {
     /** Get the time from the staging details. */
     stdair::Duration_T getTime() const;
 
-    /** Build the arrival pattern. */
-    void buildArrivalPattern (ArrivalPatternCumulativeDistribution_T&) const;
-    
-    /** Build the POS probabilty mass. */
-    void buildPOSProbabilityMass (POSProbabilityMassFunction_T&) const;
-    
-    /** Build the channel probabilty mass. */
-    void buildChannelProbabilityMass (ChannelProbabilityMassFunction_T&) const;
-
-    /** Build the trip type probabilty mass. */
-    void buildTripTypeProbabilityMass (TripTypeProbabilityMassFunction_T&) const;
-    
-    /** Build the stay duration probabilty mass. */
-    void buildStayDurationProbabilityMass (StayDurationProbabilityMassFunction_T&) const;
-    
-    /** Build the frequent flyer probabilty mass. */
-    void buildFrequentFlyerProbabilityMass (FrequentFlyerProbabilityMassFunction_T&) const;
-    
-    /** Build the preferred departure time cumulative distribition. */
-    void buildPreferredDepartureTimeContinuousDistribution (PreferredDepartureTimeContinuousDistribution_T&) const;
-    
-    /** Build the WTP cumulative distribition. */
-    void buildWTPContinuousDistribution (WTPContinuousDistribution_T&) const;
-
-    /** Build the value of time cumulative distribition. */
-    void buildValueOfTimeContinuousDistribution (ValueOfTimeContinuousDistribution_T&) const;
-    
     /** Give a description of the structure (for display purposes). */
     const std::string describe() const;
 
@@ -73,15 +37,15 @@ namespace TRADEMGEN {
     stdair::CabinCode_T _prefCabin;
     float _demandMean;
     float _demandStdDev;
-    PosProbDist_T _posProbDist;
-    ChannelProbDist_T _channelProbDist;
-    TripProbDist_T _tripProbDist;
-    StayProbDist_T _stayProbDist;
-    FFProbDist_T _ffProbDist;
-    PrefDepTimeProbDist_T _prefDepTimeProbDist; 
-    WTPProbDist_T _wtpProbDist;
-    TimeValueProbDist_T _timeValueProbDist;
-    DTDProbDist_T _dtdProbDist;
+    POSProbabilityMassFunction_T _posProbDist;
+    ChannelProbabilityMassFunction_T _channelProbDist;
+    TripTypeProbabilityMassFunction_T _tripProbDist;
+    StayDurationProbabilityMassFunction_T _stayProbDist;
+    FrequentFlyerProbabilityMassFunction_T _ffProbDist;
+    PreferredDepartureTimeContinuousDistribution_T _prefDepTimeProbDist; 
+    WTPContinuousDistribution_T _wtpProbDist;
+    ValueOfTimeContinuousDistribution_T _timeValueProbDist;
+    ArrivalPatternCumulativeDistribution_T _dtdProbDist;
     
     /** Staging Date. */
     unsigned int _itYear;
@@ -97,16 +61,16 @@ namespace TRADEMGEN {
     stdair::AirportCode_T _itPosCode;
 
     /** Staging channel type code. */
-    ChannelCode::EN_ChannelCode _itChannelCode;
+    stdair::ChannelLabel_T _itChannelCode;
 
     /** Staging trip type code. */
-    TripCode::EN_TripCode _itTripCode;
+    stdair::TripType_T _itTripCode;
 
     /** Staging stay duration. */
     stdair::DayDuration_T _itStayDuration;
     
     /** Staging Frequent Flyer code. */
-    FFCode::EN_FFCode _itFFCode;
+    stdair::FrequentFlyer_T _itFFCode;
 
     /** Staging preferred departure time. */
     stdair::Duration_T _itPrefDepTime;

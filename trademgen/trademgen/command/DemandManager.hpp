@@ -70,6 +70,7 @@ namespace TRADEMGEN {
     /** Reset the context of the demand streams for another demand generation
         without having to reparse the demand input file. */
     static void reset (const stdair::BomRoot&);
+
   };
 
 }

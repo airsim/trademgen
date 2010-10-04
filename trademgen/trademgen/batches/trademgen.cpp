@@ -232,7 +232,7 @@ int main (int argc, char* argv[]) {
     }
 
     // Number of generations.
-    const int lNbOfRuns = 1;
+    const int lNbOfRuns = 10;
 
     // Open and clean the .csv output file
     std::ofstream output;
@@ -282,12 +282,17 @@ int main (int argc, char* argv[]) {
           stdair::BookingRequestPtr_T lNextRequest =
             trademgenService.generateNextRequest (lDemandStreamKey);
           assert (lNextRequest != NULL);
+
+          stdair::Duration_T lDuration = lNextRequest->getRequestDateTime() -
+            lPoppedRequest.getRequestDateTime();
+          if (lDuration.total_milliseconds() < 0) {
+            STDAIR_LOG_DEBUG (lDemandStreamKey);
+            STDAIR_LOG_DEBUG (lPoppedRequest.getRequestDateTime());
+            STDAIR_LOG_DEBUG (lNextRequest->getRequestDateTime());
+            assert (false);
+          }
           
-          stdair::DateTime_T lNextRequestDateTime =
-            lNextRequest->getRequestDateTime ();
-          stdair::EventStruct lNextEventStruct ("Request",
-                                                lNextRequestDateTime,
-                                                lDemandStreamKey,
+          stdair::EventStruct lNextEventStruct ("Request", lDemandStreamKey,
                                                 lNextRequest);
           lEventQueue.addEvent (lNextEventStruct);
         }

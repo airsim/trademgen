@@ -9,7 +9,6 @@
 #include <stdair/service/Logger.hpp>
 // TRADEMGEN
 #include <trademgen/TRADEMGEN_Types.hpp>
-#include <trademgen/basic/ChannelCode.hpp>
 #include <trademgen/bom/DemandStruct.hpp>
 
 namespace TRADEMGEN {
@@ -18,7 +17,7 @@ namespace TRADEMGEN {
   DemandStruct::DemandStruct ()
     : _prefDepDate (stdair::DEFAULT_DATE), _prefArrDate (stdair::DEFAULT_DATE),
       _prefCabin (""), _itHours (0), _itMinutes (0), _itSeconds (0),
-      _itFFCode (FFCode::NONE) {
+      _itFFCode ("") {
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -32,154 +31,6 @@ namespace TRADEMGEN {
       + boost::posix_time::minutes (_itMinutes)
       + boost::posix_time::seconds (_itSeconds);
   }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildArrivalPattern (ArrivalPatternCumulativeDistribution_T& ioArrivalPatternCumulativeDistribution) const {
-    for (DTDProbDist_T::const_iterator it = _dtdProbDist.begin();
-         it != _dtdProbDist.end(); ++it) {
-      const stdair::DayDuration_T& lDTD = it->first;
-      const DTDProbMass_T& lDTDProbMass = it->second;
-      
-      const stdair::FloatDuration_T lZeroDTDFloat = 0.0;
-      stdair::FloatDuration_T lDTDFloat =
-        static_cast<stdair::FloatDuration_T> (lDTD);
-      lDTDFloat = lZeroDTDFloat - lDTD;
-
-      ioArrivalPatternCumulativeDistribution.
-        insert (ArrivalPatternCumulativeDistribution_T::
-                value_type (lDTDFloat, lDTDProbMass));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildPOSProbabilityMass (POSProbabilityMassFunction_T& ioPOSProbabilityMassFuction) const {
-    for (PosProbDist_T::const_iterator it = _posProbDist.begin();
-         it != _posProbDist.end(); ++it) {
-      const stdair::AirportCode_T& lPOS = it->first;
-      const PosProbMass_T& lProbability = it->second;
-
-      ioPOSProbabilityMassFuction.
-        insert (POSProbabilityMassFunction_T::
-                value_type (lPOS, lProbability));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildChannelProbabilityMass (ChannelProbabilityMassFunction_T& ioChannelProbabilityMassFuction) const {
-    
-    for (ChannelProbDist_T::const_iterator it = _channelProbDist.begin();
-         it != _channelProbDist.end(); ++it) {
-      const ChannelCode& lChannelCode = it->first;
-      const ChannelCode::EN_ChannelCode& lENChannelCode = lChannelCode.getCode();
-      const stdair::ChannelLabel_T lLabel =
-        ChannelCode::getCodeLabel (lENChannelCode);
-      const stdair::Probability_T& lProbability = it->second;
-
-      ioChannelProbabilityMassFuction.
-        insert (ChannelProbabilityMassFunction_T::
-                value_type (lLabel, lProbability));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildTripTypeProbabilityMass (TripTypeProbabilityMassFunction_T& ioTripTypeProbabilityMassFuction) const {
-    
-    for (TripProbDist_T::const_iterator it = _tripProbDist.begin();
-         it != _tripProbDist.end(); ++it) {
-      const TripCode& lTripCode = it->first;
-      const TripCode::EN_TripCode& lENTripCode = lTripCode.getCode();
-      const stdair::TripType_T lLabel =
-        TripCode::getCodeLabel (lENTripCode);
-      const stdair::Probability_T& lProbability = it->second;
-
-      ioTripTypeProbabilityMassFuction.
-        insert (TripTypeProbabilityMassFunction_T::
-                value_type (lLabel, lProbability));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildStayDurationProbabilityMass (StayDurationProbabilityMassFunction_T& ioStayDurationProbabilityMassFuction) const {
-    
-    for (StayProbDist_T::const_iterator it = _stayProbDist.begin();
-         it != _stayProbDist.end(); ++it) {
-      const stdair::DayDuration_T& lDuration = it->first;
-      const stdair::Probability_T& lProbability = it->second;
-
-      ioStayDurationProbabilityMassFuction.
-        insert (StayDurationProbabilityMassFunction_T::
-                value_type (lDuration, lProbability));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildFrequentFlyerProbabilityMass (FrequentFlyerProbabilityMassFunction_T& ioFrequentFlyerProbabilityMassFuction) const {
-    
-    for (FFProbDist_T::const_iterator it = _ffProbDist.begin();
-         it != _ffProbDist.end(); ++it) {
-      const FFCode& lFFCode = it->first;
-      const FFCode::EN_FFCode& lENFFCode = lFFCode.getCode();
-      std::stringstream ss; ss << FFCode::getCodeLabel (lENFFCode);
-      const stdair::FrequentFlyer_T lLabel = ss.str();
-      const stdair::Probability_T& lProbability = it->second;
-
-      ioFrequentFlyerProbabilityMassFuction.
-        insert (FrequentFlyerProbabilityMassFunction_T::
-                value_type (lLabel, lProbability));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildPreferredDepartureTimeContinuousDistribution (PreferredDepartureTimeContinuousDistribution_T& ioPreferredDepartureTimeContinuousDistribution) const {
-
-    for (PrefDepTimeProbDist_T::const_iterator it = _prefDepTimeProbDist.begin();
-         it != _prefDepTimeProbDist.end(); ++it) {
-      const stdair::Duration_T& lTime = it->first;
-      const stdair::IntDuration_T lIntDuration = lTime.total_seconds();
-      const PrefDepTimeProbMass_T& lPrefDepTimeProbMass = it->second;
-      
-      ioPreferredDepartureTimeContinuousDistribution.
-        insert (PreferredDepartureTimeContinuousDistribution_T::
-                value_type (lIntDuration, lPrefDepTimeProbMass));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildWTPContinuousDistribution (WTPContinuousDistribution_T& ioWTPContinuousDistribution) const {
-
-    for (WTPProbDist_T::const_iterator it = _wtpProbDist.begin();
-         it != _wtpProbDist.end(); ++it) {
-      const stdair::WTP_T& lWTP = it->first;
-      const WTPProbMass_T& lWTPProMass = it->second;
-
-      ioWTPContinuousDistribution.
-        insert (WTPContinuousDistribution_T::
-                value_type (lWTP, lWTPProMass));
-    }
-  }
-
-  // ////////////////////////////////////////////////////////////////////
-  void DemandStruct::
-  buildValueOfTimeContinuousDistribution (ValueOfTimeContinuousDistribution_T& ioValueOfTimeContinuousDistribution) const {
-
-    for (TimeValueProbDist_T::const_iterator it = _timeValueProbDist.begin();
-         it != _timeValueProbDist.end(); ++it) {
-      const stdair::PriceValue_T& lValueOfTime = it->first;
-      const TimeValueProbMass_T& lValueOfTimeProMass = it->second;
-
-      ioValueOfTimeContinuousDistribution.
-        insert (ValueOfTimeContinuousDistribution_T::
-                value_type (lValueOfTime, lValueOfTimeProMass));
-    }
-  }
   
   // ////////////////////////////////////////////////////////////////////
   const std::string DemandStruct::describe() const {
@@ -190,10 +41,10 @@ namespace TRADEMGEN {
          << ", N(" << _demandMean << ", " << _demandStdDev << "); ";
 
     unsigned short idx = 0;
-    for (PosProbDist_T::const_iterator it = _posProbDist.begin();
+    for (POSProbabilityMassFunction_T::const_iterator it = _posProbDist.begin();
          it != _posProbDist.end(); ++it, ++idx) {
       const stdair::AirportCode_T& lPosCode = it->first;
-      const PosProbMass_T& lPosProbMass = it->second;
+      const stdair::Probability_T& lPosProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
@@ -202,34 +53,37 @@ namespace TRADEMGEN {
     ostr << "; ";
     
     idx = 0;
-    for (ChannelProbDist_T::const_iterator it = _channelProbDist.begin();
+    for (ChannelProbabilityMassFunction_T::const_iterator it = 
+           _channelProbDist.begin();
          it != _channelProbDist.end(); ++it, ++idx) {
-      const ChannelCode::EN_ChannelCode lChannelCode = it->first;
-      const ChannelProbMass_T& lChannelProbMass = it->second;
+      const stdair::ChannelLabel_T lChannelCode = it->first;
+      const stdair::Probability_T& lChannelProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
-      ostr << ChannelCode::getCodeLabel(lChannelCode) << ":" << lChannelProbMass;
+      ostr << lChannelCode << ":" << lChannelProbMass;
     }
     ostr << "; ";
     
     idx = 0;
-    for (TripProbDist_T::const_iterator it = _tripProbDist.begin();
+    for (TripTypeProbabilityMassFunction_T::const_iterator it = 
+           _tripProbDist.begin();
          it != _tripProbDist.end(); ++it, ++idx) {
-      const TripCode::EN_TripCode lTripCode = it->first;
-      const TripProbMass_T& lTripProbMass = it->second;
+      const stdair::TripType_T lTripCode = it->first;
+      const stdair::Probability_T& lTripProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
-      ostr << TripCode::getCodeLabel(lTripCode) << ":" << lTripProbMass;
+      ostr << lTripCode << ":" << lTripProbMass;
     }
     ostr << "; ";
     
     idx = 0;
-    for (StayProbDist_T::const_iterator it = _stayProbDist.begin();
+    for (StayDurationProbabilityMassFunction_T::const_iterator it = 
+           _stayProbDist.begin();
          it != _stayProbDist.end(); ++it, ++idx) {
       const stdair::DayDuration_T& lStayDuration = it->first;
-      const StayProbMass_T& lStayProbMass = it->second;
+      const stdair::Probability_T& lStayProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
@@ -238,22 +92,24 @@ namespace TRADEMGEN {
     ostr << "; ";
     
     idx = 0;
-    for (FFProbDist_T::const_iterator it = _ffProbDist.begin();
+    for (FrequentFlyerProbabilityMassFunction_T::const_iterator it =
+           _ffProbDist.begin();
          it != _ffProbDist.end(); ++it, ++idx) {
-      const FFCode::EN_FFCode lFFCode = it->first;
-      const FFProbMass_T& lFFProbMass = it->second;
+      const stdair::FrequentFlyer_T lFFCode = it->first;
+      const stdair::Probability_T& lFFProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
-      ostr << FFCode::getCodeLabel(lFFCode) << ":" << lFFProbMass;
+      ostr << lFFCode << ":" << lFFProbMass;
     }
     ostr << "; ";
     
     idx = 0;
-    for (PrefDepTimeProbDist_T::const_iterator it = _prefDepTimeProbDist.begin();
+    for (PreferredDepartureTimeContinuousDistribution_T::const_iterator it =
+           _prefDepTimeProbDist.begin();
          it != _prefDepTimeProbDist.end(); ++it, ++idx) {
-      const stdair::Duration_T& lPrefDepTime = it->first;
-      const PrefDepTimeProbMass_T& lPrefDepTimeProbMass = it->second;
+      const stdair::IntDuration_T& lPrefDepTime = it->first;
+      const stdair::Probability_T& lPrefDepTimeProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
@@ -262,10 +118,10 @@ namespace TRADEMGEN {
     ostr << "; ";
     
     idx = 0;
-    for (WTPProbDist_T::const_iterator it = _wtpProbDist.begin();
+    for (WTPContinuousDistribution_T::const_iterator it = _wtpProbDist.begin();
          it != _wtpProbDist.end(); ++it, ++idx) {
       const stdair::WTP_T& lWTP = it->first;
-      const WTPProbMass_T& lWTPProbMass = it->second;
+      const stdair::Probability_T& lWTPProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
@@ -274,10 +130,11 @@ namespace TRADEMGEN {
     ostr << "; ";
     
     idx = 0;
-    for (TimeValueProbDist_T::const_iterator it = _timeValueProbDist.begin();
+    for (ValueOfTimeContinuousDistribution_T::const_iterator it =
+           _timeValueProbDist.begin();
          it != _timeValueProbDist.end(); ++it, ++idx) {
       const stdair::PriceValue_T& lTimeValue = it->first;
-      const TimeValueProbMass_T& lTimeValueProbMass = it->second;
+      const stdair::Probability_T& lTimeValueProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
@@ -286,10 +143,10 @@ namespace TRADEMGEN {
     ostr << "; ";
     
     idx = 0;
-    for (DTDProbDist_T::const_iterator it = _dtdProbDist.begin();
-         it != _dtdProbDist.end(); ++it, ++idx) {
-      const stdair::DayDuration_T& lDTD = it->first;
-      const DTDProbMass_T& lDTDProbMass = it->second;
+    for (ArrivalPatternCumulativeDistribution_T::const_iterator it = 
+           _dtdProbDist.begin(); it != _dtdProbDist.end(); ++it, ++idx) {
+      const stdair::FloatDuration_T& lDTD = it->first;
+      const stdair::Probability_T& lDTDProbMass = it->second;
       if (idx != 0) {
         ostr << ", ";
       }
