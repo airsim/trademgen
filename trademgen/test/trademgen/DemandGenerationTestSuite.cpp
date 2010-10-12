@@ -89,7 +89,6 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
       stdair::DateTime_T lNextRequestDateTime =
         lNextRequest->getRequestDateTime ();
       stdair::EventStruct lNextEventStruct ("Request",
-                                            lNextRequestDateTime,
                                             lDemandStreamKey,
                                             lNextRequest);
       lEventQueue.eraseLastUsedEvent ();
