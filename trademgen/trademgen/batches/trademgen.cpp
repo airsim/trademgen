@@ -253,9 +253,6 @@ int main (int argc, char* argv[]) {
     //return 0;
 
     for (int i = 1; i <= lNbOfRuns; ++i) {
-
-      output << "Demand generation number " << i << std::endl;
-      
       // /////////////////////////////////////////////////////
       // Event queue
       stdair::EventQueue lEventQueue = stdair::EventQueue ();

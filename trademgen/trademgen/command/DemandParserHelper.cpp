@@ -458,6 +458,9 @@ namespace TRADEMGEN {
     /** Passenger type parser: chset_p("A-Z") */
     chset_t passenger_type_p ("A-Z");
 
+    /** Frequent flyer type parser: chset_p("A-Z") */
+    chset_t ff_type_p ("A-Z");
+
     /** Family code parser */
     int1_p_t family_code_p;
       
@@ -531,11 +534,7 @@ namespace TRADEMGEN {
         (airport_p)[storeDestination(self._demand)]
         ;
 
-      pref_cabin =
-        boost::spirit::classic::ch_p('Y')
-        | boost::spirit::classic::ch_p('P')
-        | boost::spirit::classic::ch_p('J')
-        ;
+      pref_cabin = cabin_code_p;
 
       pos_dist =
         pos_pair >> *( ',' >> pos_pair )
@@ -616,15 +615,7 @@ namespace TRADEMGEN {
         >> ':' >> ff_share
         ;
 
-      ff_code =
-        boost::spirit::classic::ch_p('L')
-        | boost::spirit::classic::ch_p('T')
-        | boost::spirit::classic::ch_p('Q')
-        | boost::spirit::classic::ch_p('G')
-        | boost::spirit::classic::ch_p('S')
-        | boost::spirit::classic::ch_p('K')
-        | boost::spirit::classic::ch_p('N')
-        ;
+      ff_code = ff_type_p;
 
       ff_share =
         (boost::spirit::classic::ureal_p)[storeFFProbMass(self._demand)]
