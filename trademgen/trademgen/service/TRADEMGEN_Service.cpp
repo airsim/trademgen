@@ -159,9 +159,12 @@ namespace TRADEMGEN {
     const bool doesExistAndIsReadable =
       stdair::BasFileMgr::doesExistAndIsReadable (iDemandInputFilename);
     if (doesExistAndIsReadable == false) {
-      STDAIR_LOG_ERROR ("The demand input file, '" << iDemandInputFilename
-                        << "', can not be retrieved on the file-system");
-      throw stdair::FileNotFoundException();
+      STDAIR_LOG_ERROR ("The demand input file '" << iDemandInputFilename
+                        << "' does not exist or can not be read");
+      
+      throw DemandInputFileNotFoundException ("The demand file '"
+                                              + iDemandInputFilename
+                                              + "' does not exist or can not be read");
     }
 
     // Retrieve the Trademgen service context

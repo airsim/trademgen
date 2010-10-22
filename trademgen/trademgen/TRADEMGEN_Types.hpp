@@ -16,6 +16,17 @@ namespace TRADEMGEN {
 
   // ///////// Exceptions ///////////
   class RootException : public std::exception {
+  public:
+    /** Constructors. */
+    RootException (const std::string& iWhat) : _what (iWhat) {}
+    RootException () : _what ("No more details") {}
+    /** Destructor. */
+    virtual ~RootException() throw() {}
+    /** Give the details of the exception. */
+    const char* what() const throw() { return _what.c_str(); } 
+  protected:
+    /** Details for the exception. */
+    std::string _what;
   };
 
   class NonInitialisedServiceException : public RootException {
@@ -43,6 +54,19 @@ namespace TRADEMGEN {
   };
 
   class TrademgenGenerationException : public RootException {
+  };
+
+  class FileException : public RootException {
+  public:
+    /** Constructor. */
+    FileException (const std::string& iWhat) : RootException (iWhat) {}
+  };
+
+  class DemandInputFileNotFoundException : public FileException {
+  public:
+    /** Constructor. */
+    DemandInputFileNotFoundException (const std::string& iWhat)
+      : FileException (iWhat) {}
   };
 
 
