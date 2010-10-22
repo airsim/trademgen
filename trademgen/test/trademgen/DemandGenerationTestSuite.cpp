@@ -86,10 +86,7 @@ void DemandGenerationTestSuite::simpleEventGenerationHelper() {
       // DEBUG
       STDAIR_LOG_DEBUG ("Added request: " << lNextRequest->describe());
       
-      stdair::DateTime_T lNextRequestDateTime =
-        lNextRequest->getRequestDateTime ();
-      stdair::EventStruct lNextEventStruct ("Request",
-                                            lDemandStreamKey,
+      stdair::EventStruct lNextEventStruct ("Request", lDemandStreamKey,
                                             lNextRequest);
       lEventQueue.eraseLastUsedEvent ();
       lEventQueue.addEvent (lNextEventStruct);
