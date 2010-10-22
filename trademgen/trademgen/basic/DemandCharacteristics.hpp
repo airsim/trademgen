@@ -30,7 +30,7 @@ namespace TRADEMGEN {
                            const StayDurationProbabilityMassFunction_T&,
                            const FrequentFlyerProbabilityMassFunction_T&,
                            const PreferredDepartureTimeContinuousDistribution_T&,
-                           const WTPContinuousDistribution_T&,
+                           const stdair::WTP_T&,
                            const ValueOfTimeContinuousDistribution_T&);
     
     /** Destructor */
@@ -66,8 +66,9 @@ namespace TRADEMGEN {
     /** Preferred departure time cumulative distribution. */
     const PreferredDepartureTimeCumulativeDistribution_T _preferredDepartureTimeCumulativeDistribution;
     
-    /** Willingness-to-pay cumulative distribution */
-    const WTPCumulativeDistribution_T _wtpCumulativeDistribution;
+    /** Min Willingness-to-pay, used for the computation of the WTP of
+        each request. */
+    const stdair::WTP_T _minWTP;
 
     /** Value of time cumulative distribution. */
     const ValueOfTimeCumulativeDistribution_T _valueOfTimeCumulativeDistribution;

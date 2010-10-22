@@ -51,7 +51,7 @@ namespace TRADEMGEN {
                                    iDemand._tripProbDist,
                                    iDemand._stayProbDist, iDemand._ffProbDist,
                                    iDemand._prefDepTimeProbDist,
-                                   iDemand._wtpProbDist,
+                                   iDemand._minWTP,
                                    iDemand._timeValueProbDist,
                                    lDemandDistribution,
                                    lNumberOfRequestsSeed, lRequestDateTimeSeed,

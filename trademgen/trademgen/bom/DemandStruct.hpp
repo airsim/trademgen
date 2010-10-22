@@ -43,7 +43,7 @@ namespace TRADEMGEN {
     StayDurationProbabilityMassFunction_T _stayProbDist;
     FrequentFlyerProbabilityMassFunction_T _ffProbDist;
     PreferredDepartureTimeContinuousDistribution_T _prefDepTimeProbDist; 
-    WTPContinuousDistribution_T _wtpProbDist;
+    stdair::WTP_T _minWTP;
     ValueOfTimeContinuousDistribution_T _timeValueProbDist;
     ArrivalPatternCumulativeDistribution_T _dtdProbDist;
     
@@ -74,9 +74,6 @@ namespace TRADEMGEN {
 
     /** Staging preferred departure time. */
     stdair::Duration_T _itPrefDepTime;
-
-    /** Staging Willingness-To-Pay (WTP). */
-    stdair::WTP_T _itWTP;
     
     /** Staging time value. */
     stdair::PriceValue_T _itTimeValue;

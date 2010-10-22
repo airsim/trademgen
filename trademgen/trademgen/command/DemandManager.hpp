@@ -37,7 +37,7 @@ namespace TRADEMGEN {
                                  const StayDurationProbabilityMassFunction_T&,
                                  const FrequentFlyerProbabilityMassFunction_T&,
                                  const PreferredDepartureTimeContinuousDistribution_T&,
-                                 const WTPContinuousDistribution_T&,
+                                 const stdair::WTP_T&,
                                  const ValueOfTimeContinuousDistribution_T&,
                                  const DemandDistribution&,
                                  const stdair::RandomSeed_T&,

@@ -33,7 +33,7 @@ namespace TRADEMGEN {
    const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
    const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
    const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
-   const WTPContinuousDistribution_T& iWTPContinuousDistribution,
+   const stdair::WTP_T& iMinWTP,
    const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
    const DemandDistribution& iDemandDistribution,
    const stdair::RandomSeed_T& iNumberOfRequestsSeed,
@@ -45,8 +45,7 @@ namespace TRADEMGEN {
                         iChannelProbMass, iTripTypeProbMass,
                         iStayDurationProbMass, iFrequentFlyerProbMass,
                         iPreferredDepartureTimeContinuousDistribution,
-                        iWTPContinuousDistribution,
-                        iValueOfTimeContinuousDistribution,
+                        iMinWTP, iValueOfTimeContinuousDistribution,
                         iDemandDistribution, iNumberOfRequestsSeed,
                         iRequestDateTimeSeed, iDemandCharacteristicsSeed);
     

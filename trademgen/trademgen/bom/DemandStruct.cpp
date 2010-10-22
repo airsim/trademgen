@@ -116,18 +116,8 @@ namespace TRADEMGEN {
       ostr << lPrefDepTime << ":" << lPrefDepTimeProbMass;
     }
     ostr << "; ";
-    
-    idx = 0;
-    for (WTPContinuousDistribution_T::const_iterator it = _wtpProbDist.begin();
-         it != _wtpProbDist.end(); ++it, ++idx) {
-      const stdair::WTP_T& lWTP = it->first;
-      const stdair::Probability_T& lWTPProbMass = it->second;
-      if (idx != 0) {
-        ostr << ", ";
-      }
-      ostr << lWTP << ":" << lWTPProbMass;
-    }
-    ostr << "; ";
+
+    ostr << _minWTP << "; ";
     
     idx = 0;
     for (ValueOfTimeContinuousDistribution_T::const_iterator it =

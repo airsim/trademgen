@@ -27,7 +27,7 @@ namespace TRADEMGEN {
                 const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
                 const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
                 const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
-                const WTPContinuousDistribution_T& iWTPContinuousDistribution,
+                const stdair::WTP_T& iMinWTP,
                 const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
                 const DemandDistribution& iDemandDistribution,
                 const stdair::RandomSeed_T& iNumberOfRequestsSeed,
@@ -38,8 +38,7 @@ namespace TRADEMGEN {
                               iChannelProbMass, iTripTypeProbMass,
                               iStayDurationProbMass, iFrequentFlyerProbMass,
                               iPreferredDepartureTimeContinuousDistribution,
-                              iWTPContinuousDistribution,
-                              iValueOfTimeContinuousDistribution),
+                              iMinWTP, iValueOfTimeContinuousDistribution),
       _demandDistribution (iDemandDistribution),
       _totalNumberOfRequestsToBeGenerated (0),
       _numberOfRequestsRandomGenerator (iNumberOfRequestsSeed),
@@ -219,12 +218,16 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  const stdair::WTP_T DemandStream::generateWTP () {
-    // Generate a random number between 0 and 1.
-    const stdair::Probability_T lVariate =
-      _demandCharacteristicsRandomGenerator.generateUniform01();  
-
-    return _demandCharacteristics._wtpCumulativeDistribution.getValue (lVariate);
+  const stdair::WTP_T DemandStream::
+  generateWTP (const stdair::Date_T& iDepartureDate,
+               const stdair::DateTime_T& iDateTimeThisRequest,
+               const stdair::DayDuration_T& iDurationOfStay) {
+    const stdair::Date_T lDateThisRequest = iDateTimeThisRequest.date ();
+    const stdair::DateOffset_T lAP = iDepartureDate - lDateThisRequest;
+    const stdair::DayDuration_T lAPInDays = lAP.days ();
+    const stdair::WTP_T lWTP = 
+      (365 - lAPInDays) * _demandCharacteristics._minWTP / 36;
+    return lWTP;
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -262,10 +265,12 @@ namespace TRADEMGEN {
     // Preferred departure time.
     const stdair::Duration_T lPreferredDepartureTime =
       generatePreferredDepartureTime ();
-    // WTP
-    const stdair::WTP_T lWTP = generateWTP ();
     // Value of time
     const stdair::PriceValue_T lValueOfTime = generateValueOfTime ();
+    // WTP
+    const stdair::WTP_T lWTP = generateWTP (lPreferredDepartureDate,
+                                            lDateTimeThisRequest,
+                                            lStayDuration);
     
     // Create the booking request with a hardcoded party size.
     stdair::BookingRequestPtr_T oBookingRequest_ptr = stdair::BookingRequestPtr_T

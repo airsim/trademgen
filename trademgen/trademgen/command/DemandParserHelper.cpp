@@ -301,20 +301,8 @@ namespace TRADEMGEN {
     
     // //////////////////////////////////////////////////////////////////
     void storeWTP::operator() (double iReal) const {
-      _demand._itWTP = iReal;
+      _demand._minWTP = iReal;
       //STDAIR_LOG_DEBUG ("WTP: " << iReal);
-    }
-
-    // //////////////////////////////////////////////////////////////////
-    storeWTPProbMass::storeWTPProbMass (DemandStruct& ioDemand)
-      : ParserSemanticAction (ioDemand) {
-    }
-    
-    // //////////////////////////////////////////////////////////////////
-    void storeWTPProbMass::operator() (double iReal) const {
-      _demand._wtpProbDist.insert (WTPContinuousDistribution_T::
-                                   value_type (_demand._itWTP,  iReal));
-      //STDAIR_LOG_DEBUG ("WTPProbMass: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -393,7 +381,6 @@ namespace TRADEMGEN {
       _demand._stayProbDist.clear();
       _demand._ffProbDist.clear();
       _demand._prefDepTimeProbDist.clear(); 
-      _demand._wtpProbDist.clear();
       _demand._timeValueProbDist.clear();
       _demand._dtdProbDist.clear();
     }
@@ -501,7 +488,7 @@ namespace TRADEMGEN {
         >> ';' >> stay_dist
         >> ';' >> ff_dist
         >> ';' >> pref_dep_time_dist
-        >> ';' >> wtp_dist
+        >> ';' >> wtp
         >> ';' >> time_value_dist
         >> ';' >> dtd_dist
         >> ';' >> demand_params
@@ -642,17 +629,8 @@ namespace TRADEMGEN {
        ]
         ;
 
-      wtp_dist =
-        wtp_pair >> *( ',' >> wtp_pair )
-        ;
-
-      wtp_pair =
+      wtp =
         (boost::spirit::classic::ureal_p)[storeWTP(self._demand)]
-        >> ':' >> wtp_share
-        ;
-
-      wtp_share =
-        (boost::spirit::classic::ureal_p)[storeWTPProbMass(self._demand)]
         ;
 
       time_value_dist =
@@ -721,9 +699,7 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_pair);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_share);
       BOOST_SPIRIT_DEBUG_NODE (time);
-      BOOST_SPIRIT_DEBUG_NODE (wtp_dist);
-      BOOST_SPIRIT_DEBUG_NODE (wtp_pair);
-      BOOST_SPIRIT_DEBUG_NODE (wtp_share);
+      BOOST_SPIRIT_DEBUG_NODE (wtp);
       BOOST_SPIRIT_DEBUG_NODE (time_value_dist);
       BOOST_SPIRIT_DEBUG_NODE (time_value_pair);
       BOOST_SPIRIT_DEBUG_NODE (time_value_share);

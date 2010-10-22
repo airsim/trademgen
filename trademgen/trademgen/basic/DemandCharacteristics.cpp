@@ -21,7 +21,7 @@ namespace TRADEMGEN {
                          const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
                          const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
                          const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
-                         const WTPContinuousDistribution_T& iWTPContinuousDistribution,
+                         const stdair::WTP_T& iMinWTP,
                          const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution)
     : _arrivalPattern (iArrivalPattern),
       _posProbabilityMass (iPOSProbMass),
@@ -29,8 +29,7 @@ namespace TRADEMGEN {
       _tripTypeProbabilityMass (iTripTypeProbMass),
       _stayDurationProbabilityMass (iStayDurationProbMass),
       _frequentFlyerProbabilityMass (iFrequentFlyerProbMass),
-      _preferredDepartureTimeCumulativeDistribution (iPreferredDepartureTimeContinuousDistribution),
-      _wtpCumulativeDistribution (iWTPContinuousDistribution),
+      _preferredDepartureTimeCumulativeDistribution (iPreferredDepartureTimeContinuousDistribution), _minWTP (iMinWTP),
       _valueOfTimeCumulativeDistribution (iValueOfTimeContinuousDistribution) {
   }
     
@@ -64,9 +63,7 @@ namespace TRADEMGEN {
          << std::endl;
     oStr << "Preferred departure time cumulative distribution (time, proportion: ";
     oStr << _preferredDepartureTimeCumulativeDistribution.displayCumulativeDistribution() << std::endl;
-    oStr << "WTP cumulative distribution (WTP, proportion: ";
-    oStr << _wtpCumulativeDistribution.displayCumulativeDistribution()
-         << std::endl;
+    oStr << "min WTP: " << _minWTP << std::endl;
     oStr << "Value of time cumulative distribution (value of time, proportion: ";
     oStr << _valueOfTimeCumulativeDistribution.displayCumulativeDistribution()
          << std::endl;

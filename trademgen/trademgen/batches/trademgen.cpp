@@ -232,7 +232,7 @@ int main (int argc, char* argv[]) {
     }
 
     // Number of generations.
-    const int lNbOfRuns = 10;
+    const int lNbOfRuns = 1;
 
     // Open and clean the .csv output file
     std::ofstream output;

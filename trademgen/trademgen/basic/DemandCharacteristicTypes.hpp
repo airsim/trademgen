@@ -55,12 +55,6 @@ namespace TRADEMGEN {
   /** Define the preferred departure time continuous distribution. */
   typedef PreferredDepartureTimeCumulativeDistribution_T::ContinuousDistribution_T PreferredDepartureTimeContinuousDistribution_T;
 
-  /** Define the willingness-to-pay cumulative distribution. */
-  typedef ContinuousAttributeLite<stdair::WTP_T> WTPCumulativeDistribution_T;
-
-  /** Define the willingness-to-pay continuous distribution. */
-  typedef WTPCumulativeDistribution_T::ContinuousDistribution_T WTPContinuousDistribution_T;
-
   /** Define the value of time cumulative distribution. */
   typedef ContinuousAttributeLite<stdair::PriceValue_T> ValueOfTimeCumulativeDistribution_T;
 

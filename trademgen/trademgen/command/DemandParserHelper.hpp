@@ -179,24 +179,14 @@ namespace TRADEMGEN {
       void operator() (double iReal) const;
     };
   
-    /** Store the parameters for the Willingness-To-Pay (WTP)
-        continuous probability distribution. */
+    /** Store the parameters for the min Willingness-To-Pay (WTP). */
     struct storeWTP : public ParserSemanticAction {
       /** Actor Constructor. */
       storeWTP (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
-    };    
-    
-    /** Store the parameters for the Willingness-To-Pay (WTP) continuous
-        probability distribution. */
-    struct storeWTPProbMass : public ParserSemanticAction {
-      /** Actor Constructor. */
-      storeWTPProbMass (DemandStruct&);
-      /** Actor Function (functor). */
-      void operator() (double iReal) const;
     };
-  
+    
     /** Store the time value. */
     struct storeTimeValue : public ParserSemanticAction {
       /** Actor Constructor. */
@@ -250,7 +240,7 @@ namespace TRADEMGEN {
     /**
        PrefDepDate; Origin; Destination; PassengerType; Mean; StdDev;
        PosDist; ChannelDist; TripTypeDist; StayDurationDist;
-       FrequentFlyerDist; PrefDepTimeDist; WTPDist;
+       FrequentFlyerDist; PrefDepTimeDist; min WTP;
        (PrefArrivalDate; PrefArrivalTime;) TimeValueDist; 
        ValueOfTimeDist; ArrivalPatternDist;
        2010-02-08; SIN; BKK; L; 10.0; 1.0;
@@ -279,7 +269,6 @@ namespace TRADEMGEN {
         Frequent flyer (P=Platinum, G=Gold, S=Silver, M=Member, N=None)
       Continuous cumulative distribution:
         Preferred departure time (hh:mm:ss)
-        WTP (moneraty value)
         Preferred arrival date (equal to prefered departure date)
         Preferred arrival time (equal to prefered departure time)
         Value of time
@@ -295,7 +284,7 @@ namespace TRADEMGEN {
       Demand ::= PrefDepDate ';' Origin ';' Destination ';' PassengerType
          ';' DemandParams ';' PosDist ';' ChannelDist ';'  TripDist
          ';' StayDist ';' FfDist ';'  PrefDepTimeDist
-         ';' WtpDist ';' TimeValueDist ';'  DtdDist
+         ';' minWTP ';' TimeValueDist ';'  DtdDist
          EndOfDemand
       PrefDepDate ::= date
       PassengerType ::= 'L' | 'B' | 'F'
@@ -322,9 +311,7 @@ namespace TRADEMGEN {
       PrefDepTimeDist ::= PrefDepTimePair (',' PrefDepTimePair)*
       PrefDepTimePair ::= time ':' PrefDepTimeShare
       PrefDepTimeShare ::= real
-      WTPDist ::= WTPPair (',' WTPPair)*
-      WTPPair ::= real ':' WTPShare
-      WTPShare ::= real
+      minWTP ::= real
       TimeValueDist ::= TimeValuePair (',' TimeValuePair)*
       TimeValuePair ::= [0;2]-digit-integer ':' TimeValueShare
       TimeValueShare ::= real
@@ -354,7 +341,7 @@ namespace TRADEMGEN {
           stay_dist, stay_pair, stay_share,
           ff_dist, ff_pair, ff_code, ff_share,
           pref_dep_time_dist, pref_dep_time_pair, pref_dep_time_share, time,
-          wtp_dist, wtp_pair, wtp_share,
+          wtp,
           time_value_dist, time_value_pair, time_value_share,
           dtd_dist, dtd_pair, dtd_share;
 

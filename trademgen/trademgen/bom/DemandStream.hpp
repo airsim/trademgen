@@ -132,7 +132,9 @@ namespace TRADEMGEN {
     const stdair::Duration_T generatePreferredDepartureTime ();
     
     /** Generate the WTP. */
-    const stdair::WTP_T generateWTP ();
+    const stdair::WTP_T generateWTP (const stdair::Date_T&,
+                                     const stdair::DateTime_T&,
+                                     const stdair::DayDuration_T&);
 
     /** Generate the value of time. */
     const stdair::PriceValue_T generateValueOfTime ();
@@ -154,7 +156,7 @@ namespace TRADEMGEN {
                   const StayDurationProbabilityMassFunction_T&,
                   const FrequentFlyerProbabilityMassFunction_T&,
                   const PreferredDepartureTimeContinuousDistribution_T&,
-                  const WTPContinuousDistribution_T&,
+                  const stdair::WTP_T&,
                   const ValueOfTimeContinuousDistribution_T&,
                   const DemandDistribution&,
                   const stdair::RandomSeed_T& iNumberOfRequestsSeed,
