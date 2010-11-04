@@ -8,11 +8,15 @@
 #include <string>
 // Boost
 #include <boost/shared_ptr.hpp>
+// Boost Random
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/variate_generator.hpp>
 // STDAIR
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
+#include <trademgen/basic/DemandCharacteristicTypes.hpp>
 #include <trademgen/service/ServiceAbstract.hpp>
 
 // Forward declarations.
@@ -48,6 +52,16 @@ namespace TRADEMGEN {
       return _stdairService;
     }
 
+    /** Get the shared uniform generator. */
+    stdair::UniformGenerator_T& getUniformGenerator () {
+      return _uniformGenerator;
+    }
+
+    /** Get the default POS distribution. */
+    const POSProbabilityMass_T& getPOSProbabilityMass () const {
+      return _posProbabilityMass;
+    }
+
   private:
     // ///////// Setters //////////
     /** Set the pointer on the STDAIR service handler. */
@@ -71,7 +85,12 @@ namespace TRADEMGEN {
 
   private:
     // ////////////// Attributes ////////////////
-    //
+    /** Shared generator for seeds and some other values. */
+    stdair::RandomSeed_T _seed;
+    stdair::BaseGenerator_T _generator;
+    stdair::UniformGenerator_T _uniformGenerator;
+    /** POS probability mass, used when the POS is 'RoW'. */
+    const POSProbabilityMass_T _posProbabilityMass;
   };
 
 }

@@ -32,7 +32,9 @@ namespace TRADEMGEN {
                 const DemandDistribution& iDemandDistribution,
                 const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                 const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                const stdair::RandomSeed_T& iDemandCharacteristicsSeed)
+                const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
+                stdair::UniformGenerator_T& ioSharedGenerator,
+                const POSProbabilityMass_T& iDefaultPOSProbablityMass)
     : _key (iKey),
       _demandCharacteristics (iArrivalPattern, iPOSProbMass,
                               iChannelProbMass, iTripTypeProbMass,
@@ -43,7 +45,9 @@ namespace TRADEMGEN {
       _totalNumberOfRequestsToBeGenerated (0),
       _numberOfRequestsRandomGenerator (iNumberOfRequestsSeed),
       _requestDateTimeRandomGenerator (iRequestDateTimeSeed),
-      _demandCharacteristicsRandomGenerator (iDemandCharacteristicsSeed) {
+      _demandCharacteristicsRandomGenerator (iDemandCharacteristicsSeed),
+      _uniformGenerator (ioSharedGenerator),
+      _posProMass (iDefaultPOSProbablityMass) {
     init();
   }
 
@@ -161,11 +165,25 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::AirportCode_T DemandStream::generatePOS () {
+    stdair::AirportCode_T oPOS;
+    
     // Generate a random number between 0 and 1.
-    const stdair::Probability_T lVariate =
+    stdair::Probability_T lVariate =
       _demandCharacteristicsRandomGenerator.generateUniform01();
+    oPOS = _demandCharacteristics._posProbabilityMass.getValue (lVariate);
 
-    return _demandCharacteristics._posProbabilityMass.getValue (lVariate);
+    // Check if oPOS is different from 'row'
+    if (oPOS == "row") {
+      bool lPOSGenerationSucceeded = false;
+      while (lPOSGenerationSucceeded == false) {
+        lVariate =_demandCharacteristicsRandomGenerator.generateUniform01();
+        oPOS = _posProMass.getValue (lVariate);
+        lPOSGenerationSucceeded = 
+          1-_demandCharacteristics._posProbabilityMass.checkValue (oPOS);
+      }
+    }
+    
+    return oPOS;
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -225,8 +243,9 @@ namespace TRADEMGEN {
     const stdair::Date_T lDateThisRequest = iDateTimeThisRequest.date ();
     const stdair::DateOffset_T lAP = iDepartureDate - lDateThisRequest;
     const stdair::DayDuration_T lAPInDays = lAP.days ();
+    stdair::RealNumber_T lVariateUnif = 0.90 + _uniformGenerator() * 0.2;
     const stdair::WTP_T lWTP = 
-      (365 - lAPInDays) * _demandCharacteristics._minWTP / 36;
+      lVariateUnif * (365 - lAPInDays) * _demandCharacteristics._minWTP / 36;
     return lWTP;
   }
 

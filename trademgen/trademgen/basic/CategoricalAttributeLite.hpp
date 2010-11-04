@@ -18,7 +18,7 @@ namespace TRADEMGEN {
   /** Class modeling the distribution of values that can be taken by a
       categorical attribute. */
   template <class T>
-  struct CategoricalAttributeLite {    
+  struct CategoricalAttributeLite {
     public:
     /** Define the probability mass function type. */
     typedef std::map<T, stdair::Probability_T> ProbabilityMassFunction_T;
@@ -38,9 +38,20 @@ namespace TRADEMGEN {
 
       STDAIR_LOG_ERROR ("The following cumulative probability "
                         << "is out of range: " << iCumulativeProbability);
+      STDAIR_LOG_ERROR (displayProbabilityMass ());
       assert (false);
       T t;
       return t;
+    }
+
+    /** Check if a value belongs to the value list. */
+    bool checkValue (const T& iValue) const {
+      for (unsigned int idx = 0; idx < _size; ++idx) {
+        if (_valueArray[idx] == iValue) {
+          return true;
+        }
+      }
+      return false;
     }
     
   public:

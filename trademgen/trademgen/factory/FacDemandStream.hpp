@@ -43,7 +43,9 @@ namespace TRADEMGEN {
                           const DemandDistribution&,
                           const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                           const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                          const stdair::RandomSeed_T& iDemandCharacteristicSeed);
+                          const stdair::RandomSeed_T& iDemandCharacteristicSeed,
+                          stdair::UniformGenerator_T&,
+                          const POSProbabilityMass_T&);
     
   protected:
     /** Default Constructor.

@@ -161,7 +161,8 @@ namespace TRADEMGEN {
                   const DemandDistribution&,
                   const stdair::RandomSeed_T& iNumberOfRequestsSeed,
                   const stdair::RandomSeed_T& iRequestDateTimeSeed,
-                  const stdair::RandomSeed_T& iDemandCharacteristicsSeed);
+                  const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
+                  stdair::UniformGenerator_T&, const POSProbabilityMass_T&);
     /** Default constructors. */
     DemandStream ();
     DemandStream (const DemandStream&);
@@ -196,6 +197,12 @@ namespace TRADEMGEN {
     
     /** Random generator for demand characteristics */
     RandomGeneration _demandCharacteristicsRandomGenerator;
+
+    /** Shared random uniform generator for seeds and some other values. */
+    stdair::UniformGenerator_T& _uniformGenerator;
+
+    /** Defaut POS probablity mass, used when "row" is drawn. */
+    const POSProbabilityMass_T& _posProMass;
   };
 
 }

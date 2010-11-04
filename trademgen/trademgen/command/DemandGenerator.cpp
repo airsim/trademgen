@@ -24,6 +24,8 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   void DemandGenerator::
   createDemandCharacteristics (stdair::BomRoot& ioBomRoot,
+                               stdair::UniformGenerator_T& ioSharedGenerator,
+                               const POSProbabilityMass_T& iPOSProbMass,
                                const DemandStruct& iDemand) {
     
     const DemandStreamKey lDemandStreamKey (iDemand._origin,
@@ -38,11 +40,10 @@ namespace TRADEMGEN {
     
     // Seed
     stdair::RandomSeed_T lNumberOfRequestsSeed =
-      ioBomRoot.generateSeed (); //stdair::DEFAULT_RANDOM_SEED;
-    stdair::RandomSeed_T lRequestDateTimeSeed =
-      ioBomRoot.generateSeed (); //stdair::DEFAULT_RANDOM_SEED;
+      generateSeed (ioSharedGenerator);
+    stdair::RandomSeed_T lRequestDateTimeSeed = generateSeed (ioSharedGenerator);
     stdair::RandomSeed_T lDemandCharacteristicsSeed =
-      ioBomRoot.generateSeed (); //stdair::DEFAULT_RANDOM_SEED;
+      generateSeed (ioSharedGenerator);
   
     // Delegate the call to the dedicated command
     DemandManager::addDemandStream(ioBomRoot, lDemandStreamKey,
@@ -55,6 +56,16 @@ namespace TRADEMGEN {
                                    iDemand._timeValueProbDist,
                                    lDemandDistribution,
                                    lNumberOfRequestsSeed, lRequestDateTimeSeed,
-                                   lDemandCharacteristicsSeed);
+                                   lDemandCharacteristicsSeed,
+                                   ioSharedGenerator, iPOSProbMass);
   }    
+
+  // ////////////////////////////////////////////////////////////////////
+  stdair::RandomSeed_T DemandGenerator::
+  generateSeed (stdair::UniformGenerator_T& ioSharedGenerator) {
+    stdair::RealNumber_T lVariateUnif = ioSharedGenerator() * 1e9;
+    stdair::RandomSeed_T oSeed = static_cast<stdair::RandomSeed_T>(lVariateUnif);
+    return oSeed;
+  }
+  
 }

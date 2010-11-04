@@ -361,8 +361,12 @@ namespace TRADEMGEN {
 
     // //////////////////////////////////////////////////////////////////
     doEndDemand::doEndDemand (stdair::BomRoot& ioBomRoot,
+                              stdair::UniformGenerator_T& ioSharedGenerator,
+                              const POSProbabilityMass_T& iPOSProbMass,
                               DemandStruct& ioDemand)
-      : ParserSemanticAction (ioDemand), _bomRoot (ioBomRoot) {
+      : ParserSemanticAction (ioDemand), _bomRoot (ioBomRoot),
+        _uniformGenerator (ioSharedGenerator),
+        _posProbabilityMass (iPOSProbMass) {
     }
     
     // //////////////////////////////////////////////////////////////////
@@ -373,7 +377,8 @@ namespace TRADEMGEN {
       // STDAIR_LOG_DEBUG ("Demand: " << _demand.describe());
 
       // Create the Demand BOM objects
-      DemandGenerator::createDemandCharacteristics (_bomRoot, _demand);
+      DemandGenerator::createDemandCharacteristics (_bomRoot, _uniformGenerator,
+                                                    _posProbabilityMass,_demand);
                                  
       // Clean the lists
       _demand._posProbDist.clear();
@@ -465,8 +470,11 @@ namespace TRADEMGEN {
 
     // //////////////////////////////////////////////////////////////////
     DemandParser::DemandParser (stdair::BomRoot& ioBomRoot,
+                                stdair::UniformGenerator_T& ioSharedGenerator,
+                                const POSProbabilityMass_T& iPOSProbMass,
                                 DemandStruct& ioDemand) 
-      : _bomRoot (ioBomRoot), _demand (ioDemand) {
+      : _bomRoot (ioBomRoot), _uniformGenerator (ioSharedGenerator),
+        _posProbabilityMass (iPOSProbMass), _demand (ioDemand) {
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -493,7 +501,8 @@ namespace TRADEMGEN {
         >> ';' >> time_value_dist
         >> ';' >> dtd_dist
         >> ';' >> demand_params
-        >> demand_end[doEndDemand(self._bomRoot, self._demand)]
+        >> demand_end[doEndDemand(self._bomRoot, self._uniformGenerator,
+                                  self._posProbabilityMass, self._demand)]
         ;
 
       demand_end =
@@ -729,8 +738,12 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   DemandFileParser::
   DemandFileParser (stdair::BomRoot& ioBomRoot,
+                    stdair::UniformGenerator_T& ioSharedGenerator,
+                    const POSProbabilityMass_T& iPOSProbMass,
                     const std::string& iFilename)
-    : _filename (iFilename), _bomRoot (ioBomRoot) {
+    : _filename (iFilename), _bomRoot (ioBomRoot),
+      _uniformGenerator (ioSharedGenerator),
+      _posProbabilityMass (iPOSProbMass) {
     init();
   }
 
@@ -770,7 +783,8 @@ namespace TRADEMGEN {
     STDAIR_LOG_DEBUG ("Parsing demand input file: " << _filename);
 
     // Initialise the parser (grammar) with the helper/staging structure.
-    DemandParserHelper::DemandParser lDemandParser (_bomRoot, _demand);
+    DemandParserHelper::DemandParser lDemandParser (_bomRoot, _uniformGenerator,
+                                                    _posProbabilityMass,_demand);
       
     // Launch the parsing of the file and, thanks to the doEndDemand
     // call-back structure, the building of the whole BomRoot BOM

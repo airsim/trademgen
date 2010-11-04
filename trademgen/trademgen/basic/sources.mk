@@ -1,5 +1,6 @@
 bas_h_sources = \
 		$(top_srcdir)/trademgen/basic/BasConst_TRADEMGEN_Service.hpp \
+		$(top_srcdir)/trademgen/basic/BasConst_DemandGeneration.hpp \
 		$(top_srcdir)/trademgen/basic/BasParserTypes.hpp \
 		$(top_srcdir)/trademgen/basic/ContinuousAttribute.hpp \
 		$(top_srcdir)/trademgen/basic/CategoricalAttribute.hpp \

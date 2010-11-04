@@ -224,11 +224,14 @@ namespace TRADEMGEN {
     /** Mark the end of the demand parsing. */
     struct doEndDemand : public ParserSemanticAction {
       /** Actor Constructor. */
-      doEndDemand (stdair::BomRoot&, DemandStruct&);
+      doEndDemand (stdair::BomRoot&, stdair::UniformGenerator_T&,
+                   const POSProbabilityMass_T&, DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
       /** Actor Specific Context. */
       stdair::BomRoot& _bomRoot;
+      stdair::UniformGenerator_T& _uniformGenerator;
+      const POSProbabilityMass_T& _posProbabilityMass;
     };
   
 
@@ -325,7 +328,8 @@ namespace TRADEMGEN {
     struct DemandParser : 
       public boost::spirit::classic::grammar<DemandParser> {
 
-      DemandParser (stdair::BomRoot&, DemandStruct&);
+      DemandParser (stdair::BomRoot&, stdair::UniformGenerator_T&,
+                    const POSProbabilityMass_T&, DemandStruct&);
 
       template <typename ScannerT>
       struct definition {
@@ -351,6 +355,8 @@ namespace TRADEMGEN {
 
       // Parser Context
       stdair::BomRoot& _bomRoot;
+      stdair::UniformGenerator_T& _uniformGenerator;
+      const POSProbabilityMass_T& _posProbabilityMass;
       DemandStruct& _demand;
     };
 
@@ -370,7 +376,8 @@ namespace TRADEMGEN {
   class DemandFileParser : public stdair::CmdAbstract {
   public:
     /** Constructor. */
-    DemandFileParser (stdair::BomRoot&,
+    DemandFileParser (stdair::BomRoot&, stdair::UniformGenerator_T&,
+                      const POSProbabilityMass_T&,
                       const stdair::Filename_T& iDemandInputFilename);
 
     /** Parse the demand input file. */
@@ -393,6 +400,12 @@ namespace TRADEMGEN {
       
     /** Root of the BOM tree. */
     stdair::BomRoot& _bomRoot;
+
+    /** Shared uniform generator. */
+    stdair::UniformGenerator_T& _uniformGenerator;
+
+    /** Default POS distribution. */
+    const POSProbabilityMass_T& _posProbabilityMass;
 
     /** Demand Structure. */
     DemandStruct _demand;

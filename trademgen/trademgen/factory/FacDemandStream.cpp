@@ -58,7 +58,9 @@ namespace TRADEMGEN {
           const DemandDistribution& iDemandDistribution,
           const stdair::RandomSeed_T& iNumberOfRequestsSeed,
           const stdair::RandomSeed_T& iRequestDateTimeSeed,
-          const stdair::RandomSeed_T& iDemandCharacteristicsSeed) {
+          const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
+          stdair::UniformGenerator_T& ioSharedGenerator,
+          const POSProbabilityMass_T& iDefaultPOSProbablityMass) {
     DemandStream* oDemandStream_ptr =
       new DemandStream (iKey, iArrivalPattern, iPOSProbMass, iChannelProbMass,
                         iTripTypeProbMass, iStayDurationProbMass,
@@ -66,7 +68,8 @@ namespace TRADEMGEN {
                         iPreferredDepartureTimeContinuousDistribution,
                         iMinWTP, iValueOfTimeContinuousDistribution,
                         iDemandDistribution, iNumberOfRequestsSeed,
-                        iRequestDateTimeSeed, iDemandCharacteristicsSeed);
+                        iRequestDateTimeSeed, iDemandCharacteristicsSeed,
+                        ioSharedGenerator, iDefaultPOSProbablityMass);
     assert (oDemandStream_ptr != NULL);
     _pool.push_back (oDemandStream_ptr);
     return *oDemandStream_ptr;

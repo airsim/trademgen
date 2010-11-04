@@ -35,7 +35,12 @@ namespace TRADEMGEN {
     /** Generate the Demand objects corresponding to the given
         Flight-Period, and add them to the given BomRoot. */
     static void createDemandCharacteristics (stdair::BomRoot&,
+                                             stdair::UniformGenerator_T&,
+                                             const POSProbabilityMass_T&,
                                              const DemandStruct&);
+
+    /** Generate the random seed for the demand characteristic distributions. */
+    static stdair::RandomSeed_T generateSeed (stdair::UniformGenerator_T&);
   };
 
 }

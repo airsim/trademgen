@@ -9,6 +9,8 @@
 // STDAIR
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/command/CmdAbstract.hpp>
+// TRADEMGEN
+#include <trademgen/basic/DemandCharacteristicTypes.hpp>
 
 // Forward declarations.
 namespace stdair {
@@ -26,7 +28,9 @@ namespace TRADEMGEN {
                demand input file.
         @param const stdair::Date_T&
         @param stdair::BomRoot& Root of the BOM tree. */
-    static void generateDemand (const stdair::Filename_T&, stdair::BomRoot&);
+    static void generateDemand (const stdair::Filename_T&, stdair::BomRoot&,
+                                stdair::UniformGenerator_T&,
+                                const POSProbabilityMass_T&);
   };
 }
 #endif // __TRADEMGEN_CMD_DEMANDPARSER_HPP

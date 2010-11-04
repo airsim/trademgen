@@ -38,7 +38,9 @@ namespace TRADEMGEN {
    const DemandDistribution& iDemandDistribution,
    const stdair::RandomSeed_T& iNumberOfRequestsSeed,
    const stdair::RandomSeed_T& iRequestDateTimeSeed,
-   const stdair::RandomSeed_T& iDemandCharacteristicsSeed) {
+   const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
+   stdair::UniformGenerator_T& ioSharedGenerator,
+   const POSProbabilityMass_T& iDefaultPOSProbablityMass) {
     
     DemandStream& lDemandStream = FacDemandStream::
       instance().create(iKey, iArrivalPattern, iPOSProbMass,
@@ -47,7 +49,8 @@ namespace TRADEMGEN {
                         iPreferredDepartureTimeContinuousDistribution,
                         iMinWTP, iValueOfTimeContinuousDistribution,
                         iDemandDistribution, iNumberOfRequestsSeed,
-                        iRequestDateTimeSeed, iDemandCharacteristicsSeed);
+                        iRequestDateTimeSeed, iDemandCharacteristicsSeed,
+                        ioSharedGenerator, iDefaultPOSProbablityMass);
     
     // Insert the reference on the given DemandStream object into the
     // dedicated list

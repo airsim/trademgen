@@ -16,9 +16,12 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   void DemandParser::
   generateDemand (const stdair::Filename_T& iFilename,
-                  stdair::BomRoot& ioBomRoot) {
+                  stdair::BomRoot& ioBomRoot,
+                  stdair::UniformGenerator_T& ioSharedGenerator,
+                  const POSProbabilityMass_T& iDefaultPOSProbablityMass) {
     // Initialise the demand file parser.
-    DemandFileParser lDemandParser (ioBomRoot, iFilename);
+    DemandFileParser lDemandParser (ioBomRoot, ioSharedGenerator,
+                                    iDefaultPOSProbablityMass, iFilename);
 
     // Parse the CSV-formatted demand input file, and generate the
     // corresponding DemandCharacteristic objects.

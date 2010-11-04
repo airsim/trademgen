@@ -176,13 +176,22 @@ namespace TRADEMGEN {
     stdair::STDAIR_ServicePtr_T lSTDAIR_Service =
       lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
     assert (lSTDAIR_Service != NULL);
+
+    // Retrieve the shared generator
+    stdair::UniformGenerator_T& lSharedGenerator =
+      lTRADEMGEN_ServiceContext.getUniformGenerator();
+
+    // Retrieve the default POS distribution
+    const POSProbabilityMass_T& lDefaultPOSProbabilityMass =
+      lTRADEMGEN_ServiceContext.getPOSProbabilityMass();
     
     // Get the root of the BOM tree, on which all of the other BOM objects
     // will be attached
     stdair::BomRoot& lBomRoot = lSTDAIR_Service->getBomRoot();
 
     // Initialise the demand generators
-    DemandParser::generateDemand (iDemandInputFilename, lBomRoot);
+    DemandParser::generateDemand (iDemandInputFilename, lBomRoot,
+                                  lSharedGenerator, lDefaultPOSProbabilityMass);
 
     // DEBUG
     //STDAIR_LOG_DEBUG ("Generated BomRoot:");
