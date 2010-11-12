@@ -46,7 +46,7 @@ namespace TRADEMGEN {
     /** Arrival pattern (cumulative distribution of timing of arrival
         of requests (negative number of days between departure date
         and request date). */
-    const ContinuousFloatDuration_T _arrivalPattern;
+    const CumulativeFloatDuration_T _arrivalPattern;
 
     /** POS probability mass. */
     const POSProbabilityMass_T _posProbabilityMass;
@@ -69,6 +69,9 @@ namespace TRADEMGEN {
     /** Min Willingness-to-pay, used for the computation of the WTP of
         each request. */
     const stdair::WTP_T _minWTP;
+
+    /** Cumulative distribution, used for the computation of the WTP. */
+    const CumulativeDistribution_T _cumulativeDistribution;
 
     /** Value of time cumulative distribution. */
     const ValueOfTimeCumulativeDistribution_T _valueOfTimeCumulativeDistribution;

@@ -6,6 +6,7 @@
 #include <iosfwd>
 #include <ostream>
 #include <sstream>
+#include <cmath>
 // Math
 #include <cmath>
 // STDAIR
@@ -14,6 +15,7 @@
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // TRADEMGEN
+#include <trademgen/basic/BasConst_DemandGeneration.hpp>
 #include <trademgen/bom/DemandStream.hpp>
 
 namespace TRADEMGEN {
@@ -243,9 +245,18 @@ namespace TRADEMGEN {
     const stdair::Date_T lDateThisRequest = iDateTimeThisRequest.date ();
     const stdair::DateOffset_T lAP = iDepartureDate - lDateThisRequest;
     const stdair::DayDuration_T lAPInDays = lAP.days ();
-    stdair::RealNumber_T lVariateUnif = 0.90 + _uniformGenerator() * 0.2;
-    const stdair::WTP_T lWTP = 
-      lVariateUnif * (365 - lAPInDays) * _demandCharacteristics._minWTP / 36;
+
+    stdair::RealNumber_T lProb =
+      1 - lAPInDays / DEFAULT_MAX_ADVANCE_PURCHASE;
+    if (lProb < 0.0) { lProb = 0.0; }
+    stdair::RealNumber_T lFrat5Coef =
+      _demandCharacteristics._cumulativeDistribution.getValue (lProb);
+    
+    stdair::RealNumber_T lVariateUnif = _uniformGenerator();
+      
+    const stdair::WTP_T lWTP =  _demandCharacteristics._minWTP
+      * (1.0 + (lFrat5Coef - 1.0) * log(lVariateUnif) / log(0.5));
+    
     return lWTP;
   }
 

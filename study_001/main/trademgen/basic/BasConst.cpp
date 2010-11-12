@@ -9,8 +9,18 @@ namespace TRADEMGEN {
   /** Default name for the TRADEMGEN_Service. */
   // const std::string DEFAULT_TRADEMGEN_SERVICE_NAME = "myname";
   
+  /** Default MAX/MIN WTP ratio. */
+  const double DEFAULT_MAX_MIN_WTP_RATIO = 10.0;
+
+  /** Default MAX Advance Purchase. */
+  const double DEFAULT_MAX_ADVANCE_PURCHASE = 330.0;
+
   /** Default PoS probability mass. */
   const POSProbabilityMassFunction_T DEFAULT_POS_PROBALILITY_MASS =
-    DefaultMap::create();
+    DefaultMap::createPOSProMass ();
+
+  /** Default continuous distribution. */
+  const ContinuousDistribution_T DEFAULT_CONTINUOUS_DISTRIBUTION =
+    DefaultMap::createContinuousDistribution ();
 
 }

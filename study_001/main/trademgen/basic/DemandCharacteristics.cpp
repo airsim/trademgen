@@ -8,6 +8,7 @@
 #include <stdair/STDAIR_Types.hpp>
 #include <stdair/basic/BasConst_General.hpp>
 // TRADEMGEN
+#include <trademgen/basic/BasConst_DemandGeneration.hpp>
 #include <trademgen/basic/DemandCharacteristics.hpp>
 
 namespace TRADEMGEN {
@@ -30,6 +31,7 @@ namespace TRADEMGEN {
       _stayDurationProbabilityMass (iStayDurationProbMass),
       _frequentFlyerProbabilityMass (iFrequentFlyerProbMass),
       _preferredDepartureTimeCumulativeDistribution (iPreferredDepartureTimeContinuousDistribution), _minWTP (iMinWTP),
+      _cumulativeDistribution (DEFAULT_CONTINUOUS_DISTRIBUTION),
       _valueOfTimeCumulativeDistribution (iValueOfTimeContinuousDistribution) {
   }
     
@@ -64,6 +66,9 @@ namespace TRADEMGEN {
     oStr << "Preferred departure time cumulative distribution (time, proportion: ";
     oStr << _preferredDepartureTimeCumulativeDistribution.displayCumulativeDistribution() << std::endl;
     oStr << "min WTP: " << _minWTP << std::endl;
+    oStr << "WTP pattern: ";
+    oStr << _cumulativeDistribution.displayCumulativeDistribution()
+         << std::endl;
     oStr << "Value of time cumulative distribution (value of time, proportion: ";
     oStr << _valueOfTimeCumulativeDistribution.displayCumulativeDistribution()
          << std::endl;

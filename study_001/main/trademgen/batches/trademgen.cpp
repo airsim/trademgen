@@ -232,7 +232,7 @@ int main (int argc, char* argv[]) {
     }
 
     // Number of generations.
-    const int lNbOfRuns = 10;
+    const int lNbOfRuns = 1;
 
     // Open and clean the .csv output file
     std::ofstream output;
@@ -254,7 +254,7 @@ int main (int argc, char* argv[]) {
 
     for (int i = 1; i <= lNbOfRuns; ++i) {
       // /////////////////////////////////////////////////////
-      output << "Generation number " << i << std::endl;
+      //output << "Generation number " << i << std::endl;
       // Event queue
       stdair::EventQueue lEventQueue = stdair::EventQueue ();
       // Browse the list of DemandStreams and Generate the first event for each

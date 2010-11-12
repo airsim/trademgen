@@ -21,7 +21,7 @@ namespace TRADEMGEN {
   struct ContinuousAttributeLite {
   public:
     // ///////////// Type definitions //////////////
-    typedef std::multimap<T, stdair::Probability_T> ContinuousDistribution_T;
+    typedef std::map<T, stdair::Probability_T> ContinuousDistribution_T;
     
   public:
     // /////////////// Business Methods //////////

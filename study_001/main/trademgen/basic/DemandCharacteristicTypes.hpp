@@ -14,10 +14,10 @@ namespace TRADEMGEN {
 
   /** Type definition for the continuous distribition of the duration
       (as a float number). */
-  typedef ContinuousAttributeLite<stdair::FloatDuration_T> ContinuousFloatDuration_T;
+  typedef ContinuousAttributeLite<stdair::FloatDuration_T> CumulativeFloatDuration_T;
    
   /** Type definition for the arrival pattern cumulative distribution. */
-  typedef ContinuousFloatDuration_T::ContinuousDistribution_T ArrivalPatternCumulativeDistribution_T;
+  typedef CumulativeFloatDuration_T::ContinuousDistribution_T ArrivalPatternCumulativeDistribution_T;
 
   /** Define the point-of-sale probablity mass. */
   typedef CategoricalAttributeLite<stdair::AirportCode_T> POSProbabilityMass_T;
@@ -51,14 +51,14 @@ namespace TRADEMGEN {
 
   /** Define the preferred departure time cumulative distribution. */
   typedef ContinuousAttributeLite<stdair::IntDuration_T> PreferredDepartureTimeCumulativeDistribution_T;
-
-  /** Define the preferred departure time continuous distribution. */
   typedef PreferredDepartureTimeCumulativeDistribution_T::ContinuousDistribution_T PreferredDepartureTimeContinuousDistribution_T;
 
   /** Define the value of time cumulative distribution. */
   typedef ContinuousAttributeLite<stdair::PriceValue_T> ValueOfTimeCumulativeDistribution_T;
-
-  /** Define the value of time continuous distribution. */
   typedef ValueOfTimeCumulativeDistribution_T::ContinuousDistribution_T ValueOfTimeContinuousDistribution_T;
+
+  /** Define the continuous distribution for real number. */
+  typedef ContinuousAttributeLite<stdair::RealNumber_T> CumulativeDistribution_T;
+  typedef CumulativeDistribution_T::ContinuousDistribution_T ContinuousDistribution_T;
 }
 #endif // __TRADEMGEN_BAS_DEMANDCHARACTERISTICTYPES_HPP
