@@ -9,14 +9,14 @@
 // Boost
 //#define BOOST_SPIRIT_DEBUG
 #include <boost/spirit/home/classic/core.hpp>
-#include <boost/spirit/home/classic/attribute.hpp>
-#include <boost/spirit/home/classic/utility/functor_parser.hpp>
+//#include <boost/spirit/home/classic/attribute.hpp>
+//#include <boost/spirit/home/classic/utility/functor_parser.hpp>
 #include <boost/spirit/home/classic/utility/loops.hpp>
 #include <boost/spirit/home/classic/utility/chset.hpp>
 #include <boost/spirit/home/classic/utility/confix.hpp>
 #include <boost/spirit/home/classic/iterator/file_iterator.hpp>
-#include <boost/spirit/home/classic/actor/push_back_actor.hpp>
-#include <boost/spirit/home/classic/actor/assign_actor.hpp>
+//#include <boost/spirit/home/classic/actor/push_back_actor.hpp>
+//#include <boost/spirit/home/classic/actor/assign_actor.hpp>
 
 namespace TRADEMGEN {
 
