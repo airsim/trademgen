@@ -12,8 +12,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/program_options.hpp>
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
-#include <stdair/STDAIR_Service.hpp>
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
@@ -208,102 +207,99 @@ int readConfiguration (int argc, char* argv[],
 
 // /////////////// M A I N /////////////////
 int main (int argc, char* argv[]) {
-  try {
 
-    // Query
-    std::string lQuery;
+  // Query
+  std::string lQuery;
 
-    // Input file name
-    stdair::Filename_T lInputFilename;
+  // Input file name
+  stdair::Filename_T lInputFilename;
 
-    // Output file name
-    stdair::Filename_T lOutputFilename;
+  // Output file name
+  stdair::Filename_T lOutputFilename;
 
-    // Output log File
-    std::string lLogFilename;
+  // Output log File
+  std::string lLogFilename;
 
-    // Call the command-line option parser
-    const int lOptionParserStatus = 
-      readConfiguration (argc, argv, lQuery, lInputFilename,
-                         lOutputFilename, lLogFilename);
+  // Call the command-line option parser
+  const int lOptionParserStatus = 
+    readConfiguration (argc, argv, lQuery, lInputFilename,
+                       lOutputFilename, lLogFilename);
 
-    if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
-      return 0;
-    }
+  if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
+    return 0;
+  }
 
-    // Number of generations.
-    const int lNbOfRuns = 10;
+  // Number of generations.
+  const int lNbOfRuns = 10;
 
-    // Open and clean the .csv output file
-    std::ofstream output;
-    output.open (lOutputFilename.c_str());
-    output.clear();
+  // Open and clean the .csv output file
+  std::ofstream output;
+  output.open (lOutputFilename.c_str());
+  output.clear();
     
-    // Set the log parameters
-    std::ofstream logOutputFile;
-    // Open and clean the log outputfile
-    logOutputFile.open (lLogFilename.c_str());
-    logOutputFile.clear();
+  // Set the log parameters
+  std::ofstream logOutputFile;
+  // Open and clean the log outputfile
+  logOutputFile.open (lLogFilename.c_str());
+  logOutputFile.clear();
 
-    // Initialise the TraDemGen service object
-    const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
-    TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
+  // Initialise the TraDemGen service object
+  const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
+  TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
 
-    // DEBUG
-    //return 0;
+  // DEBUG
+  //return 0;
 
-    for (int i = 1; i <= lNbOfRuns; ++i) {
-      // /////////////////////////////////////////////////////
-      output << "Generation number " << i << std::endl;
-      // Event queue
-      stdair::EventQueue lEventQueue = stdair::EventQueue ();
-      // Browse the list of DemandStreams and Generate the first event for each
-      // DemandStream.
-      trademgenService.generateFirstRequests (lEventQueue);
+  for (int i = 1; i <= lNbOfRuns; ++i) {
+    // /////////////////////////////////////////////////////
+    output << "Generation number " << i << std::endl;
+    // Event queue
+    stdair::EventQueue lEventQueue = stdair::EventQueue ();
+    // Browse the list of DemandStreams and Generate the first event for each
+    // DemandStream.
+    trademgenService.generateFirstRequests (lEventQueue);
       
-      // Pop requests, get type, and generate next request of same type
-      while (lEventQueue.isQueueDone() == false) {
-        stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
-        const stdair::BookingRequestStruct& lPoppedRequest =
-          lEventStruct.getBookingRequest ();
+    // Pop requests, get type, and generate next request of same type
+    while (lEventQueue.isQueueDone() == false) {
+      stdair::EventStruct& lEventStruct = lEventQueue.popEvent ();
+      const stdair::BookingRequestStruct& lPoppedRequest =
+        lEventStruct.getBookingRequest ();
         
-        // Output the request.
-        TRADEMGEN::BomManager::csvDisplay (output, lPoppedRequest);
+      // Output the request.
+      TRADEMGEN::BomManager::csvDisplay (output, lPoppedRequest);
         
-        // Retrieve the corresponding demand stream
-        const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
-          lEventStruct.getDemandStreamKey ();
-        // generate next request
-        bool stillHavingRequestsToBeGenerated = 
-          trademgenService.stillHavingRequestsToBeGenerated(lDemandStreamKey);
-        if (stillHavingRequestsToBeGenerated) {
-          stdair::BookingRequestPtr_T lNextRequest =
-            trademgenService.generateNextRequest (lDemandStreamKey);
-          assert (lNextRequest != NULL);
+      // Retrieve the corresponding demand stream
+      const stdair::DemandStreamKeyStr_T& lDemandStreamKey =
+        lEventStruct.getDemandStreamKey ();
+      // generate next request
+      bool stillHavingRequestsToBeGenerated = 
+        trademgenService.stillHavingRequestsToBeGenerated(lDemandStreamKey);
+      if (stillHavingRequestsToBeGenerated) {
+        stdair::BookingRequestPtr_T lNextRequest =
+          trademgenService.generateNextRequest (lDemandStreamKey);
+        assert (lNextRequest != NULL);
 
-          stdair::Duration_T lDuration = lNextRequest->getRequestDateTime() -
-            lPoppedRequest.getRequestDateTime();
-          if (lDuration.total_milliseconds() < 0) {
-            STDAIR_LOG_DEBUG (lDemandStreamKey);
-            STDAIR_LOG_DEBUG (lPoppedRequest.getRequestDateTime());
-            STDAIR_LOG_DEBUG (lNextRequest->getRequestDateTime());
-            assert (false);
-          }
-          
-          stdair::EventStruct lNextEventStruct ("Request", lDemandStreamKey,
-                                                lNextRequest);
-          lEventQueue.addEvent (lNextEventStruct);
+        stdair::Duration_T lDuration = lNextRequest->getRequestDateTime() -
+          lPoppedRequest.getRequestDateTime();
+        if (lDuration.total_milliseconds() < 0) {
+          STDAIR_LOG_DEBUG (lDemandStreamKey);
+          STDAIR_LOG_DEBUG (lPoppedRequest.getRequestDateTime());
+          STDAIR_LOG_DEBUG (lNextRequest->getRequestDateTime());
+          assert (false);
         }
-        lEventQueue.eraseLastUsedEvent ();
+          
+        stdair::EventStruct lNextEventStruct ("Request", lDemandStreamKey,
+                                              lNextRequest);
+        lEventQueue.addEvent (lNextEventStruct);
       }
-
-      trademgenService.reset();
+      lEventQueue.eraseLastUsedEvent ();
     }
-  
-    // Close the Log outputFile
-    logOutputFile.close();
 
-  } CATCH_ALL_EXCEPTIONS
+    trademgenService.reset();
+  }
+  
+  // Close the Log outputFile
+  logOutputFile.close();
 
   return 0;
 }

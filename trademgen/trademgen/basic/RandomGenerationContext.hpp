@@ -6,8 +6,9 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <iosfwd>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_maths_types.hpp>
 
 namespace TRADEMGEN {
 

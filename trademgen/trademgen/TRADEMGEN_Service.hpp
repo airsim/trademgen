@@ -5,14 +5,15 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_demand_types.hpp>
+#include <stdair/stdair_service_types.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
 
 // Forward declarations.
 namespace stdair {
-  class STDAIR_Service;
   struct BasLogParams;
   struct BasDBParams;
   struct BookingRequestStruct;

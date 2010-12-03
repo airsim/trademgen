@@ -6,12 +6,13 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
-// TRADEMGEN
+// StdAir
+#include <stdair/stdair_date_time_types.hpp>
+// TraDemGen
 #include <trademgen/basic/DemandCharacteristicTypes.hpp>
 
 namespace TRADEMGEN {
+
   /** Class modeling the characteristics of a demand type. */
   struct DemandCharacteristics {
         

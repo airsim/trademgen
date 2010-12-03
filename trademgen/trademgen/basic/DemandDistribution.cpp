@@ -4,17 +4,16 @@
 // STL
 #include <cassert>
 #include <sstream>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
-// TRADEMGEN
+// StdAir
+#include <stdair/stdair_date_time_types.hpp>
+// TraDemGen
 #include <trademgen/basic/DemandDistribution.hpp>
 
 namespace TRADEMGEN {
 
   // /////////////////////////////////////////////////////
-  DemandDistribution::
-  DemandDistribution (const stdair::NbOfRequests_T& iMean,
-                      const stdair::StdDevValue_T& iStdDev)
+  DemandDistribution::DemandDistribution (const stdair::NbOfRequests_T& iMean,
+                                          const stdair::StdDevValue_T& iStdDev)
     : _meanNumberOfRequests (iMean),
       _stdDevNumberOfRequests (iStdDev){
   }

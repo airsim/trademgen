@@ -11,15 +11,16 @@
 // Boost Random
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_service_types.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/DemandCharacteristicTypes.hpp>
 #include <trademgen/service/ServiceAbstract.hpp>
 
-// Forward declarations.
+// Forward declarations
 namespace stdair {
   struct DemandCharacteristics;
   struct DemandDistribution;

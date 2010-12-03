@@ -7,10 +7,12 @@
 // Boost Random
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_maths_types.hpp>
 
 namespace TRADEMGEN {
+
   /** Random generator. */
   struct RandomGeneration {
     // //////////// Business Methods /////////////

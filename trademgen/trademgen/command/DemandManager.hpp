@@ -4,11 +4,11 @@
 // //////////////////////////////////////////////////////////////////////
 // Import section
 // //////////////////////////////////////////////////////////////////////
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/command/CmdAbstract.hpp>
-// TRADEMGEN
+// TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/DemandCharacteristicTypes.hpp>
 
@@ -19,6 +19,7 @@ namespace stdair {
 }
 
 namespace TRADEMGEN {
+
   // Forward declarations
   struct DemandCharacteristics;
   struct DemandDistribution;

@@ -4,10 +4,10 @@
 // STL
 #include <cassert>
 #include <sstream>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/basic/BasConst_General.hpp>
-// TRADEMGEN
+// TraDemGen
 #include <trademgen/basic/DemandCharacteristics.hpp>
 
 namespace TRADEMGEN {

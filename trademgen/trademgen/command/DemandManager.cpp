@@ -3,8 +3,7 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
 #include <stdair/bom/BomManager.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/BomRoot.hpp>
@@ -12,7 +11,7 @@
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/factory/FacBomManager.hpp>
 #include <stdair/service/Logger.hpp>
-// TRADEMGEN
+// TraDemGen
 #include <trademgen/basic/DemandCharacteristics.hpp>
 #include <trademgen/basic/DemandDistribution.hpp>
 #include <trademgen/bom/DemandStruct.hpp>

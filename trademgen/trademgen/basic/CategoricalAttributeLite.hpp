@@ -7,8 +7,8 @@
 // STL
 #include <map>
 #include <iosfwd>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/service/Logger.hpp>
 // TRADEMGEN
 #include <trademgen/basic/DictionaryManager.hpp>

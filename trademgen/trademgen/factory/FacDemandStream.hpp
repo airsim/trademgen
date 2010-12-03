@@ -7,8 +7,8 @@
 // STL
 #include <cassert>
 #include <string>
-// STDAIR 
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/factory/FacAbstract.hpp>
 #include <stdair/service/FacSupervisor.hpp>
 #include <stdair/service/Logger.hpp>
@@ -16,6 +16,7 @@
 #include <trademgen/bom/DemandStream.hpp>
 
 namespace TRADEMGEN {  
+
   /** Base class for Factory layer. */
   class FacDemandStream : public stdair::FacAbstract {
     // Internal type definitions.

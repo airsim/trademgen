@@ -11,9 +11,10 @@
 #include <boost/tokenizer.hpp>
 #include <boost/program_options.hpp>
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
-#include <stdair/STDAIR_Service.hpp>
-// Trademgen
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/basic/BasDBParams.hpp>
+#include <stdair/basic/BasLogParams.hpp>
+// TraDemGen
 #include <trademgen/TRADEMGEN_Service.hpp>
 #include <trademgen/config/trademgen-paths.hpp>
 

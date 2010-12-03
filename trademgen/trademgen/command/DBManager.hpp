@@ -5,7 +5,8 @@
 // Import section
 // //////////////////////////////////////////////////////////////////////
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
+#include <stdair/stdair_basic_types.hpp>
+#include <stdair/stdair_db.hpp>
 // Trademgen
 #include <trademgen/TRADEMGEN_Types.hpp>
 

@@ -6,9 +6,9 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
-// TRADEMGEN
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
+// TraDemGen
 #include <trademgen/basic/ContinuousAttribute.hpp>
 
 namespace TRADEMGEN {

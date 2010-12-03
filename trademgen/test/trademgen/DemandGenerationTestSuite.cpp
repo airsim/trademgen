@@ -5,8 +5,7 @@
 // CPPUNIT
 #include <extracppunit/CppUnitCore.hpp>
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
-#include <stdair/STDAIR_Service.hpp>
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>

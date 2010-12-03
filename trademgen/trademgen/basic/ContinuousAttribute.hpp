@@ -7,10 +7,10 @@
 // STL
 #include <string>
 #include <map>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_date_time_types.hpp>
 #include <stdair/service/Logger.hpp>
-// TRADEMGEN
+// TraDemGen
 #include <trademgen/basic/DictionaryManager.hpp>
 
 namespace TRADEMGEN {

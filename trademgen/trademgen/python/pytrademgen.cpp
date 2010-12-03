@@ -9,8 +9,7 @@
 // Boost String
 #include <boost/python.hpp>
 // StdAir
-#include <stdair/STDAIR_Types.hpp>
-#include <stdair/STDAIR_Service.hpp>
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/basic/BasLogParams.hpp>
 #include <stdair/basic/BasDBParams.hpp>

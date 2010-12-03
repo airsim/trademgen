@@ -4,13 +4,14 @@
 // STL
 #include <cassert>
 #include <ostream>
-// STDAIR
-#include <stdair/STDAIR_Types.hpp>
+// StdAir
+#include <stdair/stdair_basic_types.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
-// TRADEMGEN
+// TraDemGen
 #include <trademgen/bom/BomManager.hpp>
 
 namespace TRADEMGEN {
+
   // ////////////////////////////////////////////////////////////////////
   void BomManager::
   csvDisplay (std::ostream& oStream,
