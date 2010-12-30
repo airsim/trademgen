@@ -30,7 +30,7 @@ MAINTAINERCLEANFILES = Makefile.in aclocal.m4 configure \
 EXTRA_DIST =
 
 # Build in these directories:
-SUBDIRS = trademgen $(TEST_DIR)
+SUBDIRS = trademgen samples $(TEST_DIR)
 
 
 # Configuration helpers
