@@ -11,6 +11,10 @@ AM_INIT_AUTOMAKE
 AM_PATH_CPPUNIT(1.10)
 AM_CONDITIONAL([HAVE_CPPUNIT], [test "x$CPPUNIT_LIBS" != x])
 
+# Package name
+PACKAGE_PRETTY_NAME="TraDemGen"
+AC_SUBST(PACKAGE_PRETTY_NAME)
+
 # Shared library versioning
 GENERIC_LIBRARY_VERSION="99:99:99"
 #                        | | |
@@ -69,6 +73,13 @@ AC_ARG_ENABLE(exceptions,
                          [Define if you want exceptions handling])])
 test "x$enable_exceptions" != xno && enable_exceptions=yes
 
+# Set the data directory for TraDemGen
+pkgdatadir="${datadir}/trademgen"
+AC_SUBST(pkgdatadir)
+# Set the directory for data samples exported by TraDemGen
+sampledir="${pkgdatadir}/samples"
+AC_SUBST(sampledir)
+
 # Check for info pages
 AC_ARG_ENABLE(info-doc, 
               [AS_HELP_STRING([--disable-info-doc],
@@ -109,10 +120,6 @@ fi
 # -----------------------------------------------------------------------------
 # Support for ExtraCC (Extra-CruiseControl): http://sf.net/projects/extracc
 # -----------------------------------------------------------------------------
-# Note: the ExtraCC is now imported as a Subversion external reference,
-#       thus directly accessible within the extracppunit directory.
-#       When that library will be widely avaible on Linux distributions,
-#       the external reference can be removed and the following line uncommented.
 AM_PATH_EXTRACC
 AC_SUBST(EXTRACC_VERSION)
 AC_SUBST(EXTRACC_CFLAGS)
@@ -158,6 +165,7 @@ AC_SUBST(BOOST_FILESYSTEM_LIB)
 AC_SUBST(BOOST_THREAD_LIB)
 AC_SUBST(BOOST_PYTHON_LIB)
 AC_SUBST(BOOST_SIGNALS_LIB)
+AC_SUBST(BOOST_IOSTREAMS_LIB)
 AC_SUBST(BOOST_ASIO_LIB)
 AC_SUBST(BOOST_MPI_LIB)
 AC_SUBST(BOOST_MPI_PYTHON_LIB)
