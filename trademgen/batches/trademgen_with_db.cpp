@@ -36,7 +36,7 @@ const std::string K_TRADEMGEN_DEFAULT_QUERY_STRING ("my good old query");
 /** Default parameters for the database connection. */
 const std::string K_TRADEMGEN_DEFAULT_DB_USER ("dsim");
 const std::string K_TRADEMGEN_DEFAULT_DB_PASSWD ("dsim");
-const std::string K_TRADEMGEN_DEFAULT_DB_DBNAME ("dsim");
+const std::string K_TRADEMGEN_DEFAULT_DB_DBNAME ("sim_dsim");
 const std::string K_TRADEMGEN_DEFAULT_DB_HOST ("localhost");
 const std::string K_TRADEMGEN_DEFAULT_DB_PORT ("3306");
 
@@ -129,10 +129,10 @@ int readConfiguration (int argc, char* argv[],
      "Filepath for the logs")
     ("user,u",
      boost::program_options::value< std::string >(&ioDBUser)->default_value(K_TRADEMGEN_DEFAULT_DB_USER),
-     "SQL database hostname (e.g., dsim)")
+     "SQL database user (e.g., dsim)")
     ("passwd,p",
      boost::program_options::value< std::string >(&ioDBPasswd)->default_value(K_TRADEMGEN_DEFAULT_DB_PASSWD),
-     "SQL database hostname (e.g., dsim)")
+     "SQL database password (e.g., dsim)")
     ("host,H",
      boost::program_options::value< std::string >(&ioDBHost)->default_value(K_TRADEMGEN_DEFAULT_DB_HOST),
      "SQL database hostname (e.g., localhost)")
@@ -141,7 +141,7 @@ int readConfiguration (int argc, char* argv[],
      "SQL database port (e.g., 3306)")
     ("dbname,m",
      boost::program_options::value< std::string >(&ioDBDBName)->default_value(K_TRADEMGEN_DEFAULT_DB_DBNAME),
-     "SQL database name (e.g., dsim)")
+     "SQL database name (e.g., sim_dsim)")
     ("query,q",
      boost::program_options::value< WordList_T >(&lWordList)->multitoken(),
      "Query word list")
