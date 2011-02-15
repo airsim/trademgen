@@ -35,7 +35,7 @@ namespace TRADEMGEN {
     // Link the EventQueue to its parent (BomRoot)
     stdair::FacBomManager::instance().linkWithParent (ioBomRoot, oEventQueue);
     
-    // Ad the EventQueue to the dedicated list
+    // Add the EventQueue to the dedicated list
     stdair::FacBomManager::instance().addToListAndMap (ioBomRoot, oEventQueue);
 
     //
@@ -63,7 +63,7 @@ namespace TRADEMGEN {
   }
   
   // //////////////////////////////////////////////////////////////////////
-  void DemandManager::addDemandStream
+  stdair::NbOfRequests_T DemandManager::addDemandStream
   (stdair::BomRoot& ioBomRoot,
    const DemandStreamKey& iKey,
    const ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
@@ -98,11 +98,20 @@ namespace TRADEMGEN {
     // STDAIR_LOG_DEBUG ("Add DemandStream: \n"
     //                   << lDemandStream.getDemandCharacteristics().display()
     //                   << lDemandStream.getDemandDistribution().display());
+    stdair::FacBomManager::instance().addToList (ioBomRoot, lDemandStream);
+    
     stdair::FacBomManager::instance().addToListAndMap (ioBomRoot,
                                                        lDemandStream);
+
+    //
+    const stdair::NbOfRequests_T& oExpectedNumberOfEventsToBeGenerated =
+      lDemandStream.getTotalNumberOfRequestsToBeGenerated();
+    
+    return oExpectedNumberOfEventsToBeGenerated;
   }
     
   // ////////////////////////////////////////////////////////////////////
+  /*
   const stdair::NbOfRequests_T& DemandManager::
   getTotalNumberOfRequestsToBeGenerated (const stdair::BomRoot& iBomRoot,
                                          const stdair::DemandStreamKeyStr_T& iKey) {
@@ -110,7 +119,27 @@ namespace TRADEMGEN {
     const DemandStream& lDemandStream =
       stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
       
-    return lDemandStream.getTotalNumberOfRequestsToBeGenerated ();
+    return lDemandStream.getTotalNumberOfRequestsToBeGenerated();
+  }
+  */
+
+  // ////////////////////////////////////////////////////////////////////
+  stdair::NbOfRequests_T DemandManager::
+  getTotalNumberOfRequestsToBeGenerated (const stdair::BomRoot& iBomRoot) {
+    stdair::NbOfRequests_T oNbOfRequests = 0.0;
+
+    const DemandStreamList_T& lDemandStreamList =
+      stdair::BomManager::getList<DemandStream> (iBomRoot);
+    for (DemandStreamList_T::const_iterator itDS = lDemandStreamList.begin();
+         itDS != lDemandStreamList.end(); ++itDS) {
+      const DemandStream* lDemandStream_ptr = *itDS;
+      assert (lDemandStream_ptr != NULL);
+    
+      oNbOfRequests +=
+        lDemandStream_ptr->getTotalNumberOfRequestsToBeGenerated();
+    }
+
+    return oNbOfRequests;
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -121,7 +150,7 @@ namespace TRADEMGEN {
     const DemandStream& lDemandStream =
       stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
     
-    return lDemandStream.stillHavingRequestsToBeGenerated ();
+    return lDemandStream.stillHavingRequestsToBeGenerated();
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -146,7 +175,7 @@ namespace TRADEMGEN {
 
     /**
        Note that when adding an event in the event queue, the
-       event can be altered. It happens when an event already
+       event can be altered. That happens when an event already
        exists, in the event queue, with exactly the same date-time
        stamp. In that case, the date-time stamp is altered for the
        newly added event, so that the unicity on the date-time
@@ -208,12 +237,12 @@ namespace TRADEMGEN {
       lEventQueue.addStatus (lKey.toString(), lExpectedTotalNbOfEvents);
     }
 
-    // Retrieve the expected total number of events to be generated
-    const stdair::Count_T& oExpectedTotalNbOfEvents =
+    // Retrieve the actual total number of events to be generated
+    const stdair::Count_T& oTotalNbOfEvents =
       lEventQueue.getExpectedTotalNbOfEvents();
 
     //
-    return oExpectedTotalNbOfEvents;
+    return oTotalNbOfEvents;
   }
   
   // ////////////////////////////////////////////////////////////////////
