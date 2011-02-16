@@ -11,6 +11,7 @@
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/DemandCharacteristicTypes.hpp>
+#include <trademgen/bom/DemandStreamKey.hpp>
 
 // Forward declarations
 namespace stdair {
@@ -21,14 +22,17 @@ namespace stdair {
 namespace TRADEMGEN {
 
   // Forward declarations
-  struct DemandCharacteristics;
   struct DemandDistribution;
+  struct DemandStruct;
+  namespace DemandParserHelper {
+    struct doEndDemand;
+  }
 
   /**
    * @brief Utility class for Demand and DemandStream objects.
    */
   class DemandManager : public stdair::CmdAbstract {
-    friend class DemandGenerator;
+    friend struct DemandParserHelper::doEndDemand;
     friend class TRADEMGEN_Service;
     
   private:
@@ -47,7 +51,22 @@ namespace TRADEMGEN {
      * @param stdair::BomRoot& Reference on the top of the BOM tree.
      */
     static stdair::EventQueue& getEventQueue (const stdair::BomRoot&);
-    
+
+    /**
+     * Generate the Demand objects corresponding to the given
+     * Flight-Period, and add them to the given BomRoot.
+     */
+    static void createDemandCharacteristics (stdair::BomRoot&,
+                                             stdair::UniformGenerator_T&,
+                                             const POSProbabilityMass_T&,
+                                             const DemandStruct&);
+
+    /**
+     * Generate the random seed for the demand characteristic
+     * distributions.
+     */
+    static stdair::RandomSeed_T generateSeed (stdair::UniformGenerator_T&);
+
     /**
      * Create a demand stream object and it into the BOM tree.
      *

@@ -63,6 +63,54 @@ namespace TRADEMGEN {
   }
   
   // //////////////////////////////////////////////////////////////////////
+  void DemandManager::
+  createDemandCharacteristics (stdair::BomRoot& ioBomRoot,
+                               stdair::UniformGenerator_T& ioSharedGenerator,
+                               const POSProbabilityMass_T& iPOSProbMass,
+                               const DemandStruct& iDemand) {
+    
+    const DemandStreamKey lDemandStreamKey (iDemand._origin,
+                                            iDemand._destination,
+                                            iDemand._prefDepDate,
+                                            iDemand._prefCabin);
+    // DEBUG
+    // STDAIR_LOG_DEBUG ("Demand stream key: " << lDemandStreamKey.describe());
+    
+    const DemandDistribution lDemandDistribution (iDemand._demandMean,
+                                                  iDemand._demandStdDev);
+    
+    // Seed
+    const stdair::RandomSeed_T& lNumberOfRequestsSeed =
+      generateSeed (ioSharedGenerator);
+    const stdair::RandomSeed_T& lRequestDateTimeSeed =
+      generateSeed (ioSharedGenerator);
+    const stdair::RandomSeed_T& lDemandCharacteristicsSeed =
+      generateSeed (ioSharedGenerator);
+  
+    // Delegate the call to the dedicated command
+    addDemandStream (ioBomRoot, lDemandStreamKey,
+                     iDemand._dtdProbDist, iDemand._posProbDist,
+                     iDemand._channelProbDist,
+                     iDemand._tripProbDist,
+                     iDemand._stayProbDist, iDemand._ffProbDist,
+                     iDemand._prefDepTimeProbDist,
+                     iDemand._minWTP,
+                     iDemand._timeValueProbDist,
+                     lDemandDistribution,
+                     lNumberOfRequestsSeed, lRequestDateTimeSeed,
+                     lDemandCharacteristicsSeed,
+                     ioSharedGenerator, iPOSProbMass);
+  }
+
+  // ////////////////////////////////////////////////////////////////////
+  stdair::RandomSeed_T DemandManager::
+  generateSeed (stdair::UniformGenerator_T& ioSharedGenerator) {
+    stdair::RealNumber_T lVariateUnif = ioSharedGenerator() * 1e9;
+    stdair::RandomSeed_T oSeed = static_cast<stdair::RandomSeed_T>(lVariateUnif);
+    return oSeed;
+  }
+  
+  // //////////////////////////////////////////////////////////////////////
   stdair::NbOfRequests_T DemandManager::addDemandStream
   (stdair::BomRoot& ioBomRoot,
    const DemandStreamKey& iKey,
