@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
   const stdair::Count_T lRefExpectedNbOfEvents (20);
   
   //  
-  const stdair::NbOfRequests_T& lExpectedNbOfEventsToBeGenerated =
+  const stdair::Count_T& lExpectedNbOfEventsToBeGenerated =
     trademgenService.getTotalNumberOfRequestsToBeGenerated();
 
   BOOST_CHECK_EQUAL (lRefExpectedNbOfEvents,

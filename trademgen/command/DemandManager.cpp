@@ -92,12 +92,6 @@ namespace TRADEMGEN {
                          iRequestDateTimeSeed, iDemandCharacteristicsSeed,
                          ioSharedGenerator, iDefaultPOSProbablityMass);
     
-    // Insert the reference on the given DemandStream object into the
-    // dedicated list
-    // DEBUG
-    // STDAIR_LOG_DEBUG ("Add DemandStream: \n"
-    //                   << lDemandStream.getDemandCharacteristics().display()
-    //                   << lDemandStream.getDemandDistribution().display());
     stdair::FacBomManager::instance().addToList (ioBomRoot, oDemandStream);
     
     stdair::FacBomManager::instance().addToListAndMap (ioBomRoot,
@@ -107,12 +101,6 @@ namespace TRADEMGEN {
     const stdair::NbOfRequests_T& lExpectedNumberOfEventsToBeGenerated =
       oDemandStream.getTotalNumberOfRequestsToBeGenerated();
 
-    // DEBUG
-    STDAIR_LOG_DEBUG ("DemandStream just added: '" << oDemandStream
-                      << "'; expected number of requests: "
-                      << lExpectedNumberOfEventsToBeGenerated << " => "
-                      << std::floor (lExpectedNumberOfEventsToBeGenerated));
-    
     return oDemandStream;
   }
     
@@ -189,33 +177,15 @@ namespace TRADEMGEN {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  /*
-  const stdair::NbOfRequests_T& DemandManager::
-  getTotalNumberOfRequestsToBeGenerated (const stdair::BomRoot& iBomRoot,
-                                         const stdair::DemandStreamKeyStr_T& iKey) {
-    // Retrieve the DemandStream which corresponds to the given key.
-    const DemandStream& lDemandStream =
-      stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
-      
-    return lDemandStream.getTotalNumberOfRequestsToBeGenerated();
-  }
-  */
-
-  // ////////////////////////////////////////////////////////////////////
-  stdair::NbOfRequests_T DemandManager::
+  const stdair::Count_T& DemandManager::
   getTotalNumberOfRequestsToBeGenerated (const stdair::BomRoot& iBomRoot) {
-    stdair::NbOfRequests_T oNbOfRequests = 0.0;
 
-    const DemandStreamList_T& lDemandStreamList =
-      stdair::BomManager::getList<DemandStream> (iBomRoot);
-    for (DemandStreamList_T::const_iterator itDS = lDemandStreamList.begin();
-         itDS != lDemandStreamList.end(); ++itDS) {
-      const DemandStream* lDemandStream_ptr = *itDS;
-      assert (lDemandStream_ptr != NULL);
-    
-      oNbOfRequests +=
-        lDemandStream_ptr->getTotalNumberOfRequestsToBeGenerated();
-    }
+    // Retrieve the EventQueue instance
+    const stdair::EventQueue& lEventQueue = getEventQueue (iBomRoot);
+
+    //
+    const stdair::Count_T& oNbOfRequests =
+      lEventQueue.getExpectedTotalNbOfEvents();
 
     return oNbOfRequests;
   }

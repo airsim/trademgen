@@ -247,16 +247,13 @@ int main (int argc, char* argv[]) {
   TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lInputFilename);
 
   //  
-  const stdair::NbOfRequests_T& lExpectedNbOfEventsToBeGenerated =
+  const stdair::Count_T& lExpectedNbOfEventsToBeGenerated =
     trademgenService.getTotalNumberOfRequestsToBeGenerated();
 
   // Initialise the (Boost) progress display object
-  boost::progress_display lProgressDisplay (lExpectedNbOfEventsToBeGenerated);
+  boost::progress_display lProgressDisplay (lExpectedNbOfEventsToBeGenerated
+                                            * lNbOfRuns);
 
-  // DEBUG
-  STDAIR_LOG_DEBUG ("Expected number of events: "
-                    << lExpectedNbOfEventsToBeGenerated);
-  
 
   for (NbOfRuns_T runIdx = 1; runIdx <= lNbOfRuns; ++runIdx) {
     // /////////////////////////////////////////////////////
@@ -268,17 +265,17 @@ int main (int argc, char* argv[]) {
     */
     const stdair::Count_T& lActualNbOfEventsToBeGenerated =
       trademgenService.generateFirstRequests();
+
+    // DEBUG
+    STDAIR_LOG_DEBUG ("[" << runIdx << "] Expected: "
+                      << lExpectedNbOfEventsToBeGenerated << ", actual: "
+                      << lActualNbOfEventsToBeGenerated);
       
-    /** (Boost) progress display (current number of events, total
-        number of events) for every demand stream. */
-    //stdair::ProgressDisplayMap_T lProgressDisplays;
-    //trademgenService.initProgressDisplays (lProgressDisplays);
-    
     /**
        Main loop.
        <ul>
-       <li>Pop a request and get its associated type/demand stream.</li>
-       <li>Generate the next request for the same type/demand stream.</li>
+         <li>Pop a request and get its associated type/demand stream.</li>
+         <li>Generate the next request for the same type/demand stream.</li>
        </ul>
     */
     while (trademgenService.isQueueDone() == false) {
@@ -344,7 +341,7 @@ int main (int argc, char* argv[]) {
       }
 
       // Update the progress display
-      //++lProgressDisplay;
+      ++lProgressDisplay;
     }
 
     // Add the number of events to the statistics accumulator
@@ -363,6 +360,9 @@ int main (int argc, char* argv[]) {
   
   // Close the Log outputFile
   logOutputFile.close();
+
+  //
+  std::cout << std::endl;
 
   return 0;
 }
