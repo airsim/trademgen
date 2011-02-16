@@ -212,10 +212,18 @@ namespace TRADEMGEN {
     // Store a reference of the EventQueue object instance within the
     // service context
     lTRADEMGEN_ServiceContext.setEventQueue (lEventQueue);
+
+    // DEBUG
+    STDAIR_LOG_DEBUG ("Before parsing file, EventQueue: '"
+                      << lEventQueue.display() << "'");
     
     // Parse the input file and initialise the demand generators
     DemandParser::generateDemand (iDemandInputFilename, lBomRoot,
                                   lSharedGenerator, lDefaultPOSProbabilityMass);
+
+    // DEBUG
+    STDAIR_LOG_DEBUG ("After parsing file, EventQueue: '"
+                      << lEventQueue.display() << "'");
   }
   
   // //////////////////////////////////////////////////////////////////////
