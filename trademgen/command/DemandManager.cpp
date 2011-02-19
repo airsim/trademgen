@@ -36,7 +36,7 @@ namespace TRADEMGEN {
     stdair::FacBomManager::instance().linkWithParent (ioBomRoot, oEventQueue);
     
     // Add the EventQueue to the dedicated list
-    stdair::FacBomManager::instance().addToListAndMap (ioBomRoot, oEventQueue);
+    stdair::FacBomManager::instance().addToList (ioBomRoot, oEventQueue);
 
     //
     return oEventQueue;
@@ -64,7 +64,7 @@ namespace TRADEMGEN {
   
   // //////////////////////////////////////////////////////////////////////
   DemandStream& DemandManager::createDemandStream
-  (stdair::BomRoot& ioBomRoot,
+  (stdair::EventQueue& ioEventQueue,
    const DemandStreamKey& iKey,
    const ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
    const POSProbabilityMassFunction_T& iPOSProbMass,
@@ -92,9 +92,9 @@ namespace TRADEMGEN {
                          iRequestDateTimeSeed, iDemandCharacteristicsSeed,
                          ioSharedGenerator, iDefaultPOSProbablityMass);
     
-    stdair::FacBomManager::instance().addToList (ioBomRoot, oDemandStream);
+    stdair::FacBomManager::instance().addToList (ioEventQueue, oDemandStream);
     
-    stdair::FacBomManager::instance().addToListAndMap (ioBomRoot,
+    stdair::FacBomManager::instance().addToListAndMap (ioEventQueue,
                                                        oDemandStream);
 
     //
@@ -129,9 +129,12 @@ namespace TRADEMGEN {
     const stdair::RandomSeed_T& lDemandCharacteristicsSeed =
       generateSeed (ioSharedGenerator);
   
+    // Retrieve the EventQueue instance
+    stdair::EventQueue& lEventQueue = getEventQueue (ioBomRoot);
+    
     // Delegate the call to the dedicated command
     DemandStream& lDemandStream = 
-      createDemandStream (ioBomRoot, lDemandStreamKey,
+      createDemandStream (lEventQueue, lDemandStreamKey,
                           iDemand._dtdProbDist, iDemand._posProbDist,
                           iDemand._channelProbDist,
                           iDemand._tripProbDist,
@@ -149,10 +152,6 @@ namespace TRADEMGEN {
     const stdair::NbOfRequests_T& lExpectedTotalNbOfEvents =
       lDemandStream.getTotalNumberOfRequestsToBeGenerated();
 
-    // TODO: attach DemandStream directly to the EventQueue
-    // Retrieve the EventQueue instance
-    stdair::EventQueue& lEventQueue = getEventQueue (ioBomRoot);
-    
     /**
      * Initialise the progress status, specific to the demand stream,
      * held by the event queue.

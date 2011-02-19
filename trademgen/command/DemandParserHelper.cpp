@@ -8,7 +8,7 @@
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
-#include <trademgen/basic/DemandCharacteristicTypes.hpp>
+#include <trademgen/basic/DemandCharacteristicsTypes.hpp>
 #include <trademgen/command/DemandParserHelper.hpp>
 #include <trademgen/command/DemandManager.hpp>
 

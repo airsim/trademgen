@@ -10,7 +10,7 @@
 #include <stdair/command/CmdAbstract.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
-#include <trademgen/basic/DemandCharacteristicTypes.hpp>
+#include <trademgen/basic/DemandCharacteristicsTypes.hpp>
 #include <trademgen/bom/DemandStreamKey.hpp>
 
 // Forward declarations
@@ -79,7 +79,9 @@ namespace TRADEMGEN {
      * standard deviation) given as parameter within the
      * DemandDistribution structure.
      *
-     * @param stdair::BomRoot& Reference on the top of the BOM tree.
+     * @param stdair::EventQueue& Reference on the EventQueue object,
+     *   to which the newly created DemandStream instance will be
+     *   attached.
      * @param const DemandStreamKey& A string identifying uniquely the
      *   demand stream (e.g., "SIN-HND 2010-Feb-08 Y").
      * @param const DemandDistribution& Parameters (mean, standard
@@ -88,7 +90,7 @@ namespace TRADEMGEN {
      * @return DemandStream& The newly created DemandStream object.
      */
     static DemandStream&
-    createDemandStream (stdair::BomRoot&,
+    createDemandStream (stdair::EventQueue&,
                         const DemandStreamKey&,
                         const ArrivalPatternCumulativeDistribution_T&,
                         const POSProbabilityMassFunction_T&,
