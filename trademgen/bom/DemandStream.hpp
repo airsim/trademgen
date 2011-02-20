@@ -15,12 +15,19 @@
 #include <trademgen/bom/DemandStreamKey.hpp>
 #include <trademgen/bom/DemandStreamTypes.hpp>
 
+// Forward declarations
+namespace stdair {
+  class FacBomManager;
+}
+
 namespace TRADEMGEN {
   
   /**
    * Class modeling a demand stream.
    */
   class DemandStream  : public stdair::BomAbstract {
+    template <typename BOM> friend class FacBom;
+    friend class stdair::FacBomManager;
     friend class FacDemandStream;
 
   public:
@@ -67,7 +74,7 @@ namespace TRADEMGEN {
     }
     
     /** Get the total number of requests to be generated. */
-    const stdair:: NbOfRequests_T& getTotalNumberOfRequestsToBeGenerated() const{
+    const stdair::NbOfRequests_T& getTotalNumberOfRequestsToBeGenerated() const{
       return _totalNumberOfRequestsToBeGenerated;
     }
 
@@ -221,7 +228,8 @@ namespace TRADEMGEN {
     
   protected:
     // ////////// Attributes //////////
-    /** Primary key (string gathering the origin, destination, POS and date). */
+    /** Primary key (string gathering the origin, destination, POS and
+        date). */
     Key_T _key;
     
     /** Pointer on the parent class (EventQueue). */
@@ -230,31 +238,33 @@ namespace TRADEMGEN {
     /** Map holding the children (not used for now). */
     stdair::HolderMap_T _holderMap;
     
-    /** Demand characteristics */
+    /** Demand characteristics. */
     DemandCharacteristics _demandCharacteristics;
 
-    /** Demand distribution */
+    /** Demand distribution. */
     DemandDistribution _demandDistribution;
     
-    /** Total number of requests to be generated*/
+    /** Total number of requests to be generated. */
     stdair::NbOfRequests_T _totalNumberOfRequestsToBeGenerated;
 
-    /** Random generation context */
+    /** Random generation context. */
     RandomGenerationContext _randomGenerationContext;
   
-    /** Random generator for number of requests */
+    /** Random generator for number of requests. */
     RandomGeneration _numberOfRequestsRandomGenerator;
     
-    /** Random generator for request datetime */
+    /** Random generator for request date-time. */
     RandomGeneration _requestDateTimeRandomGenerator;
     
-    /** Random generator for demand characteristics */
+    /** Random generator for demand characteristics. */
     RandomGeneration _demandCharacteristicsRandomGenerator;
 
-    /** Shared random uniform generator for seeds and some other values. */
+    /** Shared random uniform generator for seeds and some other
+        values. */
     stdair::UniformGenerator_T& _uniformGenerator;
 
-    /** Defaut POS probablity mass, used when "row" is drawn. */
+    /** Defaut POS probablity mass, used when "row" (rest of the world)
+        is drawn. */
     const POSProbabilityMass_T& _posProMass;
   };
 

@@ -14,7 +14,7 @@
 
 // Forward declarations
 namespace stdair {
-  class BomRoot;
+  class EventQueue;
 }
 
 namespace TRADEMGEN {
@@ -30,9 +30,9 @@ namespace TRADEMGEN {
      * @param const stdair::Filename_T& The file-name of the
               CSV-formatted demand input file.
      * @param const stdair::Date_T&
-     * @param stdair::BomRoot& Root of the BOM tree.
+     * @param stdair::EventQueue& Root of the BOM tree.
      */
-    static void generateDemand (const stdair::Filename_T&, stdair::BomRoot&,
+    static void generateDemand (const stdair::Filename_T&, stdair::EventQueue&,
                                 stdair::UniformGenerator_T&,
                                 const POSProbabilityMass_T&);
   };

@@ -92,21 +92,24 @@ namespace TRADEMGEN {
                          iRequestDateTimeSeed, iDemandCharacteristicsSeed,
                          ioSharedGenerator, iDefaultPOSProbablityMass);
     
-    stdair::FacBomManager::instance().addToList (ioEventQueue, oDemandStream);
+    // Link the DemandStream to its parent (EventQueue)
+    stdair::FacBomManager::instance().linkWithParent (ioEventQueue,
+                                                      oDemandStream);
     
+    // Add the DemandStream to the dedicated list and map
     stdair::FacBomManager::instance().addToListAndMap (ioEventQueue,
                                                        oDemandStream);
 
     //
-    const stdair::NbOfRequests_T& lExpectedNumberOfEventsToBeGenerated =
-      oDemandStream.getTotalNumberOfRequestsToBeGenerated();
+    // const stdair::NbOfRequests_T& lExpectedNumberOfEventsToBeGenerated =
+    //  oDemandStream.getTotalNumberOfRequestsToBeGenerated();
 
     return oDemandStream;
   }
     
   // //////////////////////////////////////////////////////////////////////
   void DemandManager::
-  createDemandCharacteristics (stdair::BomRoot& ioBomRoot,
+  createDemandCharacteristics (stdair::EventQueue& ioEventQueue,
                                stdair::UniformGenerator_T& ioSharedGenerator,
                                const POSProbabilityMass_T& iPOSProbMass,
                                const DemandStruct& iDemand) {
@@ -129,12 +132,9 @@ namespace TRADEMGEN {
     const stdair::RandomSeed_T& lDemandCharacteristicsSeed =
       generateSeed (ioSharedGenerator);
   
-    // Retrieve the EventQueue instance
-    stdair::EventQueue& lEventQueue = getEventQueue (ioBomRoot);
-    
     // Delegate the call to the dedicated command
     DemandStream& lDemandStream = 
-      createDemandStream (lEventQueue, lDemandStreamKey,
+      createDemandStream (ioEventQueue, lDemandStreamKey,
                           iDemand._dtdProbDist, iDemand._posProbDist,
                           iDemand._channelProbDist,
                           iDemand._tripProbDist,
@@ -162,8 +162,8 @@ namespace TRADEMGEN {
      * the event queue object can not calculate the progress statuses
      * itself.
      */
-    lEventQueue.addStatus (lDemandStreamKey.toString(),
-                           lExpectedTotalNbOfEvents);
+    ioEventQueue.addStatus (lDemandStreamKey.toString(),
+                            lExpectedTotalNbOfEvents);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -176,41 +176,24 @@ namespace TRADEMGEN {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  const stdair::Count_T& DemandManager::
-  getTotalNumberOfRequestsToBeGenerated (const stdair::BomRoot& iBomRoot) {
-
-    // Retrieve the EventQueue instance
-    const stdair::EventQueue& lEventQueue = getEventQueue (iBomRoot);
-
-    //
-    const stdair::Count_T& oNbOfRequests =
-      lEventQueue.getExpectedTotalNbOfEvents();
-
-    return oNbOfRequests;
-  }
-
-  // ////////////////////////////////////////////////////////////////////
   const bool DemandManager::
-  stillHavingRequestsToBeGenerated (const stdair::BomRoot& iBomRoot,
+  stillHavingRequestsToBeGenerated (const stdair::EventQueue& iEventQueue,
                                     const stdair::DemandStreamKeyStr_T& iKey) {
     // Retrieve the DemandStream which corresponds to the given key.
     const DemandStream& lDemandStream =
-      stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
+      stdair::BomManager::getObject<DemandStream> (iEventQueue, iKey);
     
     return lDemandStream.stillHavingRequestsToBeGenerated();
   }
 
   // ////////////////////////////////////////////////////////////////////
   stdair::BookingRequestPtr_T DemandManager::
-  generateNextRequest (const stdair::BomRoot& iBomRoot,
+  generateNextRequest (stdair::EventQueue& ioEventQueue,
                        const stdair::DemandStreamKeyStr_T& iKey) {
 
-    // Retrieve the EventQueue instance
-    stdair::EventQueue& lEventQueue = getEventQueue (iBomRoot);
-    
     // Retrieve the DemandStream which corresponds to the given key.
     DemandStream& lDemandStream = 
-      stdair::BomManager::getObject<DemandStream> (iBomRoot, iKey);
+      stdair::BomManager::getObject<DemandStream> (ioEventQueue, iKey);
 
     // Generate the next booking request
     stdair::BookingRequestPtr_T lBookingRequest =
@@ -228,24 +211,21 @@ namespace TRADEMGEN {
        newly added event, so that the unicity on the date-time
        stamp can be guaranteed.
     */
-    lEventQueue.addEvent (lEventStruct);
+    ioEventQueue.addEvent (lEventStruct);
     
     return lBookingRequest;
   }
 
   // ////////////////////////////////////////////////////////////////////
   stdair::Count_T DemandManager::
-  generateFirstRequests (const stdair::BomRoot& iBomRoot) {
-
-    // Retrieve the EventQueue instance
-    stdair::EventQueue& lEventQueue = getEventQueue (iBomRoot);
+  generateFirstRequests (stdair::EventQueue& ioEventQueue) {
 
     //
     stdair::NbOfEventsByDemandStreamMap_T lNbOfEvents;
     
     // Retrieve the DemandStream list
     const DemandStreamList_T& lDemandStreamList =
-      stdair::BomManager::getList<DemandStream> (iBomRoot);
+      stdair::BomManager::getList<DemandStream> (ioEventQueue);
 
     for (DemandStreamList_T::const_iterator itDemandStream =
            lDemandStreamList.begin();
@@ -263,30 +243,24 @@ namespace TRADEMGEN {
       if (stillHavingRequestsToBeGenerated) {
         // Generate the next event (booking request), and insert it in
         // the event queue
-        generateNextRequest (iBomRoot, lKey.toString());
+        generateNextRequest (ioEventQueue, lKey.toString());
       }
     }
 
     // Retrieve the actual total number of events to be generated
     const stdair::Count_T& oTotalNbOfEvents =
-      lEventQueue.getExpectedTotalNbOfEvents();
+      ioEventQueue.getExpectedTotalNbOfEvents();
 
     //
     return oTotalNbOfEvents;
   }
   
   // ////////////////////////////////////////////////////////////////////
-  void DemandManager::reset (const stdair::BomRoot& iBomRoot) {
+  void DemandManager::reset (stdair::EventQueue& ioEventQueue) {
 
-    // Retrieve the EventQueue instance
-    stdair::EventQueue& lEventQueue = getEventQueue (iBomRoot);
-
-    // Reset the EventQueue object
-    lEventQueue.reset();
-    
     // Reset all the DemandStream objects
     const DemandStreamList_T& lDemandStreamList =
-      stdair::BomManager::getList<DemandStream> (iBomRoot);
+      stdair::BomManager::getList<DemandStream> (ioEventQueue);
     for (DemandStreamList_T::const_iterator itDS = lDemandStreamList.begin();
          itDS != lDemandStreamList.end(); ++itDS) {
       DemandStream* lCurrentDS_ptr = *itDS;
@@ -294,6 +268,9 @@ namespace TRADEMGEN {
       
       lCurrentDS_ptr->reset();
     }
+    
+    // Reset the EventQueue object
+    ioEventQueue.reset();
   }
 
 }

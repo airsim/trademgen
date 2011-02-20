@@ -352,7 +352,7 @@ namespace TRADEMGEN {
 
     // TODO 1: understand why the following form does not work, knowing
     // that:
-    // typede boost::shared_ptr<stdair::BookingRequestStruct> stdair::BookingRequestPtr_T
+    // typedef boost::shared_ptr<stdair::BookingRequestStruct> stdair::BookingRequestPtr_T
     // stdair::BookingRequestPtr_T oBookingRequest_ptr =
     //   boost::make_shared<stdair::BookingRequestStruct> ();
 
@@ -385,9 +385,9 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  void DemandStream::reset () {
-    init ();
+  void DemandStream::reset() {
     _randomGenerationContext.reset();
+    init();
   }  
 
 }
