@@ -409,6 +409,7 @@ ${MPICH2_OUTPUT}
     o PYTHON_LIBS ........... : ${PYTHON_LIBS} 
     o PYTHON_ADD_LIBS ....... : ${PYTHON_ADD_LIBS} 
 
+  - Boost .................. :
     o BOOST_VERSION ........ : ${BOOST_VERSION}
     o BOOST_CFLAGS ......... : ${BOOST_CFLAGS}
     o BOOST_LIBS ........... : ${BOOST_LIBS}
