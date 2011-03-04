@@ -19,7 +19,6 @@
 namespace stdair {
   struct DemandCharacteristics;
   struct DemandDistribution;
-  class EventQueue;
 }
   
 namespace TRADEMGEN {
@@ -52,9 +51,6 @@ namespace TRADEMGEN {
       return _stdairService;
     }
 
-    /** Get the pointer on the EventQueue instance. */
-    stdair::EventQueue& getEventQueue() const;
-    
     /** Get the shared uniform generator. */
     stdair::UniformGenerator_T& getUniformGenerator () {
       return _uniformGenerator;
@@ -72,11 +68,6 @@ namespace TRADEMGEN {
       _stdairService = ioSTDAIR_ServicePtr;
     }
 
-    /** Set the pointer on the EventQueue instance. */
-    void setEventQueue (stdair::EventQueue& ioEventQueue) {
-      _eventQueue = &ioEventQueue;
-    }
-
     
   private:
     // ///////// Display Methods //////////
@@ -91,8 +82,6 @@ namespace TRADEMGEN {
     // ///////////// Children ////////////
     /** Standard Airline (StdAir) Service Handler. */
     stdair::STDAIR_ServicePtr_T _stdairService;
-    /** Pointer on the EventQueue instance. */
-    stdair::EventQueue* _eventQueue;
 
   private:
     // ////////////// Attributes ////////////////
