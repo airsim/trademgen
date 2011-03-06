@@ -8,6 +8,7 @@
 #include <cassert>
 #include <iosfwd>
 #include <string>
+#include <vector>
 #include <map>
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
@@ -42,27 +43,27 @@ namespace TRADEMGEN {
       // Find the first cumulative probablity value greater or equal to lKey.
       unsigned int idx = 0;
       for (; idx < _size; ++idx) {
-        if (_cumulativeDistribution[idx] > lKey) {
+        if (_cumulativeDistribution.at(idx) > lKey) {
           break;
         }
       }
 
       if (idx == 0) {
-        return _valueArray[idx];
+        return _valueArray.at(idx);
       }
       if (idx == _size) {
-        return _valueArray[idx-1];
+        return _valueArray.at(idx-1);
       }
 
       //
       const stdair::Probability_T& lCumulativeCurrentPoint =
-        DictionaryManager::keyToValue (_cumulativeDistribution[idx]);
-      const T& lValueCurrentPoint = _valueArray[idx];
+        DictionaryManager::keyToValue (_cumulativeDistribution.at(idx));
+      const T& lValueCurrentPoint = _valueArray.at(idx);
 
       //
       const stdair::Probability_T& lCumulativePreviousPoint =
-        DictionaryManager::keyToValue (_cumulativeDistribution[idx-1]);
-      const T& lValuePreviousPoint = _valueArray[idx-1];
+        DictionaryManager::keyToValue (_cumulativeDistribution.at(idx-1));
+      const T& lValuePreviousPoint = _valueArray.at(idx-1);
 
       if (lCumulativePreviousPoint == lCumulativeCurrentPoint) {
         return lValuePreviousPoint;
@@ -89,9 +90,9 @@ namespace TRADEMGEN {
         }
 
         const stdair::Probability_T& lProbability =
-          DictionaryManager::keyToValue (_cumulativeDistribution[idx]);
+          DictionaryManager::keyToValue (_cumulativeDistribution.at(idx));
       
-        oStr << _valueArray[idx] << ":" << lProbability;
+        oStr << _valueArray.at(idx) << ":" << lProbability;
       }
       return oStr.str();
     }
@@ -104,8 +105,6 @@ namespace TRADEMGEN {
      */
     ContinuousAttributeLite (const ContinuousDistribution_T& iValueMap)
       : _size (iValueMap.size()) {
-      _cumulativeDistribution = new DictionaryKey_T[_size];
-      _valueArray = new T[_size];
       init (iValueMap);
     }
     
@@ -119,12 +118,19 @@ namespace TRADEMGEN {
     }
 
     /**
+     * Copy operator.
+     */
+    ContinuousAttributeLite& operator= (const ContinuousAttributeLite& iCAL) {
+      _size = iCAL._size;
+      _cumulativeDistribution = iCAL._cumulativeDistribution;
+      _valueArray = iCAL._valueArray;
+      return *this;
+    }
+
+    /**
      * Destructor.
      */
     virtual ~ContinuousAttributeLite() {
-      // TODO: Verify that the arrays are correctly cleaned.
-      delete[] _cumulativeDistribution; _cumulativeDistribution = NULL;
-      delete[] _valueArray; _valueArray = NULL;
     }
 
   private:
@@ -132,7 +138,6 @@ namespace TRADEMGEN {
      * Default constructor.
      */
     ContinuousAttributeLite() : _size(1) {
-      assert (false);
     }
 
     /**
@@ -140,18 +145,21 @@ namespace TRADEMGEN {
      * distribution (initialisation).
      */
     void init (const ContinuousDistribution_T& iValueMap) {
-      unsigned int idx = 0;
+      //
+      const unsigned int lSize = iValueMap.size();
+      _cumulativeDistribution.reserve (lSize);
+      _valueArray.reserve (lSize);
 
       // Browse the map to retrieve the values and cumulative probabilities.
       for (typename ContinuousDistribution_T::const_iterator it =
-             iValueMap.begin(); it != iValueMap.end(); ++it, ++idx) {
+             iValueMap.begin(); it != iValueMap.end(); ++it) {
         
         const T& attributeValue = it->first;
         const DictionaryKey_T& lKey = DictionaryManager::valueToKey (it->second);
         
         // Build the two arrays.
-        _cumulativeDistribution[idx] = lKey;
-        _valueArray[idx] = attributeValue;
+        _cumulativeDistribution.push_back (lKey);
+        _valueArray.push_back (attributeValue);
       }
     }
   
@@ -161,17 +169,17 @@ namespace TRADEMGEN {
     /**
      * Size of the two arrays.
      */
-    const unsigned int _size;
+    unsigned int _size;
     
     /**
      * Cumulative dictionary-coded distribution.
      */
-    DictionaryKey_T* _cumulativeDistribution;
+    std::vector<DictionaryKey_T> _cumulativeDistribution;
 
     /**
      * The corresponding values.
      */
-    T* _valueArray;
+    std::vector<T> _valueArray;
   };
   
 }

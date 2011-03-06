@@ -9,6 +9,7 @@
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_service_types.hpp>
+#include <stdair/basic/RandomGeneration.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/service/ServiceAbstract.hpp>
 // TraDemGen
@@ -62,14 +63,14 @@ namespace TRADEMGEN {
     /**
      * Get the shared uniform generator.
      */
-    stdair::UniformGenerator_T& getUniformGenerator () {
+    stdair::RandomGeneration& getUniformGenerator() {
       return _uniformGenerator;
     }
 
     /**
      * Get the default POS distribution.
      */
-    const POSProbabilityMass_T& getPOSProbabilityMass () const {
+    const POSProbabilityMass_T& getPOSProbabilityMass() const {
       return _posProbabilityMass;
     }
 
@@ -144,10 +145,11 @@ namespace TRADEMGEN {
     // ////////////// Attributes ////////////////
     /**
      * Shared generator for seeds and some other values.
+     *
+     * The state of the random generator, given as parameter, evolves
+     * each time a demand request is generated.
      */
-    stdair::RandomSeed_T _seed;
-    stdair::BaseGenerator_T _generator;
-    stdair::UniformGenerator_T _uniformGenerator;
+    stdair::RandomGeneration _uniformGenerator;
 
     /**
      * POS probability mass, used when the POS is 'RoW'.

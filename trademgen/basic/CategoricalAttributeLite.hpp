@@ -6,8 +6,9 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
-#include <iosfwd>
+#include <sstream>
 #include <string>
+#include <vector>
 #include <map>
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
@@ -42,8 +43,8 @@ namespace TRADEMGEN {
         DictionaryManager::valueToKey (iCumulativeProbability);
 
       for (unsigned int idx = 0; idx < _size; ++idx) {
-        if (_cumulativeDistribution[idx] >= lKey) {
-          const T& oValue = _valueArray[idx];
+        if (_cumulativeDistribution.at(idx) >= lKey) {
+          const T& oValue = _valueArray.at(idx);
           return oValue;
         }
       }
@@ -59,7 +60,7 @@ namespace TRADEMGEN {
      */
     bool checkValue (const T& iValue) const {
       for (unsigned int idx = 0; idx < _size; ++idx) {
-        if (_valueArray[idx] == iValue) {
+        if (_valueArray.at(idx) == iValue) {
           return true;
         }
       }
@@ -79,7 +80,7 @@ namespace TRADEMGEN {
         if (idx != 0) {
           oStr << ", ";
         }
-        oStr << _valueArray[idx] << ":"
+        oStr << _valueArray.at(idx) << ":"
              << DictionaryManager::keyToValue (_cumulativeDistribution[idx]);
       }
       return oStr.str();
@@ -93,9 +94,13 @@ namespace TRADEMGEN {
      */
     CategoricalAttributeLite (const ProbabilityMassFunction_T& iValueMap)
       : _size (iValueMap.size()) {
-      _cumulativeDistribution = new DictionaryKey_T[_size];
-      _valueArray = new T[_size];
       init (iValueMap);
+    }
+
+    /**
+     * Default constructor.
+     */
+    CategoricalAttributeLite() : _size(1) {
     }
 
     /**
@@ -108,38 +113,40 @@ namespace TRADEMGEN {
     }
 
     /**
+     * Copy operator.
+     */
+    CategoricalAttributeLite& operator= (const CategoricalAttributeLite& iCAL) {
+      _size = iCAL._size;
+      _cumulativeDistribution = iCAL._cumulativeDistribution;
+      _valueArray = iCAL._valueArray;
+      return *this;
+    }
+
+    /**
      * Destructor.
      */
     virtual ~CategoricalAttributeLite() {
-      // TODO: Verify that the arrays are correctly cleaned.
-      delete[] _cumulativeDistribution; _cumulativeDistribution = NULL;
-      delete[] _valueArray; _valueArray = NULL;
     }
 
 
   private:
     /**
-     * Default constructor.
-     */
-    CategoricalAttributeLite() : _size(1) {
-      assert (false);
-    }
-
-
-    /**
      * Initialise the two arrays from the given map.
      */
     void init (const ProbabilityMassFunction_T& iValueMap) {
       
+      const unsigned int lSize = iValueMap.size();
+      _cumulativeDistribution.reserve (lSize);
+      _valueArray.reserve (lSize);
+
       stdair::Probability_T cumulative_probability_so_far = 0.0;
-      unsigned int idx = 0;
 
       // Browse the map to retrieve the values and to build the
       // cumulative probabilities.
       for (typename ProbabilityMassFunction_T::const_iterator
              itProbabilityMassFunction = iValueMap.begin();
            itProbabilityMassFunction != iValueMap.end();
-           ++itProbabilityMassFunction, ++idx) {
+           ++itProbabilityMassFunction) {
         
         stdair::Probability_T attribute_probability_mass =
           itProbabilityMassFunction->second;
@@ -147,12 +154,13 @@ namespace TRADEMGEN {
         if (attribute_probability_mass > 0) {
           const T& attribute_value = itProbabilityMassFunction->first;
           cumulative_probability_so_far += attribute_probability_mass;
+
           const DictionaryKey_T& lKey =
             DictionaryManager::valueToKey (cumulative_probability_so_far);
 
           // Build the two arrays.
-          _cumulativeDistribution[idx] = lKey;
-          _valueArray[idx] = attribute_value;
+          _cumulativeDistribution.push_back (lKey);
+          _valueArray.push_back (attribute_value);
         }
       }
     }
@@ -162,17 +170,17 @@ namespace TRADEMGEN {
     /**
      * Size of the two arrays.
      */
-    const unsigned int _size;
+    unsigned int _size;
     
     /**
      * Cumulative dictionary-coded distribution.
      */
-    DictionaryKey_T* _cumulativeDistribution;
+    std::vector<DictionaryKey_T> _cumulativeDistribution;
 
     /**
        The corresponding values.
     */
-    T* _valueArray;
+    std::vector<T> _valueArray;
   };
 }
 #endif // __TRADEMGEN_BAS_CATEGORICALATTRIBUTELITE_HPP
