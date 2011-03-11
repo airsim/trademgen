@@ -328,6 +328,7 @@ AC_CONFIG_FILES(
 	trademgen/batches/Makefile
 	trademgen/python/Makefile
 	samples/Makefile
+	samples/RDS01/Makefile
 	test/Makefile
 	test/trademgen/Makefile
 )
