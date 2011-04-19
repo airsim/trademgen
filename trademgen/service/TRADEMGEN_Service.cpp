@@ -457,7 +457,8 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   const bool TRADEMGEN_Service::
-  stillHavingRequestsToBeGenerated (const stdair::DemandStreamKeyStr_T& iKey) const {
+  stillHavingRequestsToBeGenerated (const stdair::DemandStreamKeyStr_T& iKey,
+                                    stdair::ProgressStatusSet& ioPSS) const {
     
     // Retrieve the TraDemGen service context
     assert (_trademgenServiceContext != NULL);
@@ -473,7 +474,7 @@ namespace TRADEMGEN {
     
     // Delegate the call to the dedicated command
     const bool oStillHavingRequestsToBeGenerated =
-      DemandManager::stillHavingRequestsToBeGenerated (lQueue, iKey);
+      DemandManager::stillHavingRequestsToBeGenerated (lQueue, iKey, ioPSS);
 
     //
     return oStillHavingRequestsToBeGenerated;
@@ -531,7 +532,8 @@ namespace TRADEMGEN {
   }
 
   // ////////////////////////////////////////////////////////////////////
-  stdair::EventStruct TRADEMGEN_Service::popEvent() const {
+  stdair::ProgressStatusSet TRADEMGEN_Service::
+  popEvent (stdair::EventStruct& ioEventStruct) const {
 
     // Retrieve the TraDemGen service context
     assert (_trademgenServiceContext != NULL);
@@ -546,10 +548,7 @@ namespace TRADEMGEN {
     stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
     
     // Extract the next event from the queue
-    const stdair::EventStruct& oEventStruct = lQueue.popEvent();
-
-    //
-    return oEventStruct;
+    return lQueue.popEvent (ioEventStruct);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -581,16 +580,14 @@ namespace TRADEMGEN {
     assert (_trademgenServiceContext != NULL);
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
-    
+
     // Retrieve the StdAir service context
     stdair::STDAIR_Service& lSTDAIR_Service =
       lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
     // Retrieve the event queue object instance
     stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
     
     // Delegate the call to the dedicated command
     DemandManager::reset (lQueue);
   }
-
 }
