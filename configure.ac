@@ -327,8 +327,6 @@ AC_CONFIG_FILES(
 	trademgen/config/Makefile
 	trademgen/batches/Makefile
 	trademgen/python/Makefile
-	samples/Makefile
-	samples/RDS01/Makefile
 	test/Makefile
 	test/trademgen/Makefile
 )
@@ -404,11 +402,11 @@ ${OPENMPI_OUTPUT}
 
 ${MPICH2_OUTPUT}
 
-  - Python .................. :
-    o PYTHON_VERSION ........ : ${PYTHON_VERSION}
-    o PYTHON_CFLAGS ......... : ${PYTHON_CFLAGS}
-    o PYTHON_LIBS ........... : ${PYTHON_LIBS} 
-    o PYTHON_ADD_LIBS ....... : ${PYTHON_ADD_LIBS} 
+  - Python ................. :
+    o PYTHON_VERSION ....... : ${PYTHON_VERSION}
+    o PYTHON_CFLAGS ........ : ${PYTHON_CFLAGS}
+    o PYTHON_LIBS .......... : ${PYTHON_LIBS} 
+    o PYTHON_ADD_LIBS ...... : ${PYTHON_ADD_LIBS} 
 
   - Boost .................. :
     o BOOST_VERSION ........ : ${BOOST_VERSION}
