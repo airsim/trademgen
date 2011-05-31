@@ -18,12 +18,12 @@ librndmgr_la_LDFLAGS =
 
 ##
 nofail_PRG = SimulateTestSuite
-extra_PRG = random_order_stats
+extra_PRG = random_order_stats plotutils
 fail_PRG =
 
 #
 MAINTAINERCLEANFILES = Makefile.in
-CLEANFILES = ${nofail_PRG:%=%_utfresults.xml} ${nofail_PRG:%=%.log}
+CLEANFILES = ${nofail_PRG:%=%_utfresults.xml} ${nofail_PRG:%=%_?.log}
 
 #
 check_PROGRAMS = $(nofail_PRG) $(extra_PRG) $(fail_PRG)
@@ -41,3 +41,9 @@ SimulateTestSuite_CXXFLAGS = $(BOOST_CFLAGS) \
 	-DBOOST_TEST_MAIN -DBOOST_TEST_DYN_LINK
 SimulateTestSuite_LDADD =
 SimulateTestSuite_LDFLAGS = $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
+
+#
+plotutils_SOURCES = plotutils.cpp
+plotutils_CXXFLAGS =
+plotutils_LDADD =
+plotutils_LDFLAGS = -lplotter

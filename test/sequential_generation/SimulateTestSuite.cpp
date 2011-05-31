@@ -187,10 +187,30 @@ BOOST_AUTO_TEST_SUITE (master_test_suite)
 /**
  * Test a simple simulation
  */
+BOOST_AUTO_TEST_CASE (demand_curves_test) {
+
+  // Output log file
+  const std::string lLogFilename ("SimulateTestSuite_1.log");
+    
+  // Set the log parameters
+  std::ofstream logOutputFile;
+    
+  // Open and clean the log outputfile
+  logOutputFile.open (lLogFilename.c_str());
+  logOutputFile.clear();
+
+
+  // Close the log file
+  logOutputFile.close();
+}
+
+/**
+ * Test a simple simulation
+ */
 BOOST_AUTO_TEST_CASE (simple_simulation_test) {
 
   // Output log File
-  const std::string lLogFilename ("SimulateTestSuite.log");
+  const std::string lLogFilename ("SimulateTestSuite_2.log");
     
   // Set the log parameters
   std::ofstream logOutputFile;
