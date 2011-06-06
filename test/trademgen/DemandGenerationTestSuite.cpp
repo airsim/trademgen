@@ -128,6 +128,8 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
                        << std::floor (lExpectedNbOfEventsToBeGenerated)
                        << "). Reference value: " << lRefExpectedNbOfEvents);
 
+  const bool lGenerateDemandWithStatisticOrder = false;
+
   /**
    * Initialisation step.
    *
@@ -138,7 +140,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
    *       the same (and equal to 20).
    */
   const stdair::Count_T& lActualNbOfEventsToBeGenerated =
-    trademgenService.generateFirstRequests();
+    trademgenService.generateFirstRequests(lGenerateDemandWithStatisticOrder);
 
   // DEBUG
   STDAIR_LOG_DEBUG ("Expected number of events: "
@@ -251,7 +253,8 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
     // generate and add them to the event queue
     if (stillHavingRequestsToBeGenerated == true) {
       const stdair::BookingRequestPtr_T lNextRequest_ptr =
-        trademgenService.generateNextRequest (lDemandStreamKey);
+        trademgenService.generateNextRequest (lDemandStreamKey,
+                                              lGenerateDemandWithStatisticOrder);
       assert (lNextRequest_ptr != NULL);
 
       /**
