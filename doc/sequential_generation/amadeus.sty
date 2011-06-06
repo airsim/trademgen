@@ -1,0 +1,191 @@
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{amadeus}[2011/05/31]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Options
+\def\logotoplefttitle{}
+\def\logotopleftmain{}
+\def\loadfont{}
+\DeclareOption{arial}{\def\loadfont{\RequirePackage[T1]{fontenc}\RequirePackage[scaled]{uarial}}}
+\DeclareOption{confidential}{%
+\def\logotoplefttitle{\begin{picture}(0,0)(12,780)\includegraphics{confidential_large}\end{picture}}
+\def\logotopleftmain{\begin{picture}(0,0)(12,35)\includegraphics{confidential}\end{picture}}
+}
+\DeclareOption{internal}{%
+\def\logotoplefttitle{\begin{picture}(0,0)(2,35)\includegraphics{internal}\end{picture}}
+\def\logotopleftmain{\logotoplefttitle}
+}
+\ProcessOptions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load standard class (article) - must be done after \ProcessOptions
+%\LoadClass[12pt]{article}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Font
+\loadfont
+%\def\arial{\RequirePackage[T1]{fontenc}\RequirePackage[scaled]{uarial}}
+\renewcommand*\familydefault{\sfdefault}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphs
+\RequirePackage{graphicx}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figures
+\def\captionwidth{14cm}
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{\footnotesize{\itshape #1}: #2}%
+  \ifdim \wd\@tempboxa >\captionwidth
+    \centering\parbox{\captionwidth}{\footnotesize{\itshape #1}: #2}\par
+  \else
+    \global \@minipagefalse
+    \hb@xt@\hsize{\centering\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Section Number and table of contents
+\setcounter{secnumdepth}{3} % depth at which we want numbering (3=subsubsection)
+\setcounter{tocdepth}{3} % depth to be included in the table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Amadeus Geometry
+\RequirePackage{geometry}
+\geometry{a4paper, textheight=23.8cm, textwidth=16cm, top=3.2cm, headsep=14.5mm, footskip=8mm, headheight=15pt}
+\parindent=0mm
+\parskip=0mm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Amadeus Color
+\RequirePackage{color}
+\definecolor{AB}{rgb}{0.102,0.38,0.663}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Amadeus Section Headings
+\RequirePackage{titlesec}
+\titleformat{\section}
+{\normalfont}
+{\Large\bfseries\color{AB}\boldmath\thesection}
+{1em}
+{\Large\bfseries\color{AB}\boldmath}
+\titleformat{\subsection}
+{\normalfont}
+{\large\bfseries\color{AB}\boldmath\thesubsection}
+{1em}
+{\large\bfseries\color{AB}\boldmath}
+\titleformat{\subsubsection}
+{\normalfont}
+{\bfseries\normalsize\color{AB}\boldmath\thesubsubsection}
+{1em}
+{\bfseries\normalsize\color{AB}\boldmath}
+\renewcommand\contentsname{Table of Contents}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Amadeus Headers and Footers
+\def\logobottomright{\begin{picture}(0,0)(77,28)\includegraphics[width=39mm]{amadeus_logo_large}\end{picture}}
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\fancypagestyle{plain} {
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+	\fancyhead{}
+	\fancyfoot{}
+}
+\fancypagestyle{title} {
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+	\fancyhead{}
+	\fancyfoot{}
+}
+\newcommand{\makeheaderandfooter}[3]{
+	\fancypagestyle{plain} {
+		\renewcommand{\headrulewidth}{0pt}
+		\renewcommand{\footrulewidth}{0pt}
+		\fancyhead{}
+		\fancyfoot{}
+		\fancyhead[L]{\logotopleftmain}
+		\fancyhead[R]{\bfseries \fontsize{10}{10}\selectfont #1\hspace*{-1.25cm} }
+		\fancyfoot[L]{%
+			\scriptsize
+			\begin{picture}(0,0)(40,-21)
+				\includegraphics[angle=90,height=29mm]{amadeus_copyright}
+			\end{picture}%
+			\hspace*{-1cm}#2\\%
+			\hspace*{-1cm}#3\\%
+			\hspace*{-1cm}Page \thepage\ of \pageref{LastPage}%
+		}
+		\fancyfoot[R]{%
+			\begin{picture}(0,0)(76.5,27)
+				\includegraphics[width=39.8mm]{amadeus_logo}
+			\end{picture}
+		}
+	}
+	\fancypagestyle{title} {
+		\renewcommand{\headrulewidth}{0pt}
+		\renewcommand{\footrulewidth}{0pt}
+		\fancyhead{}
+		\fancyfoot{}
+		\fancyhead[L]{\logotoplefttitle}
+		\fancyfoot[R]{%
+			\begin{picture}(0,0)(76.5,27)
+				\includegraphics[width=39.8mm]{amadeus_logo_large}
+			\end{picture}
+		}
+	}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Amadeus Title Page
+\newcommand{\maketitlepage}[3]{
+	{%
+		\pagestyle{title}
+		\vspace*{67mm}
+		{%
+			\color{AB}
+			\hspace*{18mm}\parbox{142mm}{\bfseries\fontsize{32}{42}\selectfont #1}\par
+			\vspace*{8mm}
+			\hspace*{18mm}\parbox{142mm}{\bfseries\fontsize{26}{36}\selectfont #2}\par
+			\vspace*{8mm}
+			\hspace*{18mm}\parbox{142mm}{\bfseries\Large #3}
+		}
+		\clearpage
+	}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents Page
+\def\maketableofcontentspage{%
+	\pagestyle{plain}
+	\setcounter{page}{2}
+	\tableofcontents
+	\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Enumerations and bullet lists
+\RequirePackage{tweaklist}
+\renewcommand{\itemhook}{
+	\setlength{\leftmargin}{7.5mm}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
+	\setlength{\topsep}{0pt}
+	\setlength{\partopsep}{0pt}
+	\setlength{\parskip}{0pt}
+}
+\renewcommand{\enumhook}{
+	\setlength{\leftmargin}{6mm}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parsep}{0pt}
+	\setlength{\topsep}{0pt}
+	\setlength{\partopsep}{0pt}
+	\setlength{\parskip}{0pt}
+}
+\renewcommand{\labelenumi}{\color{AB}\arabic{enumi}.~}
+\renewcommand{\labelenumii}{\color{AB}\alph{enumii}.~}
+\renewcommand{\labelenumiii}{\color{AB}\roman{enumiii}.~}
+\RequirePackage{pifont}
+\renewcommand{\labelitemi}{\color{AB}\tiny\ding{108}}
+\renewcommand{\labelitemii}{\color{AB}\tiny\ding{119}}
+\renewcommand{\labelitemiii}{\color{AB}-}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main body
+\RequirePackage{setspace}
+\def\mainbody{%
+	\setstretch{1.1}
+	\pagestyle{plain}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Miscellaneous
+\RequirePackage{verbatim}
+\RequirePackage[round]{natbib}
+\endinput

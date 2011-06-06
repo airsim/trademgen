@@ -1,0 +1,8 @@
+
+mglData a(10), b(10), c(10); a.Modify("rnd"); b.Modify("rnd");
+c.Modify("rnd");
+gr->Plot(a,b," o");
+// or gr->Tens(a,b,c," o");
+// or gr->Mark(a,b,c," o");
+// or gr->TextMark(a,b,"\\sqrt{\\alpha}");
+
