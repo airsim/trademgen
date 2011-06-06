@@ -1,0 +1,6 @@
+
+set terminal png #transparent
+set xrange [0:1.00]
+set yrange [0:1.00]
+plot 1 - ((1-x)/(1-0.10))**50, 1 - ((1-x)/(1-0.50))**41, 1 - ((1-x)/(1-0.90))**11
+

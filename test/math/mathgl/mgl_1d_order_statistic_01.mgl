@@ -1,0 +1,12 @@
+
+new y 10000 3
+axis 0 0 1 1
+modify y '1 - ((1-x)/(1-0.10))^50'
+modify y '1 - ((1-x)/(1-0.50))^41' 1
+modify y '1 - ((1-x)/(1-0.90))^11' 2
+#origin 0 0
+xlabel 'x'
+ylabel 'Fx = 1 - ((1-x)/(1-y))^(n-k+1)'
+box
+plot y
+

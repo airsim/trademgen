@@ -1,0 +1,8 @@
+
+new y 50 3
+modify y '0.7*sin(2*pi*x) + 0.5*cos(3*pi*x) + 0.2*sin(pi*x)'
+modify y 'sin(2*pi*x)' 1
+modify y 'cos(2*pi*x)' 2
+box
+plot y
+
