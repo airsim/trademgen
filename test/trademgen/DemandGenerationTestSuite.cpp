@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
                        << std::floor (lExpectedNbOfEventsToBeGenerated)
                        << "). Reference value: " << lRefExpectedNbOfEvents);
 
-  const bool lGenerateDemandWithStatisticOrder = false;
+  const bool lGenerateDemandWithStatisticOrder = true;
 
   /**
    * Initialisation step.
