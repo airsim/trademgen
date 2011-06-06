@@ -17,7 +17,7 @@ librndmgr_la_LIBADD =
 librndmgr_la_LDFLAGS =
 
 ##
-nofail_PRG = SimulateTestSuite
+nofail_PRG = SimulateTestSuite RandomDistributionTestSuite
 extra_PRG = random_order_stats plotutils
 fail_PRG =
 
@@ -36,6 +36,13 @@ random_order_stats_CXXFLAGS = $(BOOST_CFLAGS)
 random_order_stats_LDFLAGS = $(BOOST_LIBS) $(BOOST_PROGRAM_OPTIONS_LIB) \
 	$(builddir)/librndmgr.la
 
+#
+plotutils_SOURCES = plotutils.cpp
+plotutils_CXXFLAGS =
+plotutils_LDADD =
+plotutils_LDFLAGS = -lplotter
+
+#
 SimulateTestSuite_SOURCES = SimulateTestSuite.cpp
 SimulateTestSuite_CXXFLAGS = $(BOOST_CFLAGS) \
 	-DBOOST_TEST_MAIN -DBOOST_TEST_DYN_LINK
@@ -43,7 +50,9 @@ SimulateTestSuite_LDADD =
 SimulateTestSuite_LDFLAGS = $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
 
 #
-plotutils_SOURCES = plotutils.cpp
-plotutils_CXXFLAGS =
-plotutils_LDADD =
-plotutils_LDFLAGS = -lplotter
+RandomDistributionTestSuite_SOURCES = RandomDistributionTestSuite.cpp
+RandomDistributionTestSuite_CXXFLAGS = $(BOOST_CFLAGS) \
+	-DBOOST_TEST_MAIN -DBOOST_TEST_DYN_LINK
+RandomDistributionTestSuite_LDADD =
+RandomDistributionTestSuite_LDFLAGS = \
+	$(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
