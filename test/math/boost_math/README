@@ -1,0 +1,10 @@
+
+# Details are given on the aknowledgement page of Boost.Math:
+galeon http://www.boost.org/doc/libs/1_46_1/libs/math/doc/sf_and_dist/html/math_toolkit/status/credits.html
+# Google Summer of Code (GSoC) for Boost in 2007:
+galeon http://code.google.com/p/google-summer-of-code-2007-boost/
+# Then, click on the "Downloads" links
+galeon http://code.google.com/p/google-summer-of-code-2007-boost/downloads/list
+# And download Jacob Robert Voytko's work:
+wget http://google-summer-of-code-2007-boost.googlecode.com/files/jacobrobert_voytko.tar.bz2
+
