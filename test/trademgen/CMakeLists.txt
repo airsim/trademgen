@@ -1,0 +1,25 @@
+#
+# TraDemGen Tests
+#
+if (Boost_FOUND)
+
+  # CMake macro (defined in config/add_test_suite.cmake)
+  include (add_test_suite)
+
+  enable_testing() 
+
+  # * TraDemGen Test Suite
+  file (GLOB trademgentest_SOURCES *.cpp)
+  add_test_suite (TrademgenTest "${trademgentest_SOURCES}"
+    ${TRADEMGEN_LIB_TARGET})
+
+  # * Next test suite
+  # ...
+
+  # Don't forget to add the test suite to the DEPENDS argument list
+  add_custom_target (
+	check
+    COMMAND ${CMAKE_CTEST_COMMAND}
+    DEPENDS TrademgenTest)
+
+endif()

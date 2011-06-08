@@ -1,0 +1,15 @@
+#
+include_directories (BEFORE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}) 
+
+# Required libraries
+set (CMAKE_REQUIRED_LIBRARIES ${Boost_LIBRARIES} ${MYSQL_LIBRARIES}
+  ${SOCI_LIBRARIES} ${SOCIMYSQL_LIBRARIES})
+
+# Assembling
+add_executable (${PROJECT_NAME} ${PROJECT_NAME}.cpp)
+target_link_libraries (${PROJECT_NAME} ${TRADEMGEN_LIB_TARGET}
+  ${TRADEMGEN_UICL_LIB_TARGET} ${CMAKE_REQUIRED_LIBRARIES})
+
+# Install binaries
+install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
