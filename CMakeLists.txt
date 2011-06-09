@@ -45,10 +45,8 @@ endif()
 # Library target. It is specified here because both the stair (for the library
 # target) and batches (for the binary target) sub-directories need it.
 set (TRADEMGEN_LIB_TARGET ${PROJECT_NAME}lib)
-set (TRADEMGEN_UICL_LIB_TARGET ${PROJECT_NAME}uicllib)
 # Library names
 set (TRADEMGEN_LIB_NAME ${PROJECT_NAME})
-set (TRADEMGEN_UICL_LIB_NAME ${PROJECT_NAME}uicl)
 
 ##
 # SCM (Git)
@@ -119,11 +117,20 @@ include_directories (BEFORE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 ##
 # Dependencies
+#
 # ~~~~~~~~~~ BOOST ~~~~~~~~~~
+#
+# Note: ${Boost_DATE_TIME_LIBRARY} and ${Boost_PROGRAM_OPTIONS_LIBRARY}
+# are already set by ${SOCIMYSQL_LIBRARIES} and/or ${SOCI_LIBRARIES}.
+#
 find_package (Boost 1.44 REQUIRED COMPONENTS program_options date_time 
   iostreams serialization filesystem unit_test_framework)
 if (Boost_FOUND)
   include_directories (${Boost_INCLUDE_DIRS})
+  set (BOOST_LIBS_FOR_LIB ${Boost_IOSTREAMS_LIBRARY}
+	${Boost_SERIALIZATION_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
+  set (BOOST_LIBS_FOR_BIN "")
+  set (BOOST_LIBS_FOR_TEST ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
 
 # ~~~~~~~~~~ MySQL ~~~~~~~~~
@@ -145,6 +152,13 @@ endif()
 # ~~~~~~~~~~ MySQL ~~~~~~~~~
 find_package (Doxygen REQUIRED)
 
+# ~~~~~~~~~~ StdAir ~~~~~~~~~
+find_package (StdAir REQUIRED HINTS /home/dan/dev/deliveries/stdair-99.99.99)
+#if (STDAIR_FOUND)
+include_directories (${STDAIR_INCLUDE_DIRS})
+#endif()
+
+
 ##
 # Subdirs
 add_subdirectory (${PROJECT_NAME})
@@ -160,7 +174,7 @@ add_custom_target (dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 # Display status message for important variables
 message (STATUS)
-message (STATUS "-------------------------------------------------------------")
+message (STATUS "=============================================================")
 message (STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 message (STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 message (STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
@@ -177,8 +191,32 @@ message (STATUS "CPACK_DEBIAN_PACKAGE_DEPENDS = ${CPACK_DEBIAN_PACKAGE_DEPENDS}"
 message (STATUS "CPACK_SOURCE_GENERATOR = ${CPACK_SOURCE_GENERATOR}")
 message (STATUS "CPACK_SOURCE_PACKAGE_FILE_NAME = ${CPACK_SOURCE_PACKAGE_FILE_NAME}")
 message (STATUS)
+message (STATUS "External libraries:")
+message (STATUS "-------------------")
+message (STATUS "* Boost:")
+message (STATUS "  - Boost_INCLUDE_DIRS ........ : ${Boost_INCLUDE_DIRS}")
+message (STATUS "  - BOOST_LIBS_FOR_LIB ........ : ${BOOST_LIBS_FOR_LIB}")
+message (STATUS "  - BOOST_LIBS_FOR_BIN ........ : ${BOOST_LIBS_FOR_BIN}")
+message (STATUS "  - BOOST_LIBS_FOR_TEST ....... : ${BOOST_LIBS_FOR_TEST}")
+message (STATUS)
+message (STATUS "* MySQL:")
+message (STATUS "  - MYSQL_INCLUDE_DIR ......... : ${MYSQL_INCLUDE_DIR}")
+message (STATUS "  - MYSQL_LIBRARIES ........... : ${MYSQL_LIBRARIES}")
+message (STATUS)
+message (STATUS "* SOCI:")
+message (STATUS "  - SOCI_INCLUDE_DIR .......... : ${SOCI_INCLUDE_DIR}")
+message (STATUS "  - SOCIMYSQL_INCLUDE_DIR ..... : ${SOCIMYSQL_INCLUDE_DIR}")
+message (STATUS "  - SOCI_LIBRARIES ............ : ${SOCI_LIBRARIES}")
+message (STATUS "  - SOCIMYSQL_LIBRARIES ....... : ${SOCIMYSQL_LIBRARIES}")
+message (STATUS)
+message (STATUS "* StdAir:")
+message (STATUS "  - STDAIR_INCLUDE_DIRS ....... : ${STDAIR_INCLUDE_DIRS}")
+message (STATUS "  - STDAIR_LIBRARY_DIRS ....... : ${STDAIR_LIBRARY_DIRS}")
+message (STATUS "  - STDAIR_LIBRARIES .......... : ${STDAIR_LIBRARIES}")
+message (STATUS "  - STDAIR_EXECUTABLE ......... : ${STDAIR_EXECUTABLE}")
+message (STATUS)
 message (STATUS "Change a value with: cmake -D<Variable>=<Value>" )
-message (STATUS "-------------------------------------------------------------")
+message (STATUS "=============================================================")
 message (STATUS)
 
 # Force some variables that could be defined in the command line to be

@@ -30,7 +30,7 @@ add_library (${TRADEMGEN_LIB_TARGET} SHARED ${trademgenlib_SOURCES})
 # Dependencies on other libraries (Boost, MySQL, SOCI)
 target_link_libraries (${TRADEMGEN_LIB_TARGET} 
   ${Boost_LIBRARIES} ${MYSQL_LIBRARIES}
-  ${SOCI_LIBRARIES} ${SOCIMYSQL_LIBRARIES})
+  ${SOCI_LIBRARIES} ${SOCIMYSQL_LIBRARIES} ${STDAIR_LIBRARIES})
 add_dependencies (${TRADEMGEN_LIB_TARGET} cfg_hdr)
 # Filename and SONAME
 if (WIN32)

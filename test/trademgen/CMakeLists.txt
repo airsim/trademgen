@@ -9,7 +9,8 @@ if (Boost_FOUND)
   enable_testing() 
 
   # * TraDemGen Test Suite
-  file (GLOB trademgentest_SOURCES *.cpp)
+  #file (GLOB trademgentest_SOURCES *.cpp)
+  set (trademgentest_SOURCES DemandGenerationTestSuite.cpp)
   add_test_suite (TrademgenTest "${trademgentest_SOURCES}"
     ${TRADEMGEN_LIB_TARGET})
 
