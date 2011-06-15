@@ -1,5 +1,5 @@
 #
-# TraDemGen Tests
+# Sequential generation tests for TraDemGen
 #
 if (Boost_FOUND)
 
@@ -9,10 +9,10 @@ if (Boost_FOUND)
   enable_testing() 
 
   # * TraDemGen Test Suite
-  #file (GLOB trademgentest_SOURCES *.cpp)
-  set (TEST_TARGET TrademgenTest)
-  set (trademgentest_SOURCES DemandGenerationTestSuite.cpp)
-  add_test_suite (${TEST_TARGET} "${trademgentest_SOURCES}"
+  #file (GLOB randomdistributiontest_SOURCES *.cpp)
+  set (TEST_TARGET RandomDistributionTest)
+  set (randomdistributiontest_SOURCES RandomDistributionTestSuite.cpp)
+  add_test_suite (${TEST_TARGET} "${randomdistributiontest_SOURCES}"
     ${TRADEMGEN_LIB_TARGET} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 
   # * Next test suite

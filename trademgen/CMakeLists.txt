@@ -6,8 +6,8 @@ set (PROJ_PATH_CFG_SRC config/${PACKAGE}-paths.hpp.in)
 set (PROJ_PATH_CFG ${CMAKE_CURRENT_BINARY_DIR}/config/${PACKAGE}-paths.hpp)
 configure_file (${PROJ_PATH_CFG_SRC} ${PROJ_PATH_CFG} @ONLY)
 
-# Add the 'cfg_hdr' target, depending on the converted header
-add_custom_target (cfg_hdr ALL DEPENDS ${PROJ_PATH_CFG})
+# Add the 'hdr_cfg' target, depending on the converted header
+add_custom_target (hdr_cfg ALL DEPENDS ${PROJ_PATH_CFG})
 
 
 ##
@@ -29,9 +29,9 @@ file (GLOB trademgenlib_HEADERS *.hpp)
 add_library (${TRADEMGEN_LIB_TARGET} SHARED ${trademgenlib_SOURCES})
 # Dependencies on other libraries (Boost, MySQL, SOCI)
 target_link_libraries (${TRADEMGEN_LIB_TARGET} 
-  ${Boost_LIBRARIES} ${MYSQL_LIBRARIES}
+  ${BOOST_LIBS_FOR_LIB} ${MYSQL_LIBRARIES}
   ${SOCI_LIBRARIES} ${SOCIMYSQL_LIBRARIES} ${STDAIR_LIBRARIES})
-add_dependencies (${TRADEMGEN_LIB_TARGET} cfg_hdr)
+add_dependencies (${TRADEMGEN_LIB_TARGET} hdr_cfg)
 # Filename and SONAME
 if (WIN32)
   set_target_properties (${TRADEMGEN_LIB_TARGET} PROPERTIES 

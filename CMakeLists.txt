@@ -153,10 +153,11 @@ endif()
 find_package (Doxygen REQUIRED)
 
 # ~~~~~~~~~~ StdAir ~~~~~~~~~
-find_package (StdAir REQUIRED HINTS /home/dan/dev/deliveries/stdair-99.99.99)
-#if (STDAIR_FOUND)
+find_package (StdAir REQUIRED
+  HINTS /home/localoriuser/dev/deliveries/stdair-99.99.99)
+if (StdAir_FOUND)
 include_directories (${STDAIR_INCLUDE_DIRS})
-#endif()
+endif()
 
 
 ##

@@ -16,8 +16,12 @@
 // Boost Accumulators
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
+// Boost Empirical distribution function
+//#include "../math/boost_math/empirical_distribution/frequency.hpp"
 // Boost Unit Test Framework (UTF)
-#define BOOST_TEST_MODULE TraDemGenTest
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MAIN
+#define BOOST_TEST_MODULE RandomDistributionTest
 #include <boost/test/unit_test.hpp>
 
 // using namespace boost;
@@ -25,7 +29,7 @@ namespace ba = boost::accumulators;
 namespace boost_utf = boost::unit_test;
 
 // (Boost) Unit Test XML Report
-std::ofstream utfReportStream ("SimulateTestSuite_utfresults.xml");
+std::ofstream utfReportStream ("RandomDistributionTestSuite_utfresults.xml");
 
 /**
  * Configuration for the Boost Unit Test Framework (UTF)
