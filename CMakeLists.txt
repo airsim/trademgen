@@ -16,9 +16,9 @@ set (PACKAGE_NAME "${PACKAGE_NAME_TMP}" CACHE INTERNAL "Description")
 
 ##
 # Version
-set (trademgen_VERSION_MAJOR 0)
-set (trademgen_VERSION_MINOR 33)
-set (trademgen_VERSION_PATCH 0)
+set (trademgen_VERSION_MAJOR 99)
+set (trademgen_VERSION_MINOR 99)
+set (trademgen_VERSION_PATCH 99)
 set (trademgen_VERSION "${trademgen_VERSION_MAJOR}.${trademgen_VERSION_MINOR}.${trademgen_VERSION_PATCH}")
 set (PACKAGE_VERSION "${trademgen_VERSION}")
 # Note that the soname could be different from the version. The soname
@@ -154,7 +154,7 @@ find_package (Doxygen REQUIRED)
 
 # ~~~~~~~~~~ StdAir ~~~~~~~~~
 find_package (StdAir REQUIRED
-  HINTS /home/localoriuser/dev/deliveries/stdair-99.99.99)
+  HINTS /home/localoriuser/dev/deliveries/stdair-stable)
 if (StdAir_FOUND)
 include_directories (${STDAIR_INCLUDE_DIRS})
 endif()
