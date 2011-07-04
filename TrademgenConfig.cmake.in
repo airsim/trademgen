@@ -1,17 +1,17 @@
 #
-# Config file for the StdAir package. It defines the following variables:
-#  STDAIR_INCLUDE_DIRS - include directories for StdAir
-#  STDAIR_LIBRARY_DIRS - library directories for StdAir (normally not used!)
-#  STDAIR_LIBRARIES    - libraries to link against
-#  STDAIR_EXECUTABLE   - the stdair executable
+# Config file for the TraDemGen package. It defines the following variables:
+#  TRADEMGEN_INCLUDE_DIRS - include directories for TraDemGen
+#  TRADEMGEN_LIBRARY_DIRS - library directories for TraDemGen (normally not used!)
+#  TRADEMGEN_LIBRARIES    - libraries to link against
+#  TRADEMGEN_EXECUTABLE   - the trademgen executable
 
 # Tell the user project where to find our headers and libraries
-set (STDAIR_INCLUDE_DIRS "@STDAIR_INCLUDE_DIRS@")
-set (STDAIR_LIBRARY_DIRS "@STDAIR_LIB_DIR@")
+set (TRADEMGEN_INCLUDE_DIRS "@TRADEMGEN_INCLUDE_DIRS@")
+set (TRADEMGEN_LIBRARY_DIRS "@TRADEMGEN_LIB_DIR@")
 
 # Our library dependencies (contains definitions for IMPORTED targets)
-include ("@STDAIR_CMAKE_DIR@/StdAirLibraryDepends.cmake")
+include ("@TRADEMGEN_CMAKE_DIR@/TrademgenLibraryDepends.cmake")
 
-# These are IMPORTED targets created by StdAirLibraryDepends.cmake
-set (STDAIR_LIBRARIES stdairlib stdairuicllib)
-set (STDAIR_EXECUTABLE stdair)
+# These are IMPORTED targets created by TrademgenLibraryDepends.cmake
+set (TRADEMGEN_LIBRARIES trademgenlib trademgenuicllib)
+set (TRADEMGEN_EXECUTABLE trademgen)
