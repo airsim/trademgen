@@ -12,7 +12,8 @@ then
 fi
 
 #
-rm -f config.cache acconfig.h
+rm -f configure config.cache acconfig.h aclocal.m4
+rm -rf autom4te.cache
 
 #
 echo "- autoreconf."            && \
@@ -34,4 +35,4 @@ echo "make && make doc && make install" && \
 echo "" && \
 exit 0
 
-#echo "- configure."     && ./configure "$@" && exit 0
+#echo "- configure." && ./configure "$@" && exit 0

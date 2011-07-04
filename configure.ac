@@ -324,8 +324,9 @@ AC_CONFIG_FILES(
 	trademgen/dbadaptor/Makefile
 	trademgen/command/Makefile
 	trademgen/service/Makefile
-	trademgen/core/Makefile
 	trademgen/config/Makefile
+	trademgen/config/trademgen-paths.hpp
+	trademgen/core/Makefile
 	trademgen/batches/Makefile
 	trademgen/python/Makefile
 	test/Makefile
