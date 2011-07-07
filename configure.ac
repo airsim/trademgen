@@ -74,12 +74,14 @@ AC_ARG_ENABLE(exceptions,
                          [Define if you want exceptions handling])])
 test "x$enable_exceptions" != xno && enable_exceptions=yes
 
-# Set the data directory for TraDemGen
-pkgdatadir="${datadir}/trademgen"
-AC_SUBST(pkgdatadir)
-# Set the directory for data samples exported by TraDemGen
-sampledir="${pkgdatadir}/samples"
-AC_SUBST(sampledir)
+# Set the LIB_SUFFIX variable, depending on the x86 architecture
+# (either 32 or 64 bits)
+#if test -d /usr/lib64; then
+#  LIB_SUFFIX="64"
+#else
+#  LIB_SUFFIX=""
+#fi
+AC_SUBST(LIB_SUFFIX)
 
 # Check for info pages
 AC_ARG_ENABLE(info-doc, 
@@ -161,7 +163,10 @@ AX_SOCI([3.0])
 # -----------------------------------------------------------------------------
 # Support for StdAir (): http://sf.net/projects/stdair
 # -----------------------------------------------------------------------------
-AM_PATH_STDAIR([0.12.0])
+AM_PATH_STDAIR([0.34.0])
+# Set the directory for data samples exported by StdAir
+sampledir="${STDAIR_SAMPLE_DIR}"
+AC_SUBST(sampledir)
 
 # -------------------------------------------------------------------
 # Support for documentation
