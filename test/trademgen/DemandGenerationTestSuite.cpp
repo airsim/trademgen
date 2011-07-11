@@ -214,8 +214,9 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
     const stdair::Count_T& lExpectedTotalNbOfEvents = lNbOfEventsPair.second;
 
     // Assess whether more events should be generated for that demand stream
-    const bool stillHavingRequestsToBeGenerated = 
-      trademgenService.stillHavingRequestsToBeGenerated (lDemandStreamKey, lPPS);
+    const bool stillHavingRequestsToBeGenerated = trademgenService.
+      stillHavingRequestsToBeGenerated (lDemandStreamKey, lPPS,
+                                        lGenerateDemandWithStatisticOrder);
 
     /**
        The first time an event is popped from the queue for that demand stream,
