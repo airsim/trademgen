@@ -107,10 +107,16 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
                          value_type ("SIN-HND 2010-Feb-08 Y",
                                      NbOfEventsPair_T (1, 10)));
   lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                         value_type ("SIN-HND 2010-Feb-09 Y",
+                                     NbOfEventsPair_T (1, 10)));
+  lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
                          value_type ("SIN-BKK 2010-Feb-08 Y",
                                      NbOfEventsPair_T (1, 10)));
-  // Total number of events, for all the demand streams: 20 (10 + 10)
-  stdair::Count_T lRefExpectedNbOfEvents (20);
+  lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                         value_type ("SIN-BKK 2010-Feb-09 Y",
+                                     NbOfEventsPair_T (1, 10)));
+  // Total number of events, for all the demand streams: 3
+  stdair::Count_T lRefExpectedNbOfEvents (40);
   
   // Retrieve the expected (mean value of the) number of events to be
   // generated
@@ -137,7 +143,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
    *
    * \note For that demand (CSV) file (i.e., demand01.csv), the
    *       expected and actual numbers of events to be generated are
-   *       the same (and equal to 20).
+   *       the same (and equal to 40).
    */
   const stdair::Count_T& lActualNbOfEventsToBeGenerated =
     trademgenService.generateFirstRequests(lGenerateDemandWithStatisticOrder);
@@ -147,8 +153,8 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
                     << lExpectedNbOfEventsToBeGenerated << ", actual: "
                     << lActualNbOfEventsToBeGenerated);
   
-  // Total number of events, for all the demand streams: 8 (2 + 6)
-  const stdair::Count_T lRefActualNbOfEvents (8);
+  // Total number of events, for all the demand streams: 40
+  const stdair::Count_T lRefActualNbOfEvents (40);
   BOOST_CHECK_EQUAL (lRefActualNbOfEvents, lActualNbOfEventsToBeGenerated);
   
   BOOST_CHECK_MESSAGE (lRefActualNbOfEvents == lActualNbOfEventsToBeGenerated,
