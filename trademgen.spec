@@ -88,6 +88,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/%{name}
+%{_bindir}/%{name}_with_db
+%{_bindir}/py%{name}.py
 %{_libdir}/lib*.so.*
 %{_mandir}/man1/%{name}.1.*
 
@@ -96,6 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}
 %{_bindir}/%{name}-config
 %{_libdir}/lib%{name}.so
+%{_libdir}/libpy%{name}.so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_datadir}/aclocal/%{name}.m4
 %{_datadir}/%{name}/CMake
