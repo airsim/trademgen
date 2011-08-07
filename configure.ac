@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------
 AC_PREREQ(2.59)
 AC_COPYRIGHT([Copyright (C) 2007-2011 Denis Arnaud <denis_arnaud@users.sourceforge.net>])
-AC_INIT([TRADEMGEN],[99.99.99],[denis_arnaud@users.sourceforge.net],[trademgen])
+AC_INIT([TRADEMGEN],[0.1.0],[denis_arnaud@users.sourceforge.net],[trademgen])
 AC_CONFIG_HEADER([trademgen/config.h])
 AC_CONFIG_SRCDIR([trademgen/basic/BasConst.cpp])
 AC_CONFIG_AUX_DIR([config])
@@ -16,7 +16,7 @@ PACKAGE_PRETTY_NAME="TraDemGen"
 AC_SUBST(PACKAGE_PRETTY_NAME)
 
 # Shared library versioning
-GENERIC_LIBRARY_VERSION="99:99:99"
+GENERIC_LIBRARY_VERSION="0:1:0"
 #                        | | |
 #                 +------+ | +---+
 #                 |        |     |
