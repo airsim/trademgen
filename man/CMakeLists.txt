@@ -23,7 +23,8 @@ configure_file (${DOXYGEN_CFG3_SRC} ${DOXYGEN_CFG3} @ONLY)
 
 ## Manual page sources
 # Section 1 (general commands)
-set (man1_SOURCES trademgen.doc trademgen-config.doc)
+set (man1_SOURCES trademgen-config.doc pytrademgen.doc
+  trademgen.doc trademgen_with_db.doc)
 # Section 3 (development)
 set (man3_SOURCES trademgen-library.doc)
 
