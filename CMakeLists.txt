@@ -8,13 +8,14 @@ include (config/project_config_embeddable.cmake)
 ##
 # Project info
 set_project_names (trademgen TraDemGen)
+set_project_brief ("C++ Simulated Travel Demand Generation Library")
 set_project_versions (99 99 99)
 
 ##
 # Project options
 # The parameters are:
 #  * whether or not the documentation must be built and installed
-set_project_options (off)
+set_project_options (on)
 
 
 #####################################
@@ -22,7 +23,6 @@ set_project_options (off)
 #####################################
 #
 packaging_init (${PROJECT_NAME})
-packaging_set_description ("C++ Simulated Travel Demand Generation Library")
 packaging_set_summary ("${PROJECT_NAME} aims at providing a clean API, and the corresponding C++ implementation, able to generate demand for travel solutions (e.g., from JFK to PEK on 25-05-2009) according to characteristics (e.g., Willingness-To-Pay, preferred airline, etc).
 
 ${PROJECT_NAME} makes an extensive use of existing open-source libraries for

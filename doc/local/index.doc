@@ -1,10 +1,10 @@
 /*!
-\mainpage StdAir Documentation
+\mainpage TraDemGen Documentation
 
 \htmlonly
 <!-- start of main block -->
 <div style="width: 100%;">
-<!-- start of left margin -->
+<!-- start of right margin -->
 <div style="float:right; width:200px; background-color: #eeeeff; 
      border: 1px solid #b0b0b0; margin: 0 0 10px 20px; padding: 10px; 
      font-size: 90%;">
@@ -17,25 +17,28 @@
 - \ref linking
 - \ref users_guide
 - \ref tutorials
-- \ref verification
 - \ref copyright
 - \ref help_wanted
 - \ref howto_release
 - \ref authors
 
-\section at_sourceforge StdAir at SourceForge
-- <a href="http://sourceforge.net/projects/stdair/">Project page</a>
-- <a href="http://sourceforge.net/project/showfiles.php?group_id=267760">Download StdAir</a>
-- <a href="https://sourceforge.net/apps/trac/stdair/newticket">Open a ticket fora bug or feature</a>
-- <a href="http://sourceforge.net/mail/?group_id=267760">Mailing lists</a>
-- <a href="https://sourceforge.net/apps/phpbb/stdair/">Forums</a>
-  - <a href="https://sourceforge.net/apps/phpbb/stdair/viewforum.php?f=1">Discuss about Development issues</a>
-  - <a href="https://sourceforge.net/apps/phpbb/stdair/viewforum.php?f=2">Ask for Help</a>
-  - <a href="https://sourceforge.net/apps/phpbb/stdair/viewforum.php?f=3">Discuss StdAir</a>
+\section at_sourceforge TraDemGen at SourceForge
+- <a href="http://sourceforge.net/projects/trademgen/">Project page</a>
+- <a href="http://sourceforge.net/project/showfiles.php?group_id=264773">Download TraDemGen</a>
+- <a href="https://sourceforge.net/apps/trac/trademgen/newticket">Open a ticket for
+  a bug or feature</a>
+- <a href="http://sourceforge.net/mail/?group_id=264773">Mailing lists</a>
+- <a href="https://sourceforge.net/apps/phpbb/trademgen/">Forums</a>
+  - <a href="https://sourceforge.net/apps/phpbb/trademgen/viewforum.php?f=1">
+  Discuss about Development issues</a>
+  - <a href="https://sourceforge.net/apps/phpbb/trademgen/viewforum.php?f=2">Ask
+  for Help</a>
+  - <a href="https://sourceforge.net/apps/phpbb/trademgen/viewforum.php?f=3">
+  Discuss TraDemGen</a>
 
 
-\section development StdAir Development
-- <a href="http://stdair.git.sourceforge.net/git/gitweb.cgi?p=stdair/stdair;a=tree;h=refs/heads/trunk;hb=trunk">Git Repository</a> (Subversion is deprecated)
+\section development TraDemGen Development
+- <a href="http://trademgen.git.sourceforge.net/git/gitweb.cgi?p=trademgen/trademgen;a=tree;h=refs/heads/trunk;hb=trunk">Git Repository</a> (Subversion is deprecated)
 - \ref coding_rules
 - \ref documentation
 - \ref test
@@ -43,41 +46,62 @@
 
 \section external_libs External Libraries
 - <a href="http://www.boost.org">Boost (C++ STL extensions)</a>
+- <a href="http://www.python.org/">Python</a>
 - <a href="http://dev.mysql.com/">MySQL client</a>
 - <a href="http://soci.sourceforge.net/">SOCI (C++ DB API)</a>
 
+\section social_sponsorship Support TraDemGen
+\htmlonly
+<table width="100%">
+ <tr>
+  <td align="left" valign="middle">
+   <a href="http://twitter.com/share" class="twitter-share-button" data-count="none" data-via="denis_arnaud">Tweet</a>
+   <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+  </td>
+  <td align="right" valign="middle">
+   <g:plusone></g:plusone> 
+  </td>
+ </tr>
+</table>
+\endhtmlonly
 
 \htmlonly
 </div>
-<!-- end of left margin -->
+<!-- end of right margin -->
 \endhtmlonly
 
-\section about About StdAir
+\section about About TraDemGen
 
-StdAir is a C++ library of classes and functions modeling typical
-airline IT business objects. For instance, it is used by the C++
-Revenue Management Open Library project
-(http://sourceforge.net/projects/rmol/).
+TraDemGen aims at providing a clean API, and the corresponding C++
+implementation, able to generate demand for travel solutions (e.g.,
+from JFK to PEK on 25-05-2009) according to characteristics (e.g.,
+Willingness-To-Pay, preferred airline, etc). TraDemGen mainly targets
+simulation purposes. \ref N
 
-StdAir makes an extensive use of existing open-source libraries for
-increased functionality, speed and accuracy. In particular <a
-href="http://www.boost.org">Boost</a> (<em>C++ STL Extensions</em>) library is
-used.
+TraDemGen makes an extensive use of existing open-source libraries for
+increased functionality, speed and accuracy. In particular the
+<a href="http://www.boost.org">Boost</a> (<em>C++ Standard Extensions</em>)
+library is used.
 
-The StdAir library originates from the department of Operational
-Research and Innovation at <a
-href="http://www.amadeus.com">Amadeus</a>, Sophia Antipolis,
-France. StdAir is released under the terms of the <a
-href="http://www.gnu.org/licenses/lgpl.html">GNU Lesser General Public
-License</a> (LGPL) for you to enjoy.
+The TraDemGen library originates from the department of Operational Research
+and Innovation at <a href="http://www.amadeus.com">Amadeus</a>,
+Sophia Antipolis, France. TraDemGen is released under the terms of the
+<a href="http://www.gnu.org/licenses/lgpl-2.1.html">GNU Lesser General Public
+License</a> (LGPLv2.1) for you to enjoy.
 
-StdAir should work on
+TraDemGen should work on
 <a href="http://en.wikipedia.org/wiki/GNU/Linux">GNU/Linux</a>,
 <a href="http://www.sun.com/software/solaris/">Sun Solaris</a>,
 Microsoft Windows (with <a href="http://www.cygwin.com/">Cygwin</a>,
 <a href="http://www.mingw.org/">MinGW/MSYS</a>, or 
 <a href="http://msdn.microsoft.com/visualc/">Microsoft Visual C++ .NET</a>) and
 <a href="http://www.apple.com/macosx/">Mac OS X</a> operating systems.
+
+
+\note
+\anchor N
+(N) - The TraDemGen library is \b NOT intended, in any way, to be used by
+airlines for production systems.
 
 \htmlonly
 </div>

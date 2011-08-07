@@ -3,12 +3,12 @@
 
 \section doc_general General Rules
 
-All classes in StdAir should be properly documented with Doxygen
+All classes in TraDemGen should be properly documented with Doxygen
 comments in include (<tt>.hpp</tt>) files. Source (<tt>.cpp</tt>)
 files should be documented according to a normal standard for well
 documented C++ code.
 
-An example of how the interface of a class shall be documented in StdAir
+An example of how the interface of a class shall be documented in TraDemGen
 is shown here:
 
 \verbatim
@@ -81,9 +81,9 @@ Doxygen's \c \\file, \c \\brief and \c \\author tags, \c \$Date\$ and
  *
  * -------------------------------------------------------------------------
  *
- * StdAir - C++ Standard Airline IT Object Library
+ * TraDemGen - C++ Simulated Revenue Accounting (RAC) System Library
  *
- * Copyright (C) 2009-2010  (\see authors file for a list of contributors)
+ * Copyright (C) 2009-2011  (\see authors file for a list of contributors)
  *
  * \see copyright file for license information
  *

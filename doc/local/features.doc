@@ -1,29 +1,54 @@
 /*!
 \page features Main features
 
-A short list of the main features of StdAir is given below sorted in different
-categories. Many more features and functions exist and for these we refer to
-the reference documentation.
+A short list of the main features of TraDemgEn is given below sorted
+in different categories. Many more features and functions exist and
+for these we refer to the reference documentation.
+
+\section ft_demand_generation Demand generation
+
+The demand can be generated thanks to two relatively advanced pieces
+of algorithm, both following a sequential principle. That is, the <a
+href="http://en.wikipedia.org/wiki/Event_(probability_theory)">events</a>
+(booking requests) are generated one after the other, sequentially,
+rather than being generated all at once at the beginning of the
+process (e.g., a simulation).
+
+The two sequential methods are:
+- 'Intuitive' method. The booking period is sliced in <a
+  href="http://en.wikipedia.org/wiki/Interval_(mathematics)">intervals</a>,
+  where the arrival rate of events (booking requests) is known for
+  each of those intervals, say \f$\lambda_i\f$. The inter-arrival
+  process then follows an <a
+  href="http://en.wikipedia.org/wiki/Exponential_distribution">exponential
+  law</a>. That is, the final number of booking requests follows a <a
+  href="http://en.wikipedia.org/wiki/Non-homogeneous_Poisson_process">Non
+  homogeneous Poisson distribution</a>. With that method, the <a
+  href="http://en.wikipedia.org/wiki/Variance">variance</a> of that <a
+  href="http://en.wikipedia.org/wiki/Probability_distribution">distribution</a>
+  is therefore equal to the <a
+  href="http://en.wikipedia.org/wiki/Mean">mean</a>.
+- 'Advanced' method. The process uses <a
+  href="http://en.wikipedia.org/wiki/Order_statistic">order
+  statistics</a> in order to mimic the behaviour of <a
+  href="http://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform
+  distributions</a> projected onto the know arrival pattern of
+  events. With that method, the final number of booking requests is
+  first drawn, following any probability distribution (e.g., <a
+  href="http://en.wikipedia.org/wiki/Normal_distribution">normal</a>,
+  <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma</a>,
+  <a href="http://en.wikipedia.org/wiki/Beta_distribution">Beta</a> or
+  even Weibull law) with any required standard deviation. Then, each
+  booking request is drawn in sequence:
+ - according to a mere <a
+   href="http://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform
+   distribution</a>,
+ - and projected onto the known booking arrival pattern.
 
 
-\section airline_it_bom Standard Airline IT Business Object Model (BOM)
-- (Airline) Network-related classes:
-  - Network, ReachableUniverse
-- (Air) Travel-related classes:
-  - TravelSolution, OriginDestination, 
-- (Airline) Inventory-related classes:
-  - Inventory, FlightDate, SegmentDate, SegmentCabin, BookingClass, 
-    LegDate, LegCabin, 
-    Bucket
-- (Airline) Schedule-related classes:
-  - FlightPeriod, SegmentPeriod, LegPeriod
-- (Simulated) Passenger-related demand classes:
-  - DemandStream, BookingRequest
-- (Air) Price-related classes:
-  - YieldStore
+\section ft_others Other features
 
-\section architecture Architecture of the StdAir library
-- Separate structure and content classes
-- <a href="http://www.boost.org/doc/libs/1_43_0/libs/fusion/doc/html/index.html">Boost.Fusion</a>
+- CSV input file parsing
+- Memory handling
 
 */
