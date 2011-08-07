@@ -1,0 +1,59 @@
+/*!
+\page trademgen
+      C++ Simulated Travel Demand Generation Library
+
+\section sec_synopsis SYNOPSIS
+
+<b>trademgen</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
+
+\section sec_description DESCRIPTION
+
+\e trademgen is a small program showing how to use the TraDemGen library.
+
+\e trademgen accepts the following options:
+
+ \b --prefix<br>
+    Show the TraDemGen installation prefix.
+
+ \b -v, \b --version<br>
+    Print the currently installed version of TraDemGen on the standard output.
+
+ \b -h, \b --help<br>
+    Produce that message and show usage.
+
+ \b -b, \b --builtin<br>
+    The sample BOM tree can be either built-in or parsed from an input
+    file.  That latter must then be given with the -i/--input option
+
+ \b -i, \b --input <path-to-input-file><br>
+    Path (absolute or relative) of the (CSV) input file specifying
+    the demand rule sets.<br>
+
+ \b -o, \b --output <path-to-output-file><br>
+    Path (absolute or relative) of the (CSV) output file for the
+    generated booking requests.<br>
+
+ \b -l, \b --log <path-to-output-log-file><br>
+    Path (absolute or relative) of the output log file.
+
+See the output of the <tt>`trademgen --help'</tt> command for default options.
+
+
+\section sec_see_also SEE ALSO
+\b trademgen-config(1), \b trademgen-library(3)
+
+
+\section sec_support SUPPORT
+
+Please report any bugs to https://sourceforge.net/apps/trac/trademgen/report
+
+
+\section sec_copyright COPYRIGHT
+
+Copyright © 2009-2011 Denis Arnaud
+
+See the COPYING file for more information on the (LGPLv2+) license, or
+directly on Internet:<br>
+http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+*/

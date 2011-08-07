@@ -71,6 +71,10 @@ if (${INSTALL_DOC} STREQUAL "ON")
   add_subdirectory (doc)
 endif (${INSTALL_DOC} STREQUAL "ON")
 
+##
+# Subdirs
+add_subdirectory (man)
+
 
 #####################################
 ##              Tests              ##
