@@ -334,6 +334,7 @@ AC_CONFIG_FILES(
 	trademgen/core/Makefile
 	trademgen/batches/Makefile
 	trademgen/python/Makefile
+	trademgen/python/pytrademgen.py
 	test/Makefile
 	test/sequential_generation/Makefile
 	test/trademgen/Makefile
