@@ -89,9 +89,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_bindir}/%{name}
 %{_bindir}/%{name}_with_db
-%{_bindir}/py%{name}.py
+%{_bindir}/py%{name}
 %{_libdir}/lib*.so.*
 %{_mandir}/man1/%{name}.1.*
+%{_mandir}/man1/%{name}_with_db.1.*
+%{_mandir}/man1/py%{name}.1.*
 
 %files devel
 %defattr(-,root,root,-)
