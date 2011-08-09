@@ -138,10 +138,8 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
                        << std::floor (lExpectedNbOfEventsToBeGenerated)
                        << "). Reference value: " << lRefExpectedNbOfEvents);
 
-  // Generate the date time request with the statistic order.
-  stdair::DateGenerationMethod lDateGenerationMethod ('S');
-  stdair::DateGenerationMethod::EN_DateGenerationMethod lENDateGenerationMethod =
-    lDateGenerationMethod.getMethod();
+  // Generate the date time of the requests with the statistic order method.
+  stdair::DateGenerationMethod lDateGenerationMethod (stdair::DateGenerationMethod::STA_ORD);
 
   /**
    * Initialisation step.
@@ -153,7 +151,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
    *       the same (and equal to 40).
    */
   const stdair::Count_T& lActualNbOfEventsToBeGenerated =
-    trademgenService.generateFirstRequests(lENDateGenerationMethod);
+    trademgenService.generateFirstRequests(lDateGenerationMethod);
 
   // DEBUG
   STDAIR_LOG_DEBUG ("Expected number of events: "
@@ -229,7 +227,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
     // Assess whether more events should be generated for that demand stream
     const bool stillHavingRequestsToBeGenerated = trademgenService.
       stillHavingRequestsToBeGenerated (lDemandStreamKey, lPPS,
-                                        lENDateGenerationMethod);
+                                        lDateGenerationMethod);
 
     /**
        The first time an event is popped from the queue for that demand stream,
@@ -268,7 +266,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
     if (stillHavingRequestsToBeGenerated == true) {
       const stdair::BookingRequestPtr_T lNextRequest_ptr =
         trademgenService.generateNextRequest (lDemandStreamKey,
-                                              lENDateGenerationMethod);
+                                              lDateGenerationMethod);
       assert (lNextRequest_ptr != NULL);
 
       /**
