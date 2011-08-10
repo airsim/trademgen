@@ -65,13 +65,13 @@ const stdair::Filename_T K_TRADEMGEN_DEFAULT_INPUT_FILENAME (STDAIR_SAMPLE_DIR
 const stdair::Filename_T K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME ("request.csv");
 
 /**
- * Default date-time request generation method: Poisson Process.
+ * Default demand generation method: Poisson Process.
  */
 const stdair::DemandGenerationMethod
 K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD (stdair::DemandGenerationMethod::POI_PRO);
 
 /**
- * Default date-time request generation method name: 'P' for Poisson Process.
+ * Default demand generation method name: 'P' for Poisson Process.
  */
 const char K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD_CHAR =
   K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD.getMethodAsChar();
@@ -134,7 +134,7 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
                        stdair::Filename_T& ioLogFilename,
                        stdair::DemandGenerationMethod& ioDemandGenerationMethod) {
 
-  // Date-time request generation method as a single char (e.g., 'P' or 'S').
+  // Demand generation method as a single char (e.g., 'P' or 'S').
   char lDemandGenerationMethodChar;
 
   // Default for the built-in input
@@ -167,7 +167,7 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
      "Filepath for the logs")
     ("demandgeneration,G",
      boost::program_options::value< char >(&lDemandGenerationMethodChar)->default_value(K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD_CHAR),
-     "Method used to generate the date-time of the booking requests: Poisson Process (e.g., P) or Statistics Order (e.g., S)")
+     "Method used to generate the demand (i.e., the booking requests): Poisson Process (P) or Order Statistics (S)")
     ;
 
   // Hidden options, will be allowed both on command line and
