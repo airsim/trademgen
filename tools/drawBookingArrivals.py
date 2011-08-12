@@ -4,6 +4,7 @@ import sys
 import getopt
 from datetime import datetime, date, time, tzinfo
 import re
+import math
 import matplotlib.pyplot as plt
 
 #------------------------------------------------------------------------------	
@@ -156,22 +157,53 @@ def main():
         # DEBUG
         #print "BookingRequest[" + str(bkgIdx) + "]: ", bookingRequest,"\n"
 
+    # Calculate the colors
+    # Note that xFF == 256
+    nbOfStreams = len (OnDStatsHolder)
+    colorIncrementList = [0xFF / nbOfStreams, 0xFF / nbOfStreams, 
+                          0xFF / nbOfStreams]
+    colorIdxList = [0, 0, 0]
+    colorIdx = 0
+
+    #print "Color increments: " + str(colorIncrementList)
+
     # Browse through the (O&D, departure date) statistics
     for (OnDEntryKey, OnDEntryList) in OnDStatsHolder.iteritems():
         #
-        output_file.write ("[" + str(OnDEntryKey) + "] " + str(OnDEntryList)
-                           + "\n")
+        OnDEntryListRegular = [date.fromordinal(d).strftime ("%Y-%m-%d")
+                               for d in OnDEntryList]
+        output_file.write ("[" + str(OnDEntryKey) + "] " 
+                           + str(OnDEntryListRegular) + "\n")
         output_file.write ("[" + str(OnDEntryKey) + "] " 
                            + str(OnDStats[OnDEntryKey]) + "\n")
 
         # Plot with MatplotLib
         if plotFlag:
+            # Convert the decimal into the wanted hexadecimal
+            # (see, e.g., http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.plot)
+            colorIdxStr = re.sub("0x", "", hex(colorIdx)).zfill(6)
+            colorStr = "#" + colorIdxStr
+
+            #print "Color string: " + colorStr
+
             # Plot with solid line ('-') and blue ('b') circles ('o')
-            plt.plot_date (sorted(OnDEntryList), OnDStats[OnDEntryKey], 'b-o')
-            plt.show()
+            plt.plot_date (sorted(OnDEntryList), OnDStats[OnDEntryKey], 
+                           color=colorStr, linestyle='solid', marker='o')
+
+        # Increment each component separately
+        colorIdxList = [(x[0]+x[1])
+                        for x in zip(colorIdxList, colorIncrementList)]
+        # print ("colorIdxList: '" + str(colorIdxList) + "'")
+
+        # Recompose the global color number
+        colorIdx = int(colorIdxList[0])*0x010000 + int(math.sqrt(colorIdxList[1]))*0x0100 + int(math.log10(colorIdxList[2]))*0x01
 
     #
     output_file.write ("\n")
+
+    # Plot with MatplotLib
+    if plotFlag:
+        plt.show()
 
 #--------------------------------------------
 if __name__ == "__main__":
