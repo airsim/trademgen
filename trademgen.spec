@@ -3,7 +3,7 @@
 #
 Name:           trademgen
 Version:        0.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        C++ Simulated Travel Demand Generation Library
 
@@ -13,8 +13,8 @@ URL:            http://sourceforge.net/projects/%{name}/
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  cmake
-BuildRequires:  boost-devel, soci-mysql-devel,
+BuildRequires:  cmake, python-devel
+BuildRequires:  boost-devel, soci-mysql-devel, zeromq-devel, readline-devel
 BuildRequires:  stdair-devel
 
 
@@ -103,6 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpy%{name}.so
 %{_libdir}/pkgconfig/%{name}.pc
 %{_datadir}/aclocal/%{name}.m4
+%dir %{_datadir}/%{name}
 %{_datadir}/%{name}/CMake
 %{_mandir}/man1/%{name}-config.1.*
 %{_mandir}/man3/%{name}-library.3.*
@@ -114,5 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 19 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.0-2
+- Added missing packages needed by a scratch build
+
 * Sun Aug 07 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.0-1
 - First package
+
