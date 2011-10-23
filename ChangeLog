@@ -1,6 +1,0 @@
-
-	* Sun Aug 07 2011 Denis Arnaud <denis_arnaud at users dot sourceforge.net> 0.1.0
-	- First release. The demand rule sets are parsed either from a CSV file 
-	or from a built-in sample BOM tree. Then, TraDemGen generates booking
-	requests according to the given rule sets.
-	
