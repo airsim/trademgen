@@ -20,7 +20,9 @@
 //#include <boost/progress.hpp>
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
+#include <stdair/basic/BasConst_General.hpp>
 #include <stdair/basic/ProgressStatusSet.hpp>
+#include <stdair/basic/DemandGenerationMethod.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
@@ -37,7 +39,9 @@ namespace ba = boost::accumulators;
 // //////// Specific type definitions ///////
 typedef unsigned int NbOfRuns_T;
 
-/** Type definition to gather statistics. */
+/**
+ * Type definition to gather statistics.
+ */
 typedef ba::accumulator_set<double,
                             ba::stats<ba::tag::min, ba::tag::max,
                                       ba::tag::mean (ba::immediate),
@@ -45,28 +49,61 @@ typedef ba::accumulator_set<double,
                                       ba::tag::variance> > stat_acc_type;
 
 // //////// Constants //////
-/** Default name and location for the log file. */
+/**
+ * Default name and location for the log file.
+ */
 const stdair::Filename_T K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
 
-/** Default name and location for the (CSV) input file. */
+/**
+ * Default name and location for the (CSV) input file.
+ */
 const stdair::Filename_T K_TRADEMGEN_DEFAULT_INPUT_FILENAME (STDAIR_SAMPLE_DIR
                                                              "/demand01.csv");
 
-/** Default name and location for the (CSV) output file. */
+/**
+ * Default name and location for the (CSV) output file.
+ */
 const stdair::Filename_T K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME ("request.csv");
 
-/** Default number of random draws to be generated (best if over 100). */
+/**
+ * Default demand generation method: Poisson Process.
+ */
+const stdair::DemandGenerationMethod
+K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD =
+  stdair::DemandGenerationMethod::POI_PRO;
+
+/**
+ * Default demand generation method name: 'P' for Poisson Process.
+ */
+const char K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD_CHAR =
+  K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD.getMethodAsChar();
+
+/**
+ * Default random generation seed (e.g., 120765987).
+ */
+const stdair::RandomSeed_T K_TRADEMGEN_DEFAULT_RANDOM_SEED =
+  stdair::DEFAULT_RANDOM_SEED;
+
+/**
+ * Default number of random draws to be generated (best if over 100).
+ */
 const NbOfRuns_T K_TRADEMGEN_DEFAULT_RANDOM_DRAWS = 1;
 
-/** Default for the input type. It can be either built-in or provided by an
-    input file. That latter must then be given with the -i option. */
+/**
+ * Default for the input type. It can be either built-in or provided by an
+ * input file. That latter must then be given with the -i option.
+ */
 const bool K_TRADEMGEN_DEFAULT_BUILT_IN_INPUT = false;
 
-/** Early return status (so that it can be differentiated from an error). */
+/**
+ * Early return status (so that it can be differentiated from an error).
+ */
 const int K_TRADEMGEN_EARLY_RETURN_STATUS = 99;
 
 
-/** Display the statistics held by the dedicated accumulator. */
+/**
+ * Display the statistics held by the dedicated accumulator.
+ */
 void stat_display (std::ostream& oStream, const stat_acc_type& iStatAcc) {
 
   // Store current formatting flags of the output stream
@@ -95,12 +132,19 @@ template<class T> std::ostream& operator<< (std::ostream& os,
   return os;
 }
 
-/** Read and parse the command line options. */
+/**
+ * Read and parse the command line options.
+ */
 int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
+                       stdair::RandomSeed_T& ioRandomSeed,
                        NbOfRuns_T& ioRandomRuns,
                        stdair::Filename_T& ioInputFilename,
                        stdair::Filename_T& ioOutputFilename,
-                       stdair::Filename_T& ioLogFilename) {
+                       stdair::Filename_T& ioLogFilename,
+                       stdair::DemandGenerationMethod& ioDemandGenerationMethod) {
+
+  // Demand generation method as a single char (e.g., 'P' or 'S').
+  char lDemandGenerationMethodChar;
 
   // Default for the built-in input
   ioIsBuiltin = K_TRADEMGEN_DEFAULT_BUILT_IN_INPUT;
@@ -118,15 +162,21 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
   config.add_options()
     ("builtin,b",
      "The sample BOM tree can be either built-in or parsed from an input file. That latter must then be given with the -i/--input option")
+    ("seed,s",
+     boost::program_options::value<stdair::RandomSeed_T>(&ioRandomSeed)->default_value(K_TRADEMGEN_DEFAULT_RANDOM_SEED),
+     "Seed for the random generation")
     ("draws,d",
      boost::program_options::value<NbOfRuns_T>(&ioRandomRuns)->default_value(K_TRADEMGEN_DEFAULT_RANDOM_DRAWS), 
      "Number of runs for the demand generations")
+    ("demandgeneration,G",
+     boost::program_options::value< char >(&lDemandGenerationMethodChar)->default_value(K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD_CHAR),
+     "Method used to generate the demand (i.e., the booking requests): Poisson Process (P) or Order Statistics (S)")
     ("input,i",
      boost::program_options::value< std::string >(&ioInputFilename)->default_value(K_TRADEMGEN_DEFAULT_INPUT_FILENAME),
-     "(CVS) input file for the demand distributions")
+     "(CSV) input file for the demand distributions")
     ("output,o",
      boost::program_options::value< std::string >(&ioOutputFilename)->default_value(K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME),
-     "(CVS) output file for the generated requests")
+     "(CSV) output file for the generated requests")
     ("log,l",
      boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_TRADEMGEN_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
@@ -208,6 +258,16 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
     std::cout << "Log filename is: " << ioLogFilename << std::endl;
   }
 
+  if (vm.count ("demandgeneration")) {
+    ioDemandGenerationMethod =
+      stdair::DemandGenerationMethod (lDemandGenerationMethodChar);
+    std::cout << "Date-time request generation method is: "
+              << ioDemandGenerationMethod.describe() << std::endl;
+  }
+
+  //
+  std::cout << "The random generation seed is: " << ioRandomSeed << std::endl;
+
   //
   std::cout << "The number of runs is: " << ioRandomRuns << std::endl;
   
@@ -217,7 +277,8 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
 // /////////////////////////////////////////////////////////////////////////
 void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
                      const stdair::Filename_T& iOutputFilename,
-                     const NbOfRuns_T& iNbOfRuns) {
+                     const NbOfRuns_T& iNbOfRuns,
+                     const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
 
   // Open and clean the .csv output file
   std::ofstream output;
@@ -235,10 +296,7 @@ void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
   // Initialise the (Boost) progress display object
   boost::progress_display lProgressDisplay (lExpectedNbOfEventsToBeGenerated
                                             * iNbOfRuns);
-
-  // Choose the algorithm to generate booking requests dates.
-  const bool lGenerateDemandWithStatisticOrder = false;
-
+  
   for (NbOfRuns_T runIdx = 1; runIdx <= iNbOfRuns; ++runIdx) {
     // /////////////////////////////////////////////////////
     output << "Run number: " << runIdx << std::endl;
@@ -248,7 +306,7 @@ void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
        <br>Generate the first event for each demand stream.
     */
     const stdair::Count_T& lActualNbOfEventsToBeGenerated =
-      ioTrademgenService.generateFirstRequests(lGenerateDemandWithStatisticOrder);
+      ioTrademgenService.generateFirstRequests (iDemandGenerationMethod);
 
     // DEBUG
     STDAIR_LOG_DEBUG ("[" << runIdx << "] Expected: "
@@ -292,7 +350,7 @@ void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
       const bool stillHavingRequestsToBeGenerated = ioTrademgenService.
         stillHavingRequestsToBeGenerated (lDemandStreamKey,
                                           lProgressStatusSet,
-                                          lGenerateDemandWithStatisticOrder);
+                                          iDemandGenerationMethod);
 
       // DEBUG
       STDAIR_LOG_DEBUG (lProgressStatusSet.describe());
@@ -306,7 +364,8 @@ void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
         
         stdair::BookingRequestPtr_T lNextRequest_ptr =
           ioTrademgenService.generateNextRequest (lDemandStreamKey,
-                                                  lGenerateDemandWithStatisticOrder);
+                                                  iDemandGenerationMethod);
+        
         assert (lNextRequest_ptr != NULL);
 
         // Sanity check
@@ -344,8 +403,8 @@ void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
   }
 
   // DEBUG
-  STDAIR_LOG_DEBUG ("End of the simulation. Let us see some statistics for the "
-                    << iNbOfRuns << " runs.");
+  STDAIR_LOG_DEBUG ("End of the demand generation. Following are some "
+                    "statistics for the " << iNbOfRuns << " runs.");
   std::ostringstream oStatStr;
   stat_display (oStatStr, lStatAccumulator);
   STDAIR_LOG_DEBUG (oStatStr.str());
@@ -365,6 +424,9 @@ int main (int argc, char* argv[]) {
   // State whether the BOM tree should be built-in or parsed from an input file
   bool isBuiltin;
 
+  // Random generation seed
+  stdair::RandomSeed_T lRandomSeed;
+
   // Number of random draws to be generated (best if greater than 100)
   NbOfRuns_T lNbOfRuns;
     
@@ -376,11 +438,16 @@ int main (int argc, char* argv[]) {
 
   // Output log File
   stdair::Filename_T lLogFilename;
+  
+  // Demand generation method.
+  stdair::DemandGenerationMethod
+    lDemandGenerationMethod (K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD);
 
   // Call the command-line option parser
   const int lOptionParserStatus = 
-    readConfiguration (argc, argv, isBuiltin, lNbOfRuns, lInputFilename,
-                       lOutputFilename, lLogFilename);
+    readConfiguration (argc, argv, isBuiltin, lRandomSeed, lNbOfRuns,
+                       lInputFilename, lOutputFilename, lLogFilename,
+                       lDemandGenerationMethod);
 
   if (lOptionParserStatus == K_TRADEMGEN_EARLY_RETURN_STATUS) {
     return 0;
@@ -396,7 +463,7 @@ int main (int argc, char* argv[]) {
   const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
 
   // Initialise the TraDemGen service object
-  TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams);
+  TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lRandomSeed);
 
   // Check wether or not a (CSV) input file should be read
   if (isBuiltin == true) {
@@ -409,7 +476,8 @@ int main (int argc, char* argv[]) {
   }  
 
   // Calculate the expected number of events to be generated.
-  generateDemand (trademgenService, lOutputFilename, lNbOfRuns);
+  generateDemand (trademgenService, lOutputFilename, lNbOfRuns,
+                  lDemandGenerationMethod);
 
   // Close the Log outputFile
   logOutputFile.close();

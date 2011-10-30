@@ -9,7 +9,7 @@ include (config/project_config_embeddable.cmake)
 # Project info
 set_project_names (trademgen TraDemGen)
 set_project_brief ("C++ Simulated Travel Demand Generation Library")
-set_project_versions (0 1 0)
+set_project_versions (0 2 0)
 
 ##
 # Project options
@@ -39,7 +39,7 @@ packaging_set_other_options (TBZ2 "TBZ2;TGZ")
 ##            Dependencies            ##
 ########################################
 #
-get_external_libs (git "python 2.6" "boost 1.41" mysql "soci 3.0" "stdair 0.35" doxygen)
+get_external_libs (git "python 2.6" "boost 1.41" mysql "soci 3.0" "stdair 0.43" doxygen)
 
 
 ##############################################

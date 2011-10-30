@@ -7,7 +7,9 @@
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_demand_types.hpp>
+#include <stdair/stdair_maths_types.hpp>
 #include <stdair/stdair_service_types.hpp>
+#include <stdair/basic/DemandGenerationMethod.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/bom/EventTypes.hpp>
 
@@ -21,6 +23,7 @@ namespace stdair {
   struct DemandCharacteristics;
   struct DemandDistribution;
   struct EventStruct;
+  struct TravelSolutionStruct;
 }
 
 namespace TRADEMGEN {
@@ -49,8 +52,10 @@ namespace TRADEMGEN {
      *
      * @param const stdair::BasLogParams& Parameters for the output log stream.
      * @param const stdair::BasDBParams& Parameters for the database access.
+     * @param const stdair::RandomSeed_T& Seed for the random generation.
      */
-    TRADEMGEN_Service (const stdair::BasLogParams&, const stdair::BasDBParams&);
+    TRADEMGEN_Service (const stdair::BasLogParams&, const stdair::BasDBParams&,
+                       const stdair::RandomSeed_T&);
 
     /**
      * Constructor.
@@ -62,8 +67,9 @@ namespace TRADEMGEN {
      * can be directed onto that stream.
      *
      * @param const stdair::BasLogParams& Parameters for the output log stream.
+     * @param const stdair::RandomSeed_T& Seed for the random generation.
      */
-    TRADEMGEN_Service (const stdair::BasLogParams&);
+    TRADEMGEN_Service (const stdair::BasLogParams&, const stdair::RandomSeed_T&);
 
     /**
      * Constructor.
@@ -79,8 +85,9 @@ namespace TRADEMGEN {
      * initialised by another library service such as DSIM_Service).
      *
      * @param stdair::STDAIR_ServicePtr_T Handler on the STDAIR_Service.
+     * @param const stdair::RandomSeed_T& Seed for the random generation.
      */
-    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T);
+    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T, const stdair::RandomSeed_T&);
     
     /**
      * Parse the demand input file.
@@ -256,7 +263,8 @@ namespace TRADEMGEN {
      *
      * @param const DemandStreamKey& A string identifying uniquely the
      *   demand stream (e.g., "SIN-HND 2010-Feb-08 Y").
-     * @param bool States whether the demand generation must be performed
+     * @param const stdair::DemandGenerationMethod&
+     *        States whether the demand generation must be performed
      *        following the method based on statistic orders.
      *        The alternative method, while more "intuitive", is also a
      *        sequential algorithm.
@@ -266,13 +274,14 @@ namespace TRADEMGEN {
     const bool
     stillHavingRequestsToBeGenerated (const stdair::DemandStreamKeyStr_T&,
                                       stdair::ProgressStatusSet&,
-                                      const bool iGenerateRequestWithStatisticOrder) const;
+                                      const stdair::DemandGenerationMethod&) const;
 
     /**
      * Browse the list of demand streams and generate the first
      * request of each stream.
      *
-     * @param bool States whether the demand generation must be performed
+     * @param const stdair::DemandGenerationMethod&
+     *        States whether the demand generation must be performed
      *        following the method based on statistic orders.
      *        The alternative method, while more "intuitive", is also a
      *        sequential algorithm.
@@ -280,7 +289,7 @@ namespace TRADEMGEN {
      *         be generated
      */
     stdair::Count_T
-    generateFirstRequests (const bool iGenerateRequestWithStatisticOrder) const;
+    generateFirstRequests (const stdair::DemandGenerationMethod&) const;
 
     /**
      * Generate a request with the demand stream which corresponds to
@@ -288,7 +297,8 @@ namespace TRADEMGEN {
      *
      * @param const DemandStreamKey& A string identifying uniquely the
      *   demand stream (e.g., "SIN-HND 2010-Feb-08 Y").
-     * @param bool States whether the demand generation must be performed
+     * @param const stdair::DemandGenerationMethod&
+     *        States whether the demand generation must be performed
      *        following the method based on statistic orders.
      *        The alternative method, while more "intuitive", is also a
      *        sequential algorithm.
@@ -297,7 +307,7 @@ namespace TRADEMGEN {
      */
     stdair::BookingRequestPtr_T
     generateNextRequest (const stdair::DemandStreamKeyStr_T&,
-                         const bool iGenerateRequestWithStatisticOrder) const;
+                         const stdair::DemandGenerationMethod&) const;
 
     /**
      * Pop the next coming (in time) event, and remove it from the
@@ -323,6 +333,14 @@ namespace TRADEMGEN {
      * For now, that method states whether the event queue is empty.
      */
     bool isQueueDone() const;
+
+    /**
+     * Generate the potential cancellation event.
+     */
+    bool generateCancellation (const stdair::TravelSolutionStruct&,
+                               const stdair::PartySize_T&,
+                               const stdair::DateTime_T&,
+                               const stdair::Date_T&) const;
 
     /**
      * Reset the context of the demand streams for another demand generation
@@ -392,10 +410,12 @@ namespace TRADEMGEN {
                            const bool iOwnStdairService);
     
     /**
-     * Initialise the (TRADEMGEN) service context (i.e., the
+     * Initialise the (TraDemGen) service context (i.e., the
      * TRADEMGEN_ServiceContext object).
+     *
+     * @param const stdair::RandomSeed_T& Seed for the random generation.
      */
-    void initServiceContext();
+    void initServiceContext (const stdair::RandomSeed_T&);
 
     /**
      * Initialise.

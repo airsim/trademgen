@@ -1,6 +1,6 @@
 /*!
 \page trademgen
-      C++ Simulated Travel Demand Generation Library
+      Command-line utility for the C++ Simulated Travel Demand Generation Library
 
 \section sec_synopsis SYNOPSIS
 
@@ -23,11 +23,21 @@
 
  \b -b, \b --builtin<br>
     The sample BOM tree can be either built-in or parsed from an input
-    file.  That latter must then be given with the -i/--input option
+    file.  That latter must then be given with the -i/--input option.<br>
+
+ \b -s, \b --seed<br>
+    Seed for the random generation.<br>
+
+ \b -d, \b --draws
+    Number of runs for the demand generations.<br>
+
+ \b -G, \b --demandgeneration
+    Method used to generate the demand (i.e., the booking requests):
+    Poisson Process (P) or Order Statistics (S).<br>
 
  \b -i, \b --input <path-to-input-file><br>
     Path (absolute or relative) of the (CSV) input file specifying
-    the demand rule sets.<br>
+    the demand distributions.<br>
 
  \b -o, \b --output <path-to-output-file><br>
     Path (absolute or relative) of the (CSV) output file for the

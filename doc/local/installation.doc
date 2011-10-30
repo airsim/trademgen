@@ -25,7 +25,7 @@ with your usual package manager. For instance:<br>
 <code> yum -y install trademgen-devel trademgen-doc </code>
 
 RPM packages can also be available on the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=282941">SourceForge download site</a>.
+<a href="http://sourceforge.net/project/showfiles.php?group_id=264773">SourceForge download site</a>.
 
 
 \section requirements TraDemGen Requirements
