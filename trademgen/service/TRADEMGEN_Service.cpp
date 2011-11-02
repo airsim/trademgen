@@ -7,8 +7,8 @@
 // Boost
 #include <boost/make_shared.hpp>
 // SOCI
-#include <soci/core/soci.h>
-#include <soci/backends/mysql/soci-mysql.h>
+#include <soci/soci.h>
+#include <soci/mysql/soci-mysql.h>
 // StdAir
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasConst_General.hpp>

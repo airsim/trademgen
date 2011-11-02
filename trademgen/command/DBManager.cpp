@@ -4,8 +4,8 @@
 // STL
 #include <cassert>
 // SOCI
-#include <soci/core/soci.h>
-#include <soci/backends/mysql/soci-mysql.h>
+#include <soci/soci.h>
+#include <soci/mysql/soci-mysql.h>
 // StdAir
 #include <stdair/bom/AirlineStruct.hpp>
 #include <stdair/service/Logger.hpp>
