@@ -353,9 +353,9 @@ namespace TRADEMGEN {
         definition (DemandParser const& self);
         
         // Instantiation of rules
-        boost::spirit::classic::rule<ScannerT> demand_list, demand, demand_end,
-          pref_dep_date_range, date, dow, origin, destination, pref_cabin,
-          demand_params,
+        boost::spirit::classic::rule<ScannerT> demand_list,
+          not_to_be_parsed, demand, demand_end, pref_dep_date_range,
+          date, dow, origin, destination, pref_cabin, demand_params,
           pos_dist, pos_pair, pos_code, pos_share,
           channel_dist, channel_pair, channel_code, channel_share,
           trip_dist, trip_pair, trip_code, trip_share,

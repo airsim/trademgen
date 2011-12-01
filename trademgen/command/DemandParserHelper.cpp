@@ -10,8 +10,11 @@
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/basic/DemandCharacteristicsTypes.hpp>
+//#define BOOST_SPIRIT_DEBUG
 #include <trademgen/command/DemandParserHelper.hpp>
 #include <trademgen/command/DemandManager.hpp>
+
+namespace bsc = boost::spirit::classic;
 
 namespace TRADEMGEN {
 
@@ -528,9 +531,14 @@ namespace TRADEMGEN {
     DemandParser::definition<ScannerT>::
     definition (DemandParser const& self) {
 
-      demand_list = *( boost::spirit::classic::comment_p("//")
-                       | boost::spirit::classic::comment_p("/*", "*/")
-                       | demand )
+      demand_list = *( not_to_be_parsed |
+                       demand)
+        ;
+
+     not_to_be_parsed = bsc::
+       lexeme_d[bsc::comment_p("//")
+                | bsc::comment_p("/*", "*/")
+                | bsc::eol_p]
         ;
 
       demand =
@@ -551,8 +559,7 @@ namespace TRADEMGEN {
                                    self._posProbabilityMass, self._demand)]
         ;
 
-      demand_end =
-        boost::spirit::classic::ch_p(';')
+      demand_end = bsc::ch_p(';')
         ;
       
       pref_dep_date_range = date[storePrefDepDateRangeStart(self._demand)]
@@ -561,16 +568,13 @@ namespace TRADEMGEN {
         ;
 
       date =
-        boost::spirit::classic::lexeme_d[
-         (year_p)[boost::spirit::classic::assign_a(self._demand._itYear)]
-         >> '-'
-         >> (month_p)[boost::spirit::classic::assign_a(self._demand._itMonth)]
-         >> '-'
-         >> (day_p)[boost::spirit::classic::assign_a(self._demand._itDay)]
+        bsc::lexeme_d[(year_p)[bsc::assign_a(self._demand._itYear)]
+         >> '-' >> (month_p)[bsc::assign_a(self._demand._itMonth)]
+         >> '-' >> (day_p)[bsc::assign_a(self._demand._itDay)]
          ]
         ;
 
-      dow = boost::spirit::classic::lexeme_d[ dow_p ]
+      dow = bsc::lexeme_d[ dow_p ]
         ;
 
       origin =
@@ -594,11 +598,11 @@ namespace TRADEMGEN {
 
       pos_code =
         airport_p
-        | boost::spirit::classic::chseq_p("row")
+        | bsc::chseq_p("row")
         ;
 
       pos_share =
-        (boost::spirit::classic::ureal_p)[storePosProbMass(self._demand)]
+        (bsc::ureal_p)[storePosProbMass(self._demand)]
         ;
 
       channel_dist =
@@ -611,14 +615,12 @@ namespace TRADEMGEN {
         ;
 
       channel_code =
-        boost::spirit::classic::chseq_p("DF")
-        | boost::spirit::classic::chseq_p("DN")
-        | boost::spirit::classic::chseq_p("IF")
-        | boost::spirit::classic::chseq_p("IN")
+        bsc::chseq_p("DF") | bsc::chseq_p("DN")
+        | bsc::chseq_p("IF") | bsc::chseq_p("IN")
         ;
 
       channel_share =
-        (boost::spirit::classic::ureal_p)[storeChannelProbMass(self._demand)]
+        (bsc::ureal_p)[storeChannelProbMass(self._demand)]
         ;
       
       trip_dist =
@@ -631,13 +633,11 @@ namespace TRADEMGEN {
         ;
 
       trip_code =
-        boost::spirit::classic::chseq_p("RO")
-        | boost::spirit::classic::chseq_p("RI")
-        | boost::spirit::classic::chseq_p("OW")
+        bsc::chseq_p("RO") | bsc::chseq_p("RI") | bsc::chseq_p("OW")
         ;
 
       trip_share =
-        (boost::spirit::classic::ureal_p)[storeTripProbMass(self._demand)]
+        (bsc::ureal_p)[storeTripProbMass(self._demand)]
         ;
       
       stay_dist =
@@ -650,7 +650,7 @@ namespace TRADEMGEN {
         ;
 
       stay_share =
-        (boost::spirit::classic::ureal_p)[storeStayProbMass(self._demand)]
+        (bsc::ureal_p)[storeStayProbMass(self._demand)]
         ;
 
       ff_dist =
@@ -665,7 +665,7 @@ namespace TRADEMGEN {
       ff_code = ff_type_p;
 
       ff_share =
-        (boost::spirit::classic::ureal_p)[storeFFProbMass(self._demand)]
+        (bsc::ureal_p)[storeFFProbMass(self._demand)]
         ;
       
       pref_dep_time_dist =
@@ -678,19 +678,19 @@ namespace TRADEMGEN {
         ;
 
       pref_dep_time_share =
-        (boost::spirit::classic::ureal_p)[storePrefDepTimeProbMass(self._demand)]
+        (bsc::ureal_p)[storePrefDepTimeProbMass(self._demand)]
         ;
 
       time =
-        boost::spirit::classic::lexeme_d[
-       (hours_p)[boost::spirit::classic::assign_a(self._demand._itHours)]
-       >> !('.' >> (minutes_p)[boost::spirit::classic::assign_a(self._demand._itMinutes)])
-       >> !('.' >> (seconds_p)[boost::spirit::classic::assign_a(self._demand._itSeconds)])
+        bsc::lexeme_d[
+       (hours_p)[bsc::assign_a(self._demand._itHours)]
+       >> !('.' >> (minutes_p)[bsc::assign_a(self._demand._itMinutes)])
+       >> !('.' >> (seconds_p)[bsc::assign_a(self._demand._itSeconds)])
        ]
         ;
 
       wtp =
-        (boost::spirit::classic::ureal_p)[storeWTP(self._demand)]
+        (bsc::ureal_p)[storeWTP(self._demand)]
         ;
 
       time_value_dist =
@@ -698,12 +698,12 @@ namespace TRADEMGEN {
         ;
 
       time_value_pair =
-        (boost::spirit::classic::ureal_p)[storeTimeValue(self._demand)]
+        (bsc::ureal_p)[storeTimeValue(self._demand)]
         >> ':' >> time_value_share
         ;
 
       time_value_share =
-        (boost::spirit::classic::ureal_p)[storeTimeValueProbMass(self._demand)]
+        (bsc::ureal_p)[storeTimeValueProbMass(self._demand)]
         ;
 
       dtd_dist =
@@ -711,24 +711,25 @@ namespace TRADEMGEN {
         ;
 
       dtd_pair =
-        (boost::spirit::classic::ureal_p)[storeDTD(self._demand)]
+        (bsc::ureal_p)[storeDTD(self._demand)]
         >> ':' >> dtd_share
         ;
 
       dtd_share =
-        (boost::spirit::classic::ureal_p)[storeDTDProbMass(self._demand)]
+        (bsc::ureal_p)[storeDTDProbMass(self._demand)]
         ;
 
       demand_params =
-        boost::spirit::classic::ch_p('N')
+        bsc::ch_p('N')
         >> ','
-        >> (boost::spirit::classic::ureal_p)[storeDemandMean(self._demand)]
+        >> (bsc::ureal_p)[storeDemandMean(self._demand)]
         >> ','
-        >> (boost::spirit::classic::ureal_p)[storeDemandStdDev(self._demand)]
+        >> (bsc::ureal_p)[storeDemandStdDev(self._demand)]
         ;
       
       // BOOST_SPIRIT_DEBUG_NODE (DemandParser);
       BOOST_SPIRIT_DEBUG_NODE (demand_list);
+      BOOST_SPIRIT_DEBUG_NODE (not_to_be_parsed);
       BOOST_SPIRIT_DEBUG_NODE (demand);
       BOOST_SPIRIT_DEBUG_NODE (demand_end);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_date);
@@ -771,7 +772,7 @@ namespace TRADEMGEN {
 
     // //////////////////////////////////////////////////////////////////
     template<typename ScannerT>
-    boost::spirit::classic::rule<ScannerT> const&
+    bsc::rule<ScannerT> const&
     DemandParser::definition<ScannerT>::start() const {
       return demand_list;
     }
@@ -843,10 +844,9 @@ namespace TRADEMGEN {
     // Launch the parsing of the file and, thanks to the doEndDemand
     // call-back structure, the building of the whole EventQueue BOM
     // (i.e., including Inventory, FlightDate, LegDate, SegmentDate, etc.)
-    boost::spirit::classic::parse_info<iterator_t> info =
-      boost::spirit::classic::parse (_startIterator, _endIterator,
-                                     lDemandParser,
-                                     boost::spirit::classic::space_p);
+    bsc::parse_info<iterator_t> info =
+      bsc::parse (_startIterator, _endIterator, lDemandParser,
+                  bsc::space_p - bsc::eol_p);
 
     // Retrieves whether or not the parsing was successful
     oResult = info.hit;
