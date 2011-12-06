@@ -2,8 +2,8 @@
 %global mydocs __tmp_docdir
 #
 Name:           trademgen
-Version:        0.1.0
-Release:        2%{?dist}
+Version:        0.2.1
+Release:        1%{?dist}
 
 Summary:        C++ Simulated Travel Demand Generation Library
 
@@ -89,7 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}
 %{_bindir}/%{name}_with_db
 %{_bindir}/py%{name}
+%{_bindir}/py%{name}_drawBookingArrivals
+%{_bindir}/%{name}_extractBookingRequests.sh
 %{_libdir}/lib%{name}.so.*
+%{_libdir}/libpy%{name}.so.*
 %{_mandir}/man1/%{name}.1.*
 %{_mandir}/man1/%{name}_with_db.1.*
 %{_mandir}/man1/py%{name}.1.*
@@ -114,8 +117,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 05 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.2.1-1
+- Upstream update
+
 * Fri Aug 19 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.0-2
-- Added missing packages needed by a scratch build
+- Added (BR) missing packages needed by a mock build
 
 * Sun Aug 07 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.1.0-1
 - First package
