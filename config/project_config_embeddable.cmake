@@ -1483,8 +1483,15 @@ macro (module_binary_add _exec_source_dir)
 endmacro (module_binary_add)
 
 ##
-# Add a Python script to be installed
-macro (module_python_add _script_file)
+# Add a (Shell, Python, Perl, Ruby, etc) script to be installed.
+#
+# The parameter is the relative file path of the (template) script to
+# be installed. That template file must end with the '.in' suffix.
+# Indeed, the project variables (wrapped by @@ signs) of the template file
+# are evaluated and expanded thanks to the configure command.
+# The '.in' extension of the script is dropped once installed.
+#
+macro (module_script_add _script_file)
   #
   set (_full_script_src_path ${CMAKE_CURRENT_SOURCE_DIR}/${_script_file}.in)
   set (_full_script_path ${CMAKE_CURRENT_BINARY_DIR}/${_script_file})
@@ -1496,10 +1503,10 @@ macro (module_python_add _script_file)
 	get_filename_component (_script_alone ${_script_file} NAME)
     
 	# Add the 'scripts_${MODULE_NAME}' target, depending on the
-    # converted (Python) scripts
+    # converted (Shell, Python, Perl, Ruby, etc) scripts
     add_custom_target (${_script_alone}_script ALL DEPENDS ${_full_script_path})
 
-    # Install the (Python) script file
+    # Install the (Shell, Python, Perl, Ruby, etc) script file
     install (PROGRAMS ${_full_script_path} DESTINATION bin COMPONENT devel)
 
   else (EXISTS ${_full_script_src_path})
@@ -1516,7 +1523,7 @@ macro (module_python_add _script_file)
   list (APPEND ${MODULE_NAME}_ALL_EXECS ${_script_alone})
   set (${MODULE_NAME}_ALL_EXECS ${${MODULE_NAME}_ALL_EXECS} PARENT_SCOPE)
 
-endmacro (module_python_add)
+endmacro (module_script_add)
 
 ##
 # Installation of the CMake import helper, so that third party projects

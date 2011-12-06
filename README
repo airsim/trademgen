@@ -1,7 +1,19 @@
 
+Summary:
+---------
+TraDemGen aims at providing a clean API, and the corresponding C++
+implementation, able to generate demand for travel solutions (e.g.,
+from JFK to PEK on 25-05-2009) according to characteristics (e.g.,
+Willingness-To-Pay, preferred airline, etc).
+
+TraDemGen makes an extensive use of existing open-source libraries for
+increased functionality, speed and accuracy. In particular the 
+Boost (C++ Standard Extensions: http://www.boost.org) library is used.
+
+
 Building the library and test binary from Git repository:
 ----------------------------------------------------------------
-The Sourceforge Subversion repository is to be found here:
+The Sourceforge Git repository may be cloned as following:
 git clone ssh://trademgen.git.sourceforge.net/gitroot/trademgen/trademgen trademgengit
 cd trademgengit
 git checkout trunk
@@ -12,12 +24,12 @@ but names may vary according to distributions):
   * gcc-c++
   * stdair-devel
   * boost-devel
+  * zeromq-devel
   * readline-devel
   * soci-mysql-devel
   * python-devel
-  * gettext-devel
-  * doxygen
-  * tetex-latex (optional)
+  * gettext-devel (optional)
+  * doxygen, ghostscript, graphviz and tetex-latex (optional)
   * rpm-build (optional)
 
 Building the library and test binary from the tarball:
