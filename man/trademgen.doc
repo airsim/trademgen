@@ -25,11 +25,12 @@
     The sample BOM tree can be either built-in or parsed from an input
     file.  That latter must then be given with the -i/--input option.<br>
 
- \b -s, \b --seed<br>
-    Seed for the random generation.<br>
+ \b -s, \b --see<br>
+    Seed for the random generation. It allows to reproduce exactly any
+    demand generation.<br>
 
  \b -d, \b --draws
-    Number of runs for the demand generations.<br>
+    Number of runs for the demand generation.<br>
 
  \b -G, \b --demandgeneration
     Method used to generate the demand (i.e., the booking requests):
@@ -50,7 +51,7 @@ See the output of the <tt>`trademgen --help'</tt> command for default options.
 
 
 \section sec_see_also SEE ALSO
-\b trademgen-config(1), \b trademgen-library(3)
+\b trademgen_with_db(1), \b pytrademgen(1), \b trademgen-config(1), \b trademgen-library(3)
 
 
 \section sec_support SUPPORT
