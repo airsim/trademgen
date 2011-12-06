@@ -91,13 +91,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}
 %{_bindir}/%{name}_with_db
 %{_bindir}/py%{name}
-%{_bindir}/py%{name}_drawBookingArrivals
-%{_bindir}/%{name}_extractBookingRequests.sh
+%{_bindir}/%{name}_drawBookingArrivals
+%{_bindir}/%{name}_extractBookingRequests
 %{_libdir}/lib%{name}.so.*
 %{_libdir}/libpy%{name}.so.*
 %{_mandir}/man1/%{name}.1.*
 %{_mandir}/man1/%{name}_with_db.1.*
 %{_mandir}/man1/py%{name}.1.*
+%{_mandir}/man1/%{name}_drawBookingArrivals.1.*
+%{_mandir}/man1/%{name}_extractBookingRequests.1.*
 
 %files devel
 %defattr(-,root,root,-)
