@@ -1492,9 +1492,12 @@ macro (module_python_add _script_file)
 	#
     configure_file (${_full_script_src_path} ${_full_script_path} @ONLY)
 
-    # Add the 'scripts_${MODULE_NAME}' target, depending on the
+	# Extract the file name (only) from the full file path
+	get_filename_component (_script_alone ${_script_file} NAME)
+    
+	# Add the 'scripts_${MODULE_NAME}' target, depending on the
     # converted (Python) scripts
-    add_custom_target (scripts_${MODULE_NAME} ALL DEPENDS ${_full_script_path})
+    add_custom_target (${_script_alone}_script ALL DEPENDS ${_full_script_path})
 
     # Install the (Python) script file
     install (PROGRAMS ${_full_script_path} DESTINATION bin COMPONENT devel)
@@ -1505,7 +1508,6 @@ macro (module_python_add _script_file)
   endif (EXISTS ${_full_script_src_path})
 
   # Register the binary target in the project (for reporting purpose)
-  get_filename_component (_script_alone ${_script_file} NAME)
   list (APPEND PROJ_ALL_BIN_TARGETS ${_script_alone})
   set (PROJ_ALL_BIN_TARGETS ${PROJ_ALL_BIN_TARGETS} PARENT_SCOPE)
 
