@@ -3,5 +3,7 @@
 #
 
 #
-doc_add_man_pages (MAN1 trademgen-config pytrademgen trademgen trademgen_with_db
+doc_add_man_pages (
+  MAN1 trademgen-config pytrademgen trademgen trademgen_with_db
+  trademgen_drawBookingArrivals trademgen_extractBookingRequests
   MAN3 trademgen-library)

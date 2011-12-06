@@ -16,9 +16,9 @@ def usage():
     print "booking arrival patterns."
     print
     print "-h, --help                : outputs help and quits"
-    print "-o <path>                 : path to output file (if blank, stdout)"
+    print "-o, --output <path>       : path to output file (if blank, stdout)"
     print "<path>                    : input file (if blank, stdin)"
-    print "-p                        : plot (if blank, no plot is produced)"
+    print "-p, --plot                : plot (if blank, no plot is produced)"
     print
 
 #------------------------------------------------------------------------------	

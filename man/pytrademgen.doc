@@ -4,7 +4,7 @@
 
 \section sec_synopsis SYNOPSIS
 
-<b>trademgen</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
+<b>pytrademgen</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
 
 \section sec_description DESCRIPTION
 
