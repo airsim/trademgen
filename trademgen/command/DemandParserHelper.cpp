@@ -137,6 +137,29 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
+    storeDemandChangeFeeProb::storeDemandChangeFeeProb (DemandStruct& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDemandChangeFeeProb::operator() (double iReal) const { 
+      _demand._changeFeeProb = iReal; 
+      //STDAIR_LOG_DEBUG ("Demand change fee prob: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeDemandNonRefundableProb::
+    storeDemandNonRefundableProb (DemandStruct& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDemandNonRefundableProb::operator() (double iReal) const { 
+      _demand._nonRefundableProb = iReal; 
+      //STDAIR_LOG_DEBUG ("Demand non refundable prob: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
     storePosCode::storePosCode (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
     }
@@ -550,6 +573,8 @@ namespace TRADEMGEN {
         >> ';' >> trip_dist
         >> ';' >> stay_dist
         >> ';' >> ff_dist
+        >> ';' >> change_fees
+        >> ';' >> non_refundable
         >> ';' >> pref_dep_time_dist
         >> ';' >> wtp
         >> ';' >> time_value_dist
@@ -667,6 +692,14 @@ namespace TRADEMGEN {
       ff_share =
         (bsc::ureal_p)[storeFFProbMass(self._demand)]
         ;
+
+      change_fees =
+        (bsc::ureal_p)[storeDemandChangeFeeProb(self._demand)]
+        ;
+
+      non_refundable =
+        (bsc::ureal_p)[storeDemandNonRefundableProb(self._demand)]
+        ;
       
       pref_dep_time_dist =
         pref_dep_time_pair >> *( ',' >> pref_dep_time_pair )
@@ -756,6 +789,8 @@ namespace TRADEMGEN {
       BOOST_SPIRIT_DEBUG_NODE (ff_pair);
       BOOST_SPIRIT_DEBUG_NODE (ff_code);
       BOOST_SPIRIT_DEBUG_NODE (ff_share);
+      BOOST_SPIRIT_DEBUG_NODE (change_fees);
+      BOOST_SPIRIT_DEBUG_NODE (non_refundable);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_dist);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_pair);
       BOOST_SPIRIT_DEBUG_NODE (pref_dep_time_share);

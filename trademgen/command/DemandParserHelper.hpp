@@ -98,6 +98,22 @@ namespace TRADEMGEN {
       void operator() (double iReal) const;
     };
   
+    /** Store the demand change fee probability. */
+    struct storeDemandChangeFeeProb : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDemandChangeFeeProb (DemandStruct&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the demand non refundable probability. */
+    struct storeDemandNonRefundableProb : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDemandNonRefundableProb (DemandStruct&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
     /** Store the pos type code. */
     struct storePosCode : public ParserSemanticAction {
       /** Actor Constructor. */
@@ -328,6 +344,8 @@ namespace TRADEMGEN {
       FFPair ::= FFCode ':' FFShare
       FFCode ::= 'P' | 'G' | 'S' | 'M' | 'N'
       FFShare ::= real
+      ChangeFeeProb ::= real
+      NonRefundableProb ::= real
       PrefDepTimeDist ::= PrefDepTimePair (',' PrefDepTimePair)*
       PrefDepTimePair ::= time ':' PrefDepTimeShare
       PrefDepTimeShare ::= real
@@ -361,6 +379,8 @@ namespace TRADEMGEN {
           trip_dist, trip_pair, trip_code, trip_share,
           stay_dist, stay_pair, stay_share,
           ff_dist, ff_pair, ff_code, ff_share,
+          change_fees,
+          non_refundable,
           pref_dep_time_dist, pref_dep_time_pair, pref_dep_time_share, time,
           wtp,
           time_value_dist, time_value_pair, time_value_share,

@@ -31,6 +31,7 @@ namespace TRADEMGEN {
                               TripTypeProbabilityMassFunction_T(),
                               StayDurationProbabilityMassFunction_T(),
                               FrequentFlyerProbabilityMassFunction_T(),
+                              0.5, 0.5,
                               PreferredDepartureTimeContinuousDistribution_T(),
                               0.0,
                               ValueOfTimeContinuousDistribution_T()),
@@ -50,6 +51,7 @@ namespace TRADEMGEN {
                               TripTypeProbabilityMassFunction_T(),
                               StayDurationProbabilityMassFunction_T(),
                               FrequentFlyerProbabilityMassFunction_T(),
+                              0.5, 0.5,
                               PreferredDepartureTimeContinuousDistribution_T(),
                               0.0,
                               ValueOfTimeContinuousDistribution_T()),
@@ -82,6 +84,8 @@ namespace TRADEMGEN {
           const TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
           const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
           const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+          const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+          const stdair::NonRefundableRatio_T& iNonRefundableProb,
           const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
           const stdair::WTP_T& iMinWTP,
           const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
@@ -94,6 +98,7 @@ namespace TRADEMGEN {
     setDemandCharacteristics (iArrivalPattern, iPOSProbMass,
                               iChannelProbMass, iTripTypeProbMass,
                               iStayDurationProbMass, iFrequentFlyerProbMass,
+                              iChangeFeeProb, iNonRefundableProb,
                               iPreferredDepartureTimeContinuousDistribution,
                               iMinWTP, iValueOfTimeContinuousDistribution);
 
@@ -463,6 +468,28 @@ namespace TRADEMGEN {
 
     return _demandCharacteristics._frequentFlyerProbabilityMass.getValue (lVariate);
   }
+  
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::ChangeFees_T DemandStream::generateChangeFees() {
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      _demandCharacteristicsRandomGenerator();
+    if (lVariate < _demandCharacteristics._changeFeeProb) {
+      return true;
+    }
+    return false;    
+  }
+  
+  // ////////////////////////////////////////////////////////////////////
+  const stdair::NonRefundable_T DemandStream::generateNonRefundable() {
+    // Generate a random number between 0 and 1.
+    const stdair::Probability_T lVariate =
+      _demandCharacteristicsRandomGenerator();
+    if (lVariate < _demandCharacteristics._nonRefundableProb) {
+      return true;
+    }
+    return false;    
+  }
 
   // ////////////////////////////////////////////////////////////////////
   const stdair::Duration_T DemandStream::generatePreferredDepartureTime() {
@@ -547,6 +574,10 @@ namespace TRADEMGEN {
     const stdair::DayDuration_T lStayDuration = generateStayDuration();
     // Frequet flyer type.
     const stdair::FrequentFlyer_T lFrequentFlyer = generateFrequentFlyer();
+    // Change fees
+    const stdair::ChangeFees_T lChangeFees = generateChangeFees();
+    // Non refundable
+    const stdair::NonRefundable_T lNonRefundable = generateNonRefundable();
     // Preferred departure time.
     const stdair::Duration_T lPreferredDepartureTime =
       generatePreferredDepartureTime();
@@ -577,7 +608,8 @@ namespace TRADEMGEN {
                                          lChannelLabel, lTripType,
                                          lStayDuration, lFrequentFlyer,
                                          lPreferredDepartureTime,
-                                         lWTP, lValueOfTime));
+                                         lWTP, lChangeFees, lNonRefundable,
+                                         lValueOfTime));
     
     // DEBUG
     // STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());

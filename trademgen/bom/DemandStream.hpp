@@ -135,6 +135,8 @@ namespace TRADEMGEN {
                               const TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
                               const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
                               const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+                              const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+                              const stdair::NonRefundableRatio_T& iNonRefundableProb,
                               const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
                               const stdair::WTP_T& iMinWTP,
                               const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution) {
@@ -142,6 +144,7 @@ namespace TRADEMGEN {
         DemandCharacteristics (iArrivalPattern, iPOSProbMass,
                                iChannelProbMass, iTripTypeProbMass,
                                iStayDurationProbMass, iFrequentFlyerProbMass,
+                               iChangeFeeProb, iNonRefundableProb,
                                iPreferredDepartureTimeContinuousDistribution,
                                iMinWTP, iValueOfTimeContinuousDistribution);
     }
@@ -178,6 +181,8 @@ namespace TRADEMGEN {
                  const TripTypeProbabilityMassFunction_T&,
                  const StayDurationProbabilityMassFunction_T&,
                  const FrequentFlyerProbabilityMassFunction_T&,
+                 const stdair::ChangeFeesRatio_T&,
+                 const stdair::NonRefundableRatio_T&,
                  const PreferredDepartureTimeContinuousDistribution_T&,
                  const stdair::WTP_T&,
                  const ValueOfTimeContinuousDistribution_T&,
@@ -226,6 +231,12 @@ namespace TRADEMGEN {
 
     /** Generate the frequent flyer type. */
     const stdair::FrequentFlyer_T generateFrequentFlyer();
+
+    /** Generate the change fee acceptation. */
+    const stdair::ChangeFees_T generateChangeFees();
+
+    /** Generate the non refundable acceptation. */
+    const stdair::NonRefundable_T generateNonRefundable();
 
     /** Generate the preferred departure time. */
     const stdair::Duration_T generatePreferredDepartureTime();
@@ -290,7 +301,6 @@ namespace TRADEMGEN {
      * Dump recursively the content of the DemandStream object.
      */
     std::string display() const;
-
     const stdair::Duration_T convertFloatIntoDuration (const stdair::FloatDuration_T);
     
   protected:
@@ -368,9 +378,7 @@ namespace TRADEMGEN {
 
   private:
     bool _stillHavingRequestsToBeGenerated;
-
     bool _firstDateTimeRequest;
-
     stdair::FloatDuration_T _dateTimeLastRequest;
   };
 

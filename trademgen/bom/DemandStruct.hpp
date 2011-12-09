@@ -55,6 +55,8 @@ namespace TRADEMGEN {
     stdair::CabinCode_T _prefCabin;
     stdair::MeanValue_T _demandMean;
     stdair::StdDevValue_T _demandStdDev;
+    stdair::ChangeFeesRatio_T _changeFeeProb;
+    stdair::NonRefundableRatio_T _nonRefundableProb;
     POSProbabilityMassFunction_T _posProbDist;
     ChannelProbabilityMassFunction_T _channelProbDist;
     TripTypeProbabilityMassFunction_T _tripProbDist;
