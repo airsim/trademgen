@@ -178,6 +178,8 @@ namespace TRADEMGEN {
                         const TripTypeProbabilityMassFunction_T&,
                         const StayDurationProbabilityMassFunction_T&,
                         const FrequentFlyerProbabilityMassFunction_T&,
+                        const stdair::ChangeFeesRatio_T&,
+                        const stdair::NonRefundableRatio_T&,
                         const PreferredDepartureTimeContinuousDistribution_T&,
                         const stdair::WTP_T&,
                         const ValueOfTimeContinuousDistribution_T&,

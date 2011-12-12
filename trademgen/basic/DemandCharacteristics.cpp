@@ -20,6 +20,7 @@ namespace TRADEMGEN {
       _tripTypeProbabilityMass (TripTypeProbabilityMassFunction_T()),
       _stayDurationProbabilityMass (StayDurationProbabilityMassFunction_T()),
       _frequentFlyerProbabilityMass (FrequentFlyerProbabilityMassFunction_T()),
+      _changeFeeProb (0.5), _nonRefundableProb (0.5),
       _preferredDepartureTimeCumulativeDistribution (PreferredDepartureTimeContinuousDistribution_T()),
       _minWTP (stdair::WTP_T()), _frat5Pattern (DEFAULT_FRAT5_PATTERN),
       _valueOfTimeCumulativeDistribution (ValueOfTimeContinuousDistribution_T()) {
@@ -34,6 +35,8 @@ namespace TRADEMGEN {
       _tripTypeProbabilityMass (iDC._tripTypeProbabilityMass),
       _stayDurationProbabilityMass (iDC._stayDurationProbabilityMass),
       _frequentFlyerProbabilityMass (iDC._frequentFlyerProbabilityMass),
+      _changeFeeProb (iDC._changeFeeProb),
+      _nonRefundableProb (iDC._nonRefundableProb),
       _preferredDepartureTimeCumulativeDistribution (iDC._preferredDepartureTimeCumulativeDistribution),
       _minWTP (iDC._minWTP), _frat5Pattern (iDC._frat5Pattern),
       _valueOfTimeCumulativeDistribution (iDC._valueOfTimeCumulativeDistribution) {
@@ -47,6 +50,8 @@ namespace TRADEMGEN {
                          const TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
                          const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
                          const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+                         const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+                         const stdair::NonRefundableRatio_T& iNonRefundableProb,
                          const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
                          const stdair::WTP_T& iMinWTP,
                          const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution)
@@ -56,6 +61,8 @@ namespace TRADEMGEN {
       _tripTypeProbabilityMass (iTripTypeProbMass),
       _stayDurationProbabilityMass (iStayDurationProbMass),
       _frequentFlyerProbabilityMass (iFrequentFlyerProbMass),
+      _changeFeeProb (iChangeFeeProb),
+      _nonRefundableProb (iNonRefundableProb),
       _preferredDepartureTimeCumulativeDistribution (iPreferredDepartureTimeContinuousDistribution),
       _minWTP (iMinWTP), _frat5Pattern (DEFAULT_FRAT5_PATTERN),
       _valueOfTimeCumulativeDistribution (iValueOfTimeContinuousDistribution) {
@@ -100,6 +107,12 @@ namespace TRADEMGEN {
          << std::endl;
     oStr << "Frequent flyer probability mass (frequent flyer, propotion): ";
     oStr << _frequentFlyerProbabilityMass.displayProbabilityMass()
+         << std::endl;
+    oStr << "Change fee acceptation probability: "
+         << _changeFeeProb
+         << std::endl;
+    oStr << "Non refundable acceptation probability: "
+         << _nonRefundableProb
          << std::endl;
     oStr << "Preferred departure time cumulative distribution (time, proportion: ";
     oStr << _preferredDepartureTimeCumulativeDistribution.displayCumulativeDistribution() << std::endl;

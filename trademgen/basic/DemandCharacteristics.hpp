@@ -53,6 +53,8 @@ namespace TRADEMGEN {
                            const TripTypeProbabilityMassFunction_T&,
                            const StayDurationProbabilityMassFunction_T&,
                            const FrequentFlyerProbabilityMassFunction_T&,
+                           const stdair::ChangeFeesRatio_T&,
+                           const stdair::NonRefundableRatio_T&,
                            const PreferredDepartureTimeContinuousDistribution_T&,
                            const stdair::WTP_T&,
                            const ValueOfTimeContinuousDistribution_T&);
@@ -106,6 +108,16 @@ namespace TRADEMGEN {
      * Frequent flyer probability mass.
      */
     FrequentFlyerProbabilityMass_T _frequentFlyerProbabilityMass;
+
+    /**
+     * Change fee restriction acceptation probability.
+     */
+    stdair::ChangeFeesRatio_T _changeFeeProb;
+
+    /**
+     * Non refundable restriction acceptation probability.
+     */
+    stdair::NonRefundableRatio_T _nonRefundableProb;
 
     /**
      * Preferred departure time cumulative distribution.

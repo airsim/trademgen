@@ -142,13 +142,17 @@ namespace TRADEMGEN {
 
     //
     const stdair::WTP_T lWTP (1000.0);
+    const stdair::ChangeFeesRatio_T lChangeFees (0.5);
+    const stdair::NonRefundableRatio_T lNonRefundable (0.5);
 
 
     // Delegate the call to the dedicated command
     DemandStream& lDemandStream = 
       createDemandStream (ioEventQueue, lDemandStreamKey, lDTDProbDist,
                           lPOSProbDist, lChannelProbDist, lTripProbDist,
-                          lStayProbDist, lFFProbDist, lPrefDepTimeProbDist,
+                          lStayProbDist, lFFProbDist,
+                          lChangeFees, lNonRefundable,
+                          lPrefDepTimeProbDist,
                           lWTP, lTimeValueProbDist, lDemandDistribution,
                           ioSharedGenerator.getBaseGenerator(),
                           lRequestDateTimeSeed,
@@ -176,6 +180,8 @@ namespace TRADEMGEN {
    const TripTypeProbabilityMassFunction_T& iTripTypeProbMass,
    const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
    const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
+   const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+   const stdair::NonRefundableRatio_T& iNonRefundableProb,
    const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
    const stdair::WTP_T& iMinWTP,
    const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
@@ -191,6 +197,7 @@ namespace TRADEMGEN {
     oDemandStream.setAll (iArrivalPattern, iPOSProbMass,
                           iChannelProbMass, iTripTypeProbMass,
                           iStayDurationProbMass, iFrequentFlyerProbMass,
+                          iChangeFeeProb, iNonRefundableProb,
                           iPreferredDepartureTimeContinuousDistribution,
                           iMinWTP, iValueOfTimeContinuousDistribution,
                           iDemandDistribution, ioSharedGenerator,
@@ -255,6 +262,8 @@ namespace TRADEMGEN {
                               iDemand._channelProbDist,
                               iDemand._tripProbDist,
                               iDemand._stayProbDist, iDemand._ffProbDist,
+                              iDemand._changeFeeProb,
+                              iDemand._nonRefundableProb,
                               iDemand._prefDepTimeProbDist,
                               iDemand._minWTP,
                               iDemand._timeValueProbDist,
@@ -637,14 +646,19 @@ namespace TRADEMGEN {
 
     //
     const stdair::WTP_T lSINBKKWTP (400.0);
+    const stdair::ChangeFeesRatio_T lChangeFees (0.5);
+    const stdair::NonRefundableRatio_T lNonRefundable (0.5);
 
 
     // Delegate the call to the dedicated command
     DemandStream& lSINBKKDemandStream = 
       createDemandStream (ioEventQueue, lSINBKKDemandStreamKey, lDTDProbDist,
                           lSINBKKPOSProbDist, lChannelProbDist, lTripProbDist,
-                          lStayProbDist, lFFProbDist, lSINPrefDepTimeProbDist,
-                          lSINBKKWTP, lTimeValueProbDist, lSINBKKDemandDistribution,
+                          lStayProbDist, lFFProbDist,
+                          lChangeFees, lNonRefundable,
+                          lSINPrefDepTimeProbDist,
+                          lSINBKKWTP, lTimeValueProbDist,
+                          lSINBKKDemandDistribution,
                           ioSharedGenerator.getBaseGenerator(),
                           lSINBKKRequestDateTimeSeed,
                           lSINBKKDemandCharacteristicsSeed, iPOSProbMass);
@@ -709,8 +723,11 @@ namespace TRADEMGEN {
     DemandStream& lBKKHKGDemandStream = 
       createDemandStream (ioEventQueue, lBKKHKGDemandStreamKey, lDTDProbDist,
                           lBKKHKGPOSProbDist, lChannelProbDist, lTripProbDist,
-                          lStayProbDist, lFFProbDist, lBKKPrefDepTimeProbDist,
-                          lBKKHKGWTP, lTimeValueProbDist, lBKKHKGDemandDistribution,
+                          lStayProbDist, lFFProbDist,
+                          lChangeFees, lNonRefundable,
+                          lBKKPrefDepTimeProbDist,
+                          lBKKHKGWTP, lTimeValueProbDist,
+                          lBKKHKGDemandDistribution,
                           ioSharedGenerator.getBaseGenerator(),
                           lBKKHKGRequestDateTimeSeed,
                           lBKKHKGDemandCharacteristicsSeed, iPOSProbMass);
@@ -756,7 +773,9 @@ namespace TRADEMGEN {
     DemandStream& lSINHKGDemandStream = 
       createDemandStream (ioEventQueue, lSINHKGDemandStreamKey, lDTDProbDist,
                           lSINHKGPOSProbDist, lChannelProbDist, lTripProbDist,
-                          lStayProbDist, lFFProbDist, lSINPrefDepTimeProbDist,
+                          lStayProbDist, lFFProbDist, 
+                          lChangeFees, lNonRefundable,
+                          lSINPrefDepTimeProbDist,
                           lSINHKGWTP, lTimeValueProbDist, lSINHKGDemandDistribution,
                           ioSharedGenerator.getBaseGenerator(),
                           lSINHKGRequestDateTimeSeed,

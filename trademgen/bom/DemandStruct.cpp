@@ -109,7 +109,13 @@ namespace TRADEMGEN {
       ostr << lFFCode << ":" << lFFProbMass;
     }
     ostr << "; ";
+
+    ostr << _changeFeeProb << "; ";
     
+    ostr << "; ";
+
+    ostr << _nonRefundableProb << "; ";
+        
     idx = 0;
     for (PreferredDepartureTimeContinuousDistribution_T::const_iterator it =
            _prefDepTimeProbDist.begin();
