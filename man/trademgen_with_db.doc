@@ -4,7 +4,7 @@
 
 \section sec_synopsis SYNOPSIS
 
-<b>trademgen</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
+<b>trademgen_with_db</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
 
 \section sec_description DESCRIPTION
 
@@ -14,35 +14,58 @@
 \e trademgen_with_db accepts the following options:
 
  \b --prefix<br>
-    Show the TraDemGen installation prefix.
+    Show the TraDemGen installation prefix.<br>
 
  \b -v, \b --version<br>
-    Print the currently installed version of TraDemGen on the standard output.
+    Print the currently installed version of TraDemGen on the standard
+    output.<br>
 
  \b -h, \b --help<br>
-    Produce that message and show usage.
+    Produce that message and show usage.<br>
 
  \b -b, \b --builtin<br>
     The sample BOM tree can be either built-in or parsed from an input
-    file.  That latter must then be given with the -i/--input option
+    file.  That latter must then be given with the -i/--input option.<br>
+
+ \b -s, \b --see<br>
+    Seed for the random generation. It allows to reproduce exactly any
+    demand generation.<br>
+
+ \b -d, \b --draws
+    Number of runs for the demand generation.<br>
+
+ \b -G, \b --demandgeneration
+    Method used to generate the demand (i.e., the booking requests):
+    Poisson Process (P) or Order Statistics (S).<br>
 
  \b -i, \b --input <path-to-input-file><br>
     Path (absolute or relative) of the (CSV) input file specifying
     the demand rule sets.<br>
 
- \b -o, \b --output <path-to-output-file><br>
-    Path (absolute or relative) of the (CSV) output file for the
-    generated booking requests.<br>
-
  \b -l, \b --log <path-to-output-log-file><br>
-    Path (absolute or relative) of the output log file.
+    Path (absolute or relative) of the output log file.<br>
+
+ \b -u, \b --user <database-user-name><br>
+    SQL database user (e.g., dsim).<br>
+
+ \b -p, \b --passwd <database-user-password><br>
+    SQL database password (e.g., dsim).<br>
+
+ \b -H, \b --host <database-server-host-name><br>
+    SQL database hostname (e.g., localhost).<br>
+
+ \b -P, \b --port <database-server-port><br>
+    SQL database port (e.g., 3306).<br>
+
+ \b -m, \b --dbname <database-name><br>
+    SQL database name (e.g., sim_dsim).<br>
 
 See the output of the <tt>`trademgen_with_db --help'</tt> command for 
 default options.
 
 
 \section sec_see_also SEE ALSO
-\b trademgen(1), \b trademgen-config(1), \b trademgen-library(3)
+\b trademgen(1), \b pytrademgen(1), \b trademgen-config(1), \b trademgen-library(3)
 
 
 \section sec_support SUPPORT

@@ -37,12 +37,18 @@ Building the library and test binary from the tarball:
 The latest stable source tarball (trademgen*.tar.gz or .bz2) can be found here:
 http://sourceforge.net/project/showfiles.php?group_id=317250
 
+To customise the following to your environment, you can alter the path
+to the installation directory:
+export INSTALL_BASEDIR=/home/user/dev/deliveries
+export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=64"
+
 Then, as usual:
 * To configure the project, type something like:
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/home/user/dev/deliveries/trademgen-99.99.99 \
-   -DWITH_STDAIR_PREFIX=/home/user/dev/deliveries/stdair-stable \
-   -DCMAKE_BUILD_TYPE:STRING=Debug -DINSTALL_DOC:BOOL=ON ..
+  cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/trademgen-99.99.99 \
+   -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
+   -DCMAKE_BUILD_TYPE:STRING=Debug -DINSTALL_DOC:BOOL=ON \
+   ${LIBSUFFIX_4_CMAKE} ..
 * To build the project, type:
   make
 * To test the project, type:
@@ -54,5 +60,10 @@ Then, as usual:
   make dist
 * To package the binary and the (HTML and PDF) documentation:
   make package
+* To run the local binary version:
+  ./trademgen/trademgen -b
+* To run the installed version:
+  ${INSTALL_BASEDIR}/trademgen-99.99.99/bin/trademgen -b
 
-Denis Arnaud (August 2011)
+Denis Arnaud (December 2011)
+

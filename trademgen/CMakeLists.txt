@@ -50,8 +50,10 @@ module_binary_add (batches)
 module_binary_add (batches trademgen_with_db)
 
 ##
-# Installing Python scripts
-module_python_add (python/pytrademgen)
+# Installing Python and Shell scripts
+module_script_add (python/pytrademgen)
+module_script_add (tools/trademgen_drawBookingArrivals)
+module_script_add (tools/trademgen_extractBookingRequests)
 
 ##
 # Install the CMake import helper, so that third party projects can refer to it
