@@ -1,4 +1,10 @@
 
+* Mon Dec 12 2011 Denis Arnaud <denis_arnaud at users dot sourceforge.net> 0.2.2
+- Took into account feedback from the review request (#728815). The test/math/
+sub-directory has been moved out into a dedicated GitHub repository
+(https://github.com/denisarnaud/playground). The other tests (sequential
+generation) are now checked.
+
 * Mon Dec 05 2011 Denis Arnaud <denis_arnaud at users dot sourceforge.net> 0.2.1
 - [Dev] Adapted the database-related source code to the new SOCI-3.1 API.
 - [Build] Improved the CMake build framework. For instance, the package

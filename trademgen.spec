@@ -2,7 +2,7 @@
 %global mydocs __tmp_docdir
 #
 Name:           trademgen
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}
 
 Summary:        C++ Simulated Travel Demand Generation Library
@@ -125,6 +125,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 12 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.2.2-1
+- Upstream update. Took into account feedback from #728815.
+
 * Mon Dec 05 2011 Denis Arnaud <denis.arnaud_fedora@m4x.org> 0.2.1-1
 - Upstream update
 
