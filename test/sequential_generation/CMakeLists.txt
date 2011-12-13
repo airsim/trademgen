@@ -1,26 +1,16 @@
 #
 # Sequential generation tests for TraDemGen
 #
-if (Boost_FOUND)
+module_set_name (sequential_generation)
+module_library_add_specific (sequential_generation . "na" RandomManager.cpp)
+##
+# Specify each test suite configuration
 
-  # CMake macro (defined in config/add_test_suite.cmake)
-  include (add_test_suite)
+# * RandomDistributionTest Test Suite
+module_test_add_suite (RandomDistributionTest RandomDistributionTestSuite.cpp)
 
-  enable_testing() 
 
-  # * TraDemGen Test Suite
-  #file (GLOB randomdistributiontest_SOURCES *.cpp)
-  set (TEST_TARGET RandomDistributionTest)
-  set (randomdistributiontest_SOURCES RandomDistributionTestSuite.cpp)
-  add_test_suite (${TEST_TARGET} "${randomdistributiontest_SOURCES}"
-    ${TRADEMGEN_LIB_TARGET} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+##
+# Register all the test suites to be built and performed
+module_test_build_all ()
 
-  # * Next test suite
-  # ...
-
-  # Don't forget to add the test suite to the DEPENDS argument list of
-  # the 'check' target within the test/CMakeLists.txt file
-  add_custom_target (check${TEST_TARGET} COMMAND ${CMAKE_CTEST_COMMAND}
-    DEPENDS ${TEST_TARGET})
-
-endif()

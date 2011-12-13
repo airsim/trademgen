@@ -121,7 +121,7 @@ namespace test_random {
       // The lower bound is translated to the latest drawn number
       lLowerBound = lDrawnNumber;
     }
-  
+ 
     // Reset formatting flags of _oStr
     _oStr.flags (oldFlags);
 
@@ -140,7 +140,7 @@ namespace test_random {
 
     // Draw randomly
     const double lUniformRangeLength = 1.0 / _nbOfDraws;
-    double lLowerBound = 0.0;
+    // double lLowerBound = 0.0;
     for (unsigned int i = 1; i <= _nbOfDraws; ++i) {
       // Draw a random number corresponding to the uniform [0,1) range
       double lDrawnNumber = _uniformDistributionGenerator();
@@ -163,7 +163,7 @@ namespace test_random {
       // _oStr << "[" << i << "]: " << lDrawnNumber << std::endl;
 
       // The lower bound is translated to the latest drawn number
-      lLowerBound = lDrawnNumber;
+      // lLowerBound = lDrawnNumber;
     }
   
     // Reset formatting flags of _oStr

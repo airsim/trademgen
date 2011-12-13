@@ -81,7 +81,8 @@ add_subdirectory (man)
 #####################################
 ##
 # Test suites
-add_test_suites (${PROJECT_NAME})
+add_test_module (sequential_generation)
+add_test_suites (${PROJECT_NAME} sequential_generation)
 
 
 #######################################
