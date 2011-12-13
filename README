@@ -45,7 +45,7 @@ export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=64"
 Then, as usual:
 * To configure the project, type something like:
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/trademgen-0.2.1 \
+  cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/trademgen-0.2.2 \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
    -DCMAKE_BUILD_TYPE:STRING=Debug -DINSTALL_DOC:BOOL=ON \
    ${LIBSUFFIX_4_CMAKE} ..
@@ -57,7 +57,7 @@ Then, as usual:
   just type:
   make install
   cd ${INSTALL_BASEDIR}
-  rm -f trademgen-stable && ln -s trademgen-0.2.1 trademgen-stable
+  rm -f trademgen-stable && ln -s trademgen-0.2.2 trademgen-stable
   cd -
 * To package the source files, type:
   make dist
