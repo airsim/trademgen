@@ -70,6 +70,10 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# Remove extra libraries, which are generated only for the tests
+rm -f $RPM_BUILD_ROOT%{_libdir}/libsequential_generation*.so*
+
+#
 mkdir -p %{mydocs}
 mv $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/html %{mydocs}
 rm -f %{mydocs}/html/installdox
