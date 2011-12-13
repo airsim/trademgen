@@ -1538,6 +1538,11 @@ endmacro (module_export_install)
 ##                            Tests                              ##
 ###################################################################
 #
+macro (add_test_module _test_module)
+  list (APPEND PROJ_ALL_MOD_FOR_BLD ${_test_module})
+endmacro (add_test_module)
+
+#
 macro (add_test_suites)
   #
   set (_test_suite_dir_list ${ARGV})
