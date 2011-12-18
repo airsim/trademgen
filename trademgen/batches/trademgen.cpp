@@ -31,7 +31,6 @@
 // TraDemGen
 #include <trademgen/TRADEMGEN_Service.hpp>
 #include <trademgen/config/trademgen-paths.hpp>
-#include <trademgen/config/trademgen-paths.hpp>
 
 // Aliases for namespaces
 namespace ba = boost::accumulators;
