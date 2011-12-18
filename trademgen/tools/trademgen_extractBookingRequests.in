@@ -31,9 +31,9 @@ do
 	echo " See also the trademgen_drawBookingArrivals script, which plots"
 	echo " booking arrival curves from those very same booking requests."
 	echo " Note that there is no dependency between those two scripts." 
-    echo " "
-    echo "Usage:"
-    echo "    \$0 [-i/--input <path-to-input-log-file>]"
+    echo ""
+    echo " Usage:"
+    echo "  $0 [-i/--input <path-to-input-log-file>]"
     echo ""
     exit 0
   fi
