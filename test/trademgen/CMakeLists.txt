@@ -1,14 +1,12 @@
 #
 # TraDemGen Tests
 #
-module_set_name (trademgen)
-
 
 ##
 # Specify each test suite configuration
 
 # * TraDemGen Test Suite
-module_test_add_suite (TrademgenTest DemandGenerationTestSuite.cpp)
+module_test_add_suite (trademgen TrademgenTest DemandGenerationTestSuite.cpp)
 
 
 ##

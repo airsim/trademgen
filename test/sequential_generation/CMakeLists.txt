@@ -1,13 +1,13 @@
 #
 # Sequential generation tests for TraDemGen
 #
-module_set_name (sequential_generation)
-module_library_add_specific (sequential_generation . "na" RandomManager.cpp)
+
 ##
 # Specify each test suite configuration
 
 # * RandomDistributionTest Test Suite
-module_test_add_suite (RandomDistributionTest RandomDistributionTestSuite.cpp)
+module_test_add_suite (sequential_generation RandomDistributionTest 
+  "RandomManager.cpp;RandomDistributionTestSuite.cpp")
 
 
 ##
