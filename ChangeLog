@@ -1,4 +1,11 @@
 
+* Sun Dec 18 2011 Denis Arnaud <denis_arnaud at users dot sourceforge dot net> 0.2.3
+- Two new criteria have been added to the fare rule and to the booking
+request.
+- The CMake build system now accepts independent unit tests (not dependent on
+the core module being built). That allows, for instance, to benchmark the
+project with third-party libraries.
+
 * Mon Dec 12 2011 Denis Arnaud <denis_arnaud at users dot sourceforge.net> 0.2.2
 - Took into account feedback from the review request (#728815). The test/math/
 sub-directory has been moved out into a dedicated GitHub repository

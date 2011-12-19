@@ -9,7 +9,7 @@ include (config/project_config_embeddable.cmake)
 # Project info
 set_project_names (trademgen TraDemGen)
 set_project_brief ("C++ Simulated Travel Demand Generation Library")
-set_project_versions (0 2 2)
+set_project_versions (0 2 3)
 
 ##
 # Project options
