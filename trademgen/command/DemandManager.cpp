@@ -471,28 +471,42 @@ namespace TRADEMGEN {
     const stdair::DateTime_T lCancellationTime =
       lDepartureDateTime - lCancellationTimeToDeparture;
 
-    // Retrieve the segment path
-    const stdair::SegmentPath_T lSegmentPath = iTravelSolution.getSegmentPath();
+    // Build the list of Class ID's.
+    stdair::BookingClassIDList_T lClassIDList;
     
-    // Hardcoded class path
+    const stdair::ClassObjectIDMapHolder_T& lClassObjectIDMapHolder =
+      iTravelSolution.getClassObjectIDMapHolder();
     const stdair::FareOptionStruct& lChosenFareOption =
       iTravelSolution.getChosenFareOption ();
     const stdair::ClassList_StringList_T& lClassPath =
       lChosenFareOption.getClassPath();
-    std::ostringstream oStr;
-    for (stdair::ClassList_StringList_T::const_iterator itClassList =
-           lClassPath.begin(); itClassList != lClassPath.end(); ++itClassList) {
-      const stdair::ClassList_String_T& lClassList = *itClassList;
+    stdair::ClassList_StringList_T::const_iterator itClassKeyList =
+      lClassPath.begin();
+    for (stdair::ClassObjectIDMapHolder_T::const_iterator itClassObjectIDMap =
+           lClassObjectIDMapHolder.begin();
+         itClassObjectIDMap != lClassObjectIDMapHolder.end();
+         ++itClassObjectIDMap, ++itClassKeyList) {
+      const stdair::ClassObjectIDMap_T& lClassObjectIDMap = *itClassObjectIDMap;
+      
+      // TODO: Removed this hardcode.
+      std::ostringstream ostr;
+      const stdair::ClassList_String_T& lClassList = *itClassKeyList;
       assert (lClassList.size() > 0);
-      oStr << lClassList.at(0); 
-    }
-    const stdair::ClassList_String_T lClassList_String = oStr.str();
+      ostr << lClassList.at(0);
+      const stdair::ClassCode_T lClassCode (ostr.str());
+      stdair::ClassObjectIDMap_T::const_iterator itClassID =
+        lClassObjectIDMap.find (lClassCode);
+      assert (itClassID != lClassObjectIDMap.end());
+      const stdair::BookingClassID_T& lClassID = itClassID->second;
 
+      lClassIDList.push_back (lClassID);
+    }
+    
     // Create the cancellation.
     stdair::CancellationPtr_T lCancellation_ptr =
       stdair::CancellationPtr_T
-      (new stdair::CancellationStruct (lSegmentPath, lClassList_String,
-                                       iPartySize, lCancellationTime));
+      (new stdair::CancellationStruct (lClassIDList, iPartySize,
+                                       lCancellationTime));
 
     // Create an event structure
     stdair::EventStruct lEventStruct (stdair::EventType::CX, lCancellation_ptr);
