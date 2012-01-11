@@ -23,6 +23,8 @@
 #include <stdair/service/Logger.hpp>
 #include <stdair/service/DBSessionManager.hpp>
 #include <stdair/STDAIR_Service.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/bom/BomDisplay.hpp>
@@ -63,6 +65,9 @@ namespace TRADEMGEN {
     const bool ownStdairService = true;
     addStdAirService (lSTDAIR_Service_ptr, ownStdairService);
 
+    // Initalise the SEvMgr service.
+    initSEVMGRService();
+
     // Initialise the (remaining of the) context
     initTrademgenService();
   }
@@ -85,6 +90,9 @@ namespace TRADEMGEN {
     const bool ownStdairService = true;
     addStdAirService (lSTDAIR_Service_ptr, ownStdairService);
 
+    // Initalise the SEvMgr service.
+    initSEVMGRService();
+
     // Initialise the (remaining of the) context
     initTrademgenService();
   }
@@ -102,6 +110,9 @@ namespace TRADEMGEN {
     // \note TraDemGen does not own the STDAIR service resources here.
     const bool doesNotOwnStdairService = false;
     addStdAirService (ioSTDAIR_Service_ptr, doesNotOwnStdairService);
+
+    // Initalise the SEvMgr service.
+    initSEVMGRService();
 
     // Initialise the context
     initTrademgenService();
@@ -175,6 +186,33 @@ namespace TRADEMGEN {
 
     return lSTDAIR_Service_ptr;
   }
+
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::initSEVMGRService() {
+
+    // Retrieve the TraDemGen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the StdAir service context
+    stdair::STDAIR_ServicePtr_T lSTDAIR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSTDAIR_ServicePtr();
+
+    /**
+     * Initialise the SEvMgr service handler.
+     *
+     * \note The (Boost.)Smart Pointer keeps track of the references
+     *       on the Service object, and deletes that object when it is
+     *       no longer referenced (e.g., at the end of the process).
+     */
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr = 
+      boost::make_shared<SEVMGR::SEVMGR_Service> (lSTDAIR_Service_ptr);
+    
+    // Store the SEvMgr service object within the (TraDemGen) service context
+    lTRADEMGEN_ServiceContext.setSEVMGR_Service (lSEVMGR_Service_ptr);
+  }
+  
   
   // //////////////////////////////////////////////////////////////////////
   void TRADEMGEN_Service::initTrademgenService() {
@@ -253,6 +291,16 @@ namespace TRADEMGEN {
      * \note: Currently, no more things to do by TraDemGen at that stage,
      *        as there is no child
      */
+    /**
+     * Let the Event Management Library (i.e., the SEvMgr component) complement
+     * the BOM.
+     *
+     * \note As of now, the Event Management Library does not add anything to
+     * the sample BOM.
+     */
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
+    lSEVMGR_Service.buildSampleBom();
 
     /**
      * 3. Build the complementary objects/links for the current component (here,
@@ -600,5 +648,19 @@ namespace TRADEMGEN {
     
     // Delegate the call to the dedicated command
     DemandManager::reset (lQueue, lSharedGenerator.getBaseGenerator());
+    
+    // Retrieve the SEvMgr service context
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
+
+    /**
+     * Reset the EventQueue object.
+     *
+     * \note As the DemandStream objects are attached to the EventQueue
+     * instance, that latter has to be resetted after the DemandStream
+     * objects.
+     */
+    lSEVMGR_Service.reset();
+    
   }
 }

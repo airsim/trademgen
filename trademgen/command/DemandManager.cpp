@@ -14,6 +14,8 @@
 #include <stdair/factory/FacBom.hpp>
 #include <stdair/factory/FacBomManager.hpp>
 #include <stdair/service/Logger.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/DemandCharacteristics.hpp>
 #include <trademgen/basic/DemandDistribution.hpp>
@@ -421,15 +423,6 @@ namespace TRADEMGEN {
       
       lCurrentDS_ptr->reset (ioShareGenerator);
     }
-    
-    /**
-     * Reset the EventQueue object.
-     *
-     * \note As the DemandStream objects are attached to the EventQueue
-     * instance, that latter has to be resetted after the DemandStream
-     * objects.
-     */
-    ioEventQueue.reset();
   }
   
 
