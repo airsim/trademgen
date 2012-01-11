@@ -6,12 +6,16 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <string>
+// Boost
+#include <boost/shared_ptr.hpp>
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_service_types.hpp>
 #include <stdair/basic/RandomGeneration.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/service/ServiceAbstract.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 // TraDemGen
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/DemandCharacteristicsTypes.hpp>
@@ -74,7 +78,15 @@ namespace TRADEMGEN {
       return _posProbabilityMass;
     }
 
+    /**
+     * Get the SEvMgr service handler.
+     */
+    SEVMGR::SEVMGR_Service& getSEVMGR_Service() const {
+      assert (_sevmgrService != NULL);
+      return *_sevmgrService;
+    }
 
+    
   private:
     // ///////// Setters //////////
     /**
@@ -84,6 +96,13 @@ namespace TRADEMGEN {
                             const bool iOwnStdairService) {
       _stdairService = ioSTDAIR_ServicePtr;
       _ownStdairService = iOwnStdairService;
+    }
+
+    /**
+     * Set the pointer on the SEvMgr service handler.
+     */
+    void setSEVMGR_Service (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr) {
+      _sevmgrService = ioSEVMGR_ServicePtr;
     }
 
     
@@ -137,6 +156,11 @@ namespace TRADEMGEN {
      * Standard Airline (StdAir) Service Handler.
      */
     stdair::STDAIR_ServicePtr_T _stdairService;
+
+    /**
+     * Standard event queue (SEvMgr) Service Handler.
+     */
+    SEVMGR::SEVMGR_ServicePtr_T _sevmgrService;
 
     /**
      * State whether or not RMOL owns the STDAIR service resources.

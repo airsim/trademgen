@@ -399,6 +399,11 @@ namespace TRADEMGEN {
     stdair::STDAIR_ServicePtr_T initStdAirService (const stdair::BasLogParams&);
     
     /**
+     * Initialise the SEvMgr service.
+     */
+    void initSEVMGRService();
+    
+    /**
      * Attach the STDAIR service (holding the log and database services) to
      * the TRADEMGEN_Service.
      *
