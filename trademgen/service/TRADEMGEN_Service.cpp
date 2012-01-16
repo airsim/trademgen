@@ -616,16 +616,38 @@ namespace TRADEMGEN {
     stdair::RandomGeneration& lGenerator =
       lTRADEMGEN_ServiceContext.getUniformGenerator();
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+    // Build an event structure with the default constructor.
+    stdair::EventStruct lEventStruct;
+    stdair::EventStruct& lRefEventStruct = lEventStruct;
 
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Generate the cancellation event
+    const bool hasCancellationBeenGenerated =
+      DemandManager::generateCancellation (lGenerator, iTravelSolution,
+                                           iPartySize, iRequestTime,
+                                           iDepartureDate, lRefEventStruct);
 
-    return DemandManager::generateCancellation (lQueue, lGenerator,
-                                                iTravelSolution, iPartySize,
-                                                iRequestTime, iDepartureDate);
+    // If the cancellation has been not sucessfully gerenerated, return.
+    if (hasCancellationBeenGenerated == false) {
+      return  hasCancellationBeenGenerated;
+    }
+    assert (hasCancellationBeenGenerated == true);
+
+    // Retrieve the SEvMgr service context
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
+      
+    /**
+       \note When adding an event in the event queue, the event can be
+       altered. That happens when an event already exists, in the
+       event queue, with exactly the same date-time stamp. In that
+       case, the date-time stamp is altered for the newly added event,
+       so that the unicity on the date-time stamp can be guaranteed.
+    */
+    // Add the gerenerated cancellation event into the queue
+    lSEVMGR_Service.addEvent (lRefEventStruct);
+
+    return hasCancellationBeenGenerated;
+
   }
 
   // ////////////////////////////////////////////////////////////////////
