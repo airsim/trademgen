@@ -18,6 +18,7 @@
 // Forward declarations
 namespace stdair {
   class EventQueue;
+  class EventStruct;
   struct ProgressStatusSet;
   struct TravelSolutionStruct;
 }
@@ -266,12 +267,12 @@ namespace TRADEMGEN {
     /**
      * Generate the potential cancellation event.
      */
-    static bool generateCancellation (stdair::EventQueue&,
-                                      stdair::RandomGeneration&,
+    static bool generateCancellation (stdair::RandomGeneration&,
                                       const stdair::TravelSolutionStruct&,
                                       const stdair::PartySize_T&,
                                       const stdair::DateTime_T&,
-                                      const stdair::Date_T&);
+                                      const stdair::Date_T&,
+                                      stdair::EventStruct& ioEventStruct);
   };
 
 }

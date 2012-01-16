@@ -428,12 +428,12 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   bool DemandManager::
-  generateCancellation (stdair::EventQueue& ioEventQueue,
-                        stdair::RandomGeneration& ioGenerator,
+  generateCancellation (stdair::RandomGeneration& ioGenerator,
                         const stdair::TravelSolutionStruct& iTravelSolution,
                         const stdair::PartySize_T& iPartySize,
                         const stdair::DateTime_T& iRequestTime,
-                        const stdair::Date_T& iDepartureDate) {
+                        const stdair::Date_T& iDepartureDate,
+                        stdair::EventStruct& ioEventStruct) {
 
     // Draw a random number to decide if we generate a
     // cancellation. For instance, the probability will be hardcoded.
@@ -503,15 +503,7 @@ namespace TRADEMGEN {
 
     // Create an event structure
     stdair::EventStruct lEventStruct (stdair::EventType::CX, lCancellation_ptr);
-    
-    /**
-       \note When adding an event in the event queue, the event can be
-       altered. That happens when an event already exists, in the
-       event queue, with exactly the same date-time stamp. In that
-       case, the date-time stamp is altered for the newly added event,
-       so that the unicity on the date-time stamp can be guaranteed.
-    */
-    ioEventQueue.addEvent (lEventStruct);
+    ioEventStruct = lEventStruct;
     
     return true;
   }
