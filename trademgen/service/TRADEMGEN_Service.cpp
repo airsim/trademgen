@@ -23,12 +23,14 @@
 #include <stdair/service/Logger.hpp>
 #include <stdair/service/DBSessionManager.hpp>
 #include <stdair/STDAIR_Service.hpp>
+#include <stdair/factory/FacBomManager.hpp>
 // SEvMgr
 #include <sevmgr/SEVMGR_Service.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/bom/BomDisplay.hpp>
 #include <trademgen/bom/DemandStreamKey.hpp>
+#include <trademgen/bom/DemandStream.hpp>
 #include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
 #include <trademgen/command/DemandParser.hpp>
 #include <trademgen/command/DemandManager.hpp>
@@ -683,6 +685,40 @@ namespace TRADEMGEN {
      * objects.
      */
     lSEVMGR_Service.reset();
+  }
+}
+
+namespace SEVMGR {
+
+  /**
+   * 
+   */
+  
+  // ////////////////////////////////////////////////////////////////////
+  template<class EventGenerator>
+  void SEVMGR_Service::addEventGenerator (EventGenerator& iEventGenerator) const {
+
+    // Retrieve the StdAir service
+    const stdair::STDAIR_Service& lSTDAIR_Service =
+      this->getSTDAIR_Service();
+    
+    // Retrieve the event queue object instance
+    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+
+    // Link the DemandStream to its parent (EventQueue)
+    stdair::FacBomManager::linkWithParent (lQueue, iEventGenerator);
+    
+    // Add the DemandStream to the dedicated list and map
+    stdair::FacBomManager::addToListAndMap (lQueue, iEventGenerator);
     
   }
+  
+  // ////////////////////////////////////////////////////////////////////
+  // Explicit template instantiation
+  template void SEVMGR::SEVMGR_Service::
+  addEventGenerator<TRADEMGEN::DemandStream> (TRADEMGEN::DemandStream&) const;
+
+  // ////////////////////////////////////////////////////////////////////
+
+
 }
