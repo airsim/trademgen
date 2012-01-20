@@ -23,7 +23,6 @@
 #include <stdair/basic/BasFileMgr.hpp>
 #include <stdair/basic/ProgressStatusSet.hpp>
 #include <stdair/bom/EventStruct.hpp>
-#include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen

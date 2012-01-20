@@ -6,7 +6,6 @@
 // StdAir
 #include <stdair/basic/RandomGeneration.hpp>
 #include <stdair/basic/BasFileMgr.hpp>
-#include <stdair/bom/EventQueue.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
 #include <trademgen/basic/DemandCharacteristicsTypes.hpp>
@@ -432,11 +431,12 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
-    doEndDemand::doEndDemand (stdair::EventQueue& ioEventQueue,
+    doEndDemand::doEndDemand (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                               stdair::RandomGeneration& ioSharedGenerator,
                               const POSProbabilityMass_T& iPOSProbMass,
                               DemandStruct& ioDemand)
-      : ParserSemanticAction (ioDemand), _eventQueue (ioEventQueue),
+      : ParserSemanticAction (ioDemand),
+        _sevmgrServicePtr (ioSEVMGR_ServicePtr),
         _uniformGenerator (ioSharedGenerator),
         _posProbabilityMass (iPOSProbMass) {
     }
@@ -449,7 +449,8 @@ namespace TRADEMGEN {
       // STDAIR_LOG_DEBUG ("Demand: " << _demand.describe());
 
       // Create the Demand BOM objects
-      DemandManager::createDemandCharacteristics (_eventQueue, _uniformGenerator,
+      DemandManager::createDemandCharacteristics (_sevmgrServicePtr,
+                                                  _uniformGenerator,
                                                   _posProbabilityMass, _demand);
                                  
       // Clean the lists
@@ -541,11 +542,12 @@ namespace TRADEMGEN {
     // //////////////////////////////////////////////////////////////////
 
     // //////////////////////////////////////////////////////////////////
-    DemandParser::DemandParser (stdair::EventQueue& ioEventQueue,
+    DemandParser::DemandParser (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                                 stdair::RandomGeneration& ioSharedGenerator,
                                 const POSProbabilityMass_T& iPOSProbMass,
                                 DemandStruct& ioDemand) 
-      : _eventQueue (ioEventQueue), _uniformGenerator (ioSharedGenerator),
+      : _sevmgrServicePtr (ioSEVMGR_ServicePtr),
+        _uniformGenerator (ioSharedGenerator),
         _posProbabilityMass (iPOSProbMass), _demand (ioDemand) {
     }
 
@@ -580,7 +582,8 @@ namespace TRADEMGEN {
         >> ';' >> time_value_dist
         >> ';' >> dtd_dist
         >> ';' >> demand_params
-        >> demand_end[doEndDemand (self._eventQueue, self._uniformGenerator,
+        >> demand_end[doEndDemand (self._sevmgrServicePtr,
+                                   self._uniformGenerator,
                                    self._posProbabilityMass, self._demand)]
         ;
 
@@ -823,11 +826,12 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   DemandFileParser::
-  DemandFileParser (stdair::EventQueue& ioEventQueue,
+  DemandFileParser (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                     stdair::RandomGeneration& ioSharedGenerator,
                     const POSProbabilityMass_T& iPOSProbMass,
                     const std::string& iFilename)
-    : _filename (iFilename), _eventQueue (ioEventQueue),
+    : _filename (iFilename),
+      _sevmgrServicePtr (ioSEVMGR_ServicePtr),
       _uniformGenerator (ioSharedGenerator),
       _posProbabilityMass (iPOSProbMass) {
     init();
@@ -871,7 +875,7 @@ namespace TRADEMGEN {
     STDAIR_LOG_DEBUG ("Parsing demand input file: " << _filename);
 
     // Initialise the parser (grammar) with the helper/staging structure.
-    DemandParserHelper::DemandParser lDemandParser (_eventQueue,
+    DemandParserHelper::DemandParser lDemandParser (_sevmgrServicePtr,
                                                     _uniformGenerator,
                                                     _posProbabilityMass,
                                                     _demand);

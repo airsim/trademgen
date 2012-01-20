@@ -9,10 +9,6 @@
 #include <string>
 // TraDemGen
 
-/// Forward declarations
-namespace stdair {
-  class EventQueue;
-}
 
 namespace TRADEMGEN {
 
@@ -32,9 +28,11 @@ namespace TRADEMGEN {
      *
      * @param std::ostream& Output stream in which the BOM tree should be
      *        logged/dumped.
-     * @param const stdair::EventQueue& Root of the BOM tree to be displayed.
+     * @param const SEVMGR::SEVMGR_ServicePtr_T Pointer on the SEvMgr
+     * service handler to display the queue key and to obtain the demand
+     * stream list.
      */
-    static std::string csvDisplay (const stdair::EventQueue&);
+    static std::string csvDisplay (const SEVMGR::SEVMGR_ServicePtr_T);
 
     /**
      * Recursively display (dump in the underlying output log stream)

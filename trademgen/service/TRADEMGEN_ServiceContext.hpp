@@ -79,6 +79,13 @@ namespace TRADEMGEN {
     }
 
     /**
+     * Get the pointer on the SEvMgr service handler.
+     */
+    SEVMGR::SEVMGR_ServicePtr_T getSEVMGR_ServicePtr() const {
+      return _sevmgrService;
+    }
+
+    /**
      * Get the SEvMgr service handler.
      */
     SEVMGR::SEVMGR_Service& getSEVMGR_Service() const {

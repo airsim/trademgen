@@ -16,7 +16,7 @@ namespace TRADEMGEN {
   // //////////////////////////////////////////////////////////////////////
   void DemandParser::
   generateDemand (const stdair::Filename_T& iFilename,
-                  stdair::EventQueue& ioEventQueue,
+                  SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                   stdair::RandomGeneration& ioSharedGenerator,
                   const POSProbabilityMass_T& iDefaultPOSProbablityMass) {
 
@@ -33,7 +33,7 @@ namespace TRADEMGEN {
     }
 
     // Initialise the demand file parser.
-    DemandFileParser lDemandParser (ioEventQueue, ioSharedGenerator,
+    DemandFileParser lDemandParser (ioSEVMGR_ServicePtr, ioSharedGenerator,
                                     iDefaultPOSProbablityMass, iFilename);
 
     // Parse the CSV-formatted demand input file, and generate the
