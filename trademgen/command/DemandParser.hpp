@@ -9,12 +9,13 @@
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/command/CmdAbstract.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 // TraDemGen
 #include <trademgen/basic/DemandCharacteristicsTypes.hpp>
 
 /// Forward declarations
 namespace stdair {
-  class EventQueue;
   struct RandomGeneration;
 }
 
@@ -34,10 +35,12 @@ namespace TRADEMGEN {
      *
      * @param const stdair::Filename_T& The file-name of the
               CSV-formatted demand input file.
-     * @param stdair::EventQueue& Event queue.
+     * @param SEVMGR::SEVMGR_ServicePtr_T Pointer on the SEvMgr service handler
+     * to update the queue with the parsed information.
      * @param stdair::RandomGeneration& Random generator.
      */
-    static void generateDemand (const stdair::Filename_T&, stdair::EventQueue&,
+    static void generateDemand (const stdair::Filename_T&,
+                                SEVMGR::SEVMGR_ServicePtr_T,
                                 stdair::RandomGeneration&,
                                 const POSProbabilityMass_T&);
   };

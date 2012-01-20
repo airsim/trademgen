@@ -15,7 +15,6 @@
 
 // Forward declarations
 namespace stdair {
-  class EventQueue;
   struct ProgressStatusSet;
   struct BasLogParams;
   struct BasDBParams;
@@ -230,8 +229,9 @@ namespace TRADEMGEN {
      * Get the expected number of events/requests to be generated for
      * all the demand streams.
      *
-     * The getExpectedTotalNbOfEvents() method is called on the
-     * underlying EventQueue object, which keeps track of that number.
+     * Calls the SEvMgr service with the same name
+     * "getExpectedTotalNumberOfRequestsToBeGenerated", which computes
+     * that number.
      *
      * \note That number usually corresponds to an expectation (i.e.,
      *       the mean value of a random distribution). The actual number
@@ -246,8 +246,9 @@ namespace TRADEMGEN {
      * Get the actual number of events/requests to be generated for
      * all the demand streams.
      *
-     * The getActualTotalNbOfEvents() method is called on the
-     * underlying EventQueue object, which keeps track of that number.
+     * Calls the SEvMgr service with the same name
+     * "getActualTotalNumberOfRequestsToBeGenerated", which computes
+     * that number.
      *
      * \note That number has been drawn when calling the
      *       generateFirstRequests() method.
@@ -311,7 +312,7 @@ namespace TRADEMGEN {
 
     /**
      * Pop the next coming (in time) event, and remove it from the
-     * event queue.
+     * event queue thanks to the SEvMgr service.
      * <ul>
      *   <li>The next coming (in time) event corresponds to the event
      *     having the earliest date-time stamp. In other words, it is
@@ -329,6 +330,9 @@ namespace TRADEMGEN {
 
     /**
      * States whether the event queue has reached the end.
+     *
+     * Calls the SEvMgr service with the same name "isQueueDone",
+     * which states whether the event queue has reached the end.
      *
      * For now, that method states whether the event queue is empty.
      */

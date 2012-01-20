@@ -8,7 +8,6 @@
 #include <stdair/bom/BomManager.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
-#include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/TravelSolutionStruct.hpp>
 #include <stdair/bom/CancellationStruct.hpp>
 #include <stdair/factory/FacBom.hpp>
@@ -27,9 +26,9 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   void DemandManager::
-  buildSampleBomStd (stdair::EventQueue& ioEventQueue,
-                  stdair::RandomGeneration& ioSharedGenerator,
-                  const POSProbabilityMass_T& iPOSProbMass) {
+  buildSampleBomStd (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
+                     stdair::RandomGeneration& ioSharedGenerator,
+                     const POSProbabilityMass_T& iPOSProbMass) {
 
     // Key of the demand stream
     const stdair::AirportCode_T lOrigin ("SIN");
@@ -150,7 +149,7 @@ namespace TRADEMGEN {
 
     // Delegate the call to the dedicated command
     DemandStream& lDemandStream = 
-      createDemandStream (ioEventQueue, lDemandStreamKey, lDTDProbDist,
+      createDemandStream (ioSEVMGR_ServicePtr, lDemandStreamKey, lDTDProbDist,
                           lPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist,
                           lChangeFees, lNonRefundable,
@@ -168,13 +167,13 @@ namespace TRADEMGEN {
     /**
      * Initialise the progress statuses, specific to the booking request type
      */
-    ioEventQueue.addStatus (stdair::EventType::BKG_REQ,
-                            lExpectedTotalNbOfEvents);
+    ioSEVMGR_ServicePtr->addStatus (stdair::EventType::BKG_REQ,
+                                    lExpectedTotalNbOfEvents);
   }
 
   // //////////////////////////////////////////////////////////////////////
   DemandStream& DemandManager::createDemandStream
-  (stdair::EventQueue& ioEventQueue,
+  (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
    const DemandStreamKey& iKey,
    const ArrivalPatternCumulativeDistribution_T& iArrivalPattern,
    const POSProbabilityMassFunction_T& iPOSProbMass,
@@ -206,18 +205,14 @@ namespace TRADEMGEN {
                           iRequestDateTimeSeed, iDemandCharacteristicsSeed,
                           iDefaultPOSProbablityMass);
 
-    // Link the DemandStream to its parent (EventQueue)
-    stdair::FacBomManager::linkWithParent (ioEventQueue, oDemandStream);
-    
-    // Add the DemandStream to the dedicated list and map
-    stdair::FacBomManager::addToListAndMap (ioEventQueue, oDemandStream);
+    ioSEVMGR_ServicePtr->addEventGenerator(oDemandStream);
 
     return oDemandStream;
   }
     
   // //////////////////////////////////////////////////////////////////////
   void DemandManager::
-  createDemandCharacteristics (stdair::EventQueue& ioEventQueue,
+  createDemandCharacteristics (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                                stdair::RandomGeneration& ioSharedGenerator,
                                const POSProbabilityMass_T& iPOSProbMass,
                                const DemandStruct& iDemand) {
@@ -259,7 +254,7 @@ namespace TRADEMGEN {
         
         // Delegate the call to the dedicated command
         DemandStream& lDemandStream = 
-          createDemandStream (ioEventQueue, lDemandStreamKey,
+          createDemandStream (ioSEVMGR_ServicePtr, lDemandStreamKey,
                               iDemand._dtdProbDist, iDemand._posProbDist,
                               iDemand._channelProbDist,
                               iDemand._tripProbDist,
@@ -283,8 +278,8 @@ namespace TRADEMGEN {
          * Initialise the progress statuses, one specific to the
          * booking request type.
          */
-        ioEventQueue.addStatus (stdair::EventType::BKG_REQ,
-                                lExpectedTotalNbOfEvents);
+        ioSEVMGR_ServicePtr->addStatus (stdair::EventType::BKG_REQ,
+                                        lExpectedTotalNbOfEvents);
       }
     }
   }
@@ -299,13 +294,14 @@ namespace TRADEMGEN {
   
   // ////////////////////////////////////////////////////////////////////
   const bool DemandManager::
-  stillHavingRequestsToBeGenerated (const stdair::EventQueue& iEventQueue,
+  stillHavingRequestsToBeGenerated (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                                     const stdair::DemandStreamKeyStr_T& iKey,
                                     stdair::ProgressStatusSet& ioPSS,
                                     const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
+    
     // Retrieve the DemandStream which corresponds to the given key.
     const DemandStream& lDemandStream =
-      stdair::BomManager::getObject<DemandStream> (iEventQueue, iKey);
+      ioSEVMGR_ServicePtr->getEventGenerator<DemandStream,stdair::DemandStreamKeyStr_T>(iKey);
 
     // Retrieve the progress status of the demand stream.
     stdair::ProgressStatus
@@ -319,14 +315,14 @@ namespace TRADEMGEN {
 
   // ////////////////////////////////////////////////////////////////////
   stdair::BookingRequestPtr_T DemandManager::
-  generateNextRequest (stdair::EventQueue& ioEventQueue,
+  generateNextRequest (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                        stdair::RandomGeneration& ioGenerator,
                        const stdair::DemandStreamKeyStr_T& iKey,
                        const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
 
     // Retrieve the DemandStream which corresponds to the given key.
-    DemandStream& lDemandStream = 
-      stdair::BomManager::getObject<DemandStream> (ioEventQueue, iKey);
+    DemandStream& lDemandStream =
+      ioSEVMGR_ServicePtr->getEventGenerator<DemandStream,stdair::DemandStreamKeyStr_T>(iKey);
 
     // Generate the next booking request
     stdair::BookingRequestPtr_T lBookingRequest =
@@ -344,14 +340,14 @@ namespace TRADEMGEN {
        case, the date-time stamp is altered for the newly added event,
        so that the unicity on the date-time stamp can be guaranteed.
     */
-    ioEventQueue.addEvent (lEventStruct);
+    ioSEVMGR_ServicePtr->addEvent (lEventStruct);
     
     return lBookingRequest;
   }
 
   // ////////////////////////////////////////////////////////////////////
   stdair::Count_T DemandManager::
-  generateFirstRequests (stdair::EventQueue& ioEventQueue,
+  generateFirstRequests (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                          stdair::RandomGeneration& ioGenerator,
                          const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
 
@@ -360,7 +356,7 @@ namespace TRADEMGEN {
 
     // Retrieve the DemandStream list
     const DemandStreamList_T& lDemandStreamList =
-      stdair::BomManager::getList<DemandStream> (ioEventQueue);
+      ioSEVMGR_ServicePtr->getEventGeneratorList<DemandStream>();
 
     for (DemandStreamList_T::const_iterator itDemandStream =
            lDemandStreamList.begin();
@@ -381,7 +377,8 @@ namespace TRADEMGEN {
 
       // Update the progress status for the given event type (i.e.,
       // booking request)
-      ioEventQueue.updateStatus (stdair::EventType::BKG_REQ, lActualNbOfEvents);
+      ioSEVMGR_ServicePtr->updateStatus (stdair::EventType::BKG_REQ,
+                                         lActualNbOfEvents);
 
       // Check whether there are still booking requests to be generated
       const bool stillHavingRequestsToBeGenerated =
@@ -390,13 +387,14 @@ namespace TRADEMGEN {
       if (stillHavingRequestsToBeGenerated) {
         // Generate the next event (booking request), and insert it
         // into the event queue
-        generateNextRequest (ioEventQueue, ioGenerator, lKey.toString(),
+        generateNextRequest (ioSEVMGR_ServicePtr, ioGenerator,
+                             lKey.toString(),
                              iDemandGenerationMethod);
       }
     }
 
     // Update the actual total number of events to be generated
-    ioEventQueue.setActualTotalNbOfEvents (lActualTotalNbOfEvents);
+    ioSEVMGR_ServicePtr->setActualTotalNbOfEvents (lActualTotalNbOfEvents);
 
     // Retrieve the actual total number of events to be generated
     const stdair::Count_T oTotalNbOfEvents = std::floor (lActualTotalNbOfEvents);
@@ -406,7 +404,7 @@ namespace TRADEMGEN {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  void DemandManager::reset (stdair::EventQueue& ioEventQueue,
+  void DemandManager::reset (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                              stdair::BaseGenerator_T& ioShareGenerator) {
 
     // TODO: check whether it is really necessary to destroy the
@@ -415,7 +413,7 @@ namespace TRADEMGEN {
 
     // Reset all the DemandStream objects
     const DemandStreamList_T& lDemandStreamList =
-      stdair::BomManager::getList<DemandStream> (ioEventQueue);
+      ioSEVMGR_ServicePtr->getEventGeneratorList<DemandStream>();
     for (DemandStreamList_T::const_iterator itDS = lDemandStreamList.begin();
          itDS != lDemandStreamList.end(); ++itDS) {
       DemandStream* lCurrentDS_ptr = *itDS;
@@ -423,9 +421,17 @@ namespace TRADEMGEN {
       
       lCurrentDS_ptr->reset (ioShareGenerator);
     }
+
+    /**
+     * Reset the EventQueue object.
+     *
+     * \note As the DemandStream objects are attached to the EventQueue
+     * instance, that latter has to be resetted after the DemandStream
+     * objects.
+     */
+    ioSEVMGR_ServicePtr->reset();
   }
   
-
   // ////////////////////////////////////////////////////////////////////
   bool DemandManager::
   generateCancellation (stdair::RandomGeneration& ioGenerator,
@@ -510,7 +516,7 @@ namespace TRADEMGEN {
   
   // //////////////////////////////////////////////////////////////////////
   void DemandManager::
-  buildSampleBom (stdair::EventQueue& ioEventQueue,
+  buildSampleBom (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                   stdair::RandomGeneration& ioSharedGenerator,
                   const POSProbabilityMass_T& iPOSProbMass) {
 
@@ -651,7 +657,7 @@ namespace TRADEMGEN {
 
     // Delegate the call to the dedicated command
     DemandStream& lSINBKKDemandStream = 
-      createDemandStream (ioEventQueue, lSINBKKDemandStreamKey, lDTDProbDist,
+      createDemandStream (ioSEVMGR_ServicePtr, lSINBKKDemandStreamKey, lDTDProbDist,
                           lSINBKKPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist,
                           lChangeFees, lNonRefundable,
@@ -720,7 +726,7 @@ namespace TRADEMGEN {
 
     // Delegate the call to the dedicated command
     DemandStream& lBKKHKGDemandStream = 
-      createDemandStream (ioEventQueue, lBKKHKGDemandStreamKey, lDTDProbDist,
+      createDemandStream (ioSEVMGR_ServicePtr, lBKKHKGDemandStreamKey, lDTDProbDist,
                           lBKKHKGPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist,
                           lChangeFees, lNonRefundable,
@@ -770,7 +776,7 @@ namespace TRADEMGEN {
 
     // Delegate the call to the dedicated command
     DemandStream& lSINHKGDemandStream = 
-      createDemandStream (ioEventQueue, lSINHKGDemandStreamKey, lDTDProbDist,
+      createDemandStream (ioSEVMGR_ServicePtr, lSINHKGDemandStreamKey, lDTDProbDist,
                           lSINHKGPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist, 
                           lChangeFees, lNonRefundable,
@@ -792,8 +798,8 @@ namespace TRADEMGEN {
      */
     const stdair::NbOfRequests_T lExpectedTotalNbOfEvents =
       lSINBKKExpectedNbOfEvents + lBKKHKGExpectedNbOfEvents + lSINHKGExpectedNbOfEvents;
-    ioEventQueue.addStatus (stdair::EventType::BKG_REQ,
-                            lExpectedTotalNbOfEvents);
+    ioSEVMGR_ServicePtr->addStatus (stdair::EventType::BKG_REQ,
+                                    lExpectedTotalNbOfEvents);
   }
 
 }

@@ -8,6 +8,8 @@
 #include <string>
 // STDAIR
 #include <stdair/command/CmdAbstract.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 // TRADEMGEN
 #include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/BasParserTypes.hpp>
@@ -15,7 +17,6 @@
 
 // Forward declarations
 namespace stdair {
-  class EventQueue;
   struct RandomGeneration;
 }
 
@@ -257,12 +258,12 @@ namespace TRADEMGEN {
     /** Mark the end of the demand parsing. */
     struct doEndDemand : public ParserSemanticAction {
       /** Actor Constructor. */
-      doEndDemand (stdair::EventQueue&, stdair::RandomGeneration&,
+      doEndDemand (SEVMGR::SEVMGR_ServicePtr_T, stdair::RandomGeneration&,
                    const POSProbabilityMass_T&, DemandStruct&);
       /** Actor Function (functor). */
       void operator() (iterator_t iStr, iterator_t iStrEnd) const;
       /** Actor Specific Context. */
-      stdair::EventQueue& _eventQueue;
+      SEVMGR::SEVMGR_ServicePtr_T _sevmgrServicePtr;
       stdair::RandomGeneration& _uniformGenerator;
       const POSProbabilityMass_T& _posProbabilityMass;
     };
@@ -363,7 +364,7 @@ namespace TRADEMGEN {
     struct DemandParser : 
       public boost::spirit::classic::grammar<DemandParser> {
 
-      DemandParser (stdair::EventQueue&, stdair::RandomGeneration&,
+      DemandParser (SEVMGR::SEVMGR_ServicePtr_T, stdair::RandomGeneration&,
                     const POSProbabilityMass_T&, DemandStruct&);
 
       template <typename ScannerT>
@@ -391,7 +392,7 @@ namespace TRADEMGEN {
       };
 
       // Parser Context
-      stdair::EventQueue& _eventQueue;
+      SEVMGR::SEVMGR_ServicePtr_T _sevmgrServicePtr;
       stdair::RandomGeneration& _uniformGenerator;
       const POSProbabilityMass_T& _posProbabilityMass;
       DemandStruct& _demand;
@@ -413,7 +414,7 @@ namespace TRADEMGEN {
   class DemandFileParser : public stdair::CmdAbstract {
   public:
     /** Constructor. */
-    DemandFileParser (stdair::EventQueue&, stdair::RandomGeneration&,
+    DemandFileParser (SEVMGR::SEVMGR_ServicePtr_T, stdair::RandomGeneration&,
                       const POSProbabilityMass_T&,
                       const stdair::Filename_T& iDemandInputFilename);
 
@@ -435,8 +436,8 @@ namespace TRADEMGEN {
     /** End iterator for the parser. */
     iterator_t _endIterator;
       
-    /** Root of the BOM tree. */
-    stdair::EventQueue& _eventQueue;
+    /** Pointer on the SEvMgr service handler. */
+    SEVMGR::SEVMGR_ServicePtr_T _sevmgrServicePtr;
 
     /** Shared uniform generator. */
     stdair::RandomGeneration& _uniformGenerator;

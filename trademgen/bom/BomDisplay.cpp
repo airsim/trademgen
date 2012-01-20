@@ -7,7 +7,9 @@
 // StdAir
 #include <stdair/basic/BasConst_BomDisplay.hpp>
 #include <stdair/bom/BomManager.hpp>
-#include <stdair/bom/EventQueue.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Service.hpp>
+#include <sevmgr/SEVMGR_Types.hpp>
 // TraDemGen
 #include <trademgen/bom/DemandStream.hpp>
 #include <trademgen/bom/BomDisplay.hpp>
@@ -40,7 +42,7 @@ namespace TRADEMGEN {
   };
 
   // ////////////////////////////////////////////////////////////////////
-  std::string BomDisplay::csvDisplay (const stdair::EventQueue& iEventQueue) {
+  std::string BomDisplay::csvDisplay (const SEVMGR::SEVMGR_ServicePtr_T iSEVMGR_ServicePtr) {
     std::ostringstream oStream;
 
     /**
@@ -49,18 +51,20 @@ namespace TRADEMGEN {
     oStream << std::endl;
     oStream << "==============================================================="
             << std::endl;
-    oStream << "EventQueue: " << iEventQueue.describeKey() << std::endl;
+    oStream << "EventQueue: " << iSEVMGR_ServicePtr->describeKey() << std::endl;
     oStream << "==============================================================="
             << std::endl;
 
     // Check whether there are DemandStream objects
-    if (stdair::BomManager::hasList<DemandStream> (iEventQueue) == false) {
+    const bool hasEventGeneratorList =
+      iSEVMGR_ServicePtr->hasEventGeneratorList<DemandStream>();
+    if (hasEventGeneratorList == false) {
       return oStream.str();
     }
     
     // Retrieve the DemandStream list
     const DemandStreamList_T& lDemandStreamList =
-      stdair::BomManager::getList<DemandStream> (iEventQueue);
+      iSEVMGR_ServicePtr->getEventGeneratorList<DemandStream>();
 
     // Browse the inventories
     for (DemandStreamList_T::const_iterator itDemandStream =

@@ -26,6 +26,7 @@
 #include <stdair/factory/FacBomManager.hpp>
 // SEvMgr
 #include <sevmgr/SEVMGR_Service.hpp>
+#include <sevmgr/SEVMGR_Types.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/bom/BomDisplay.hpp>
@@ -231,6 +232,10 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+    
     // Retrieve the shared generator
     stdair::RandomGeneration& lSharedGenerator =
       lTRADEMGEN_ServiceContext.getUniformGenerator();
@@ -238,17 +243,10 @@ namespace TRADEMGEN {
     // Retrieve the default POS distribution
     const POSProbabilityMass_T& lDefaultPOSProbabilityMass =
       lTRADEMGEN_ServiceContext.getPOSProbabilityMass();
-    
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue
-    stdair::EventQueue& lEventQueue = lSTDAIR_Service.getEventQueue();
 
     // Parse the input file and initialise the demand generators
     stdair::BasChronometer lDemandGeneration; lDemandGeneration.start();
-    DemandParser::generateDemand (iDemandInputFilename, lEventQueue,
+    DemandParser::generateDemand (iDemandInputFilename, lSEVMGR_Service_ptr,
                                   lSharedGenerator, lDefaultPOSProbabilityMass);
     const double lGenerationMeasure = lDemandGeneration.elapsed();
 
@@ -315,12 +313,13 @@ namespace TRADEMGEN {
     // Retrieve the default POS distribution
     const POSProbabilityMass_T& lDefaultPOSProbabilityMass =
       lTRADEMGEN_ServiceContext.getPOSProbabilityMass();
-    
-    // Retrieve the event queue
-    stdair::EventQueue& lEventQueue = lSTDAIR_Service.getEventQueue();
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
 
     // Delegate the BOM building to the dedicated service
-    DemandManager::buildSampleBom (lEventQueue, lSharedGenerator,
+    DemandManager::buildSampleBom (lSEVMGR_Service_ptr, lSharedGenerator,
                                    lDefaultPOSProbabilityMass);
   }
 
@@ -359,15 +358,13 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the STDAIR service object from the (TraDemGen) service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue
-    stdair::EventQueue& lEventQueue = lSTDAIR_Service.getEventQueue();
-
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+    
     // Delegate the BOM building to the dedicated service
-    return BomDisplay::csvDisplay (lEventQueue);
+    return BomDisplay::csvDisplay (lSEVMGR_Service_ptr);
+
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -439,16 +436,13 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    const stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the SEvMgr service context
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
     
     // Delegate the call to the dedicated command
     const stdair::Count_T& oExpectedTotalNumberOfRequestsToBeGenerated =
-      lQueue.getExpectedTotalNbOfEvents (stdair::EventType::BKG_REQ);
+      lSEVMGR_Service.getExpectedTotalNumberOfEventsToBeGenerated (stdair::EventType::BKG_REQ);
 
     //
     return oExpectedTotalNumberOfRequestsToBeGenerated;
@@ -463,16 +457,13 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    const stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the SEvMgr service context
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
     
     // Delegate the call to the dedicated command
     const stdair::Count_T& oActualTotalNumberOfRequestsToBeGenerated =
-      lQueue.getActualTotalNbOfEvents (stdair::EventType::BKG_REQ);
+      lSEVMGR_Service.getActualTotalNumberOfEventsToBeGenerated (stdair::EventType::BKG_REQ);
 
     //
     return oActualTotalNumberOfRequestsToBeGenerated;
@@ -489,16 +480,14 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    const stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
     
     // Delegate the call to the dedicated command
     const bool oStillHavingRequestsToBeGenerated =
-      DemandManager::stillHavingRequestsToBeGenerated (lQueue, iKey, ioPSS,
+      DemandManager::stillHavingRequestsToBeGenerated (lSEVMGR_Service_ptr,
+                                                       iKey, ioPSS,
                                                        iDemandGenerationMethod);
 
     //
@@ -514,12 +503,9 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
 
     // Retrieve the random generator
     stdair::RandomGeneration& lGenerator =
@@ -527,7 +513,7 @@ namespace TRADEMGEN {
 
     // Delegate the call to the dedicated command
     const stdair::Count_T& oActualTotalNbOfEvents =
-      DemandManager::generateFirstRequests (lQueue, lGenerator,
+      DemandManager::generateFirstRequests (lSEVMGR_Service_ptr, lGenerator,
                                             iDemandGenerationMethod);
 
     //
@@ -544,19 +530,17 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
     
     // Retrieve the random generator
     stdair::RandomGeneration& lGenerator =
       lTRADEMGEN_ServiceContext.getUniformGenerator();
 
     // Delegate the call to the dedicated command
-    return DemandManager::generateNextRequest (lQueue, lGenerator, iKey,
+    return DemandManager::generateNextRequest (lSEVMGR_Service_ptr,
+                                               lGenerator, iKey,
                                                iDemandGenerationMethod);
   }
 
@@ -569,15 +553,12 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the SEvMgr service context
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
     
     // Extract the next event from the queue
-    return lQueue.popEvent (ioEventStruct);
+    return lSEVMGR_Service.popEvent (ioEventStruct);
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -588,15 +569,12 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-
-    // Retrieve the event queue object instance
-    const stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the SEvMgr service context
+    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
+      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
     
     // Calculates whether the event queue has been fully emptied
-    const bool isQueueDone = lQueue.isQueueDone();
+    const bool isQueueDone = lSEVMGR_Service.isQueueDone();
 
     //
     return isQueueDone;
@@ -660,38 +638,28 @@ namespace TRADEMGEN {
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
 
-    // Retrieve the StdAir service context
-    stdair::STDAIR_Service& lSTDAIR_Service =
-      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
 
     // Retrieve the shared generator
     stdair::RandomGeneration& lSharedGenerator =
       lTRADEMGEN_ServiceContext.getUniformGenerator();
     
     // Delegate the call to the dedicated command
-    DemandManager::reset (lQueue, lSharedGenerator.getBaseGenerator());
-    
-    // Retrieve the SEvMgr service context
-    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
-      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
-
-    /**
-     * Reset the EventQueue object.
-     *
-     * \note As the DemandStream objects are attached to the EventQueue
-     * instance, that latter has to be resetted after the DemandStream
-     * objects.
-     */
-    lSEVMGR_Service.reset();
+    DemandManager::reset (lSEVMGR_Service_ptr,
+                          lSharedGenerator.getBaseGenerator());
   }
 }
 
 namespace SEVMGR {
 
   /**
-   * 
+   * Implementation of the SEvMgr service template methods for TraDemGen own
+   * EventGenerator type: DemandStream.
+   *
+   * \note The declaration of these methods can be found in the SEvMgr service
+   * header file.
    */
   
   // ////////////////////////////////////////////////////////////////////
@@ -714,11 +682,74 @@ namespace SEVMGR {
   }
   
   // ////////////////////////////////////////////////////////////////////
-  // Explicit template instantiation
-  template void SEVMGR::SEVMGR_Service::
-  addEventGenerator<TRADEMGEN::DemandStream> (TRADEMGEN::DemandStream&) const;
+  template<class EventGenerator, class Key>
+  EventGenerator& SEVMGR_Service::getEventGenerator(const Key& iKey) const {
+
+    // Retrieve the StdAir service
+    const stdair::STDAIR_Service& lSTDAIR_Service =
+      this->getSTDAIR_Service();
+    
+    // Retrieve the event queue object instance
+    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+
+    // Retrieve the DemandStream which corresponds to the given key.
+    EventGenerator& lEventGenerator = 
+      stdair::BomManager::getObject<EventGenerator> (lQueue, iKey);
+
+    return lEventGenerator;
+    
+  }
+  
+  // ////////////////////////////////////////////////////////////////////
+  template<class EventGenerator>
+  const std::list<EventGenerator*> SEVMGR_Service::getEventGeneratorList() const {
+
+    // Retrieve the StdAir service
+    const stdair::STDAIR_Service& lSTDAIR_Service =
+      this->getSTDAIR_Service();
+    
+    // Retrieve the event queue object instance
+    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+
+    // Retrieve the DemandStream list
+    const std::list<EventGenerator*> lEventGeneratorList =
+      stdair::BomManager::getList<EventGenerator> (lQueue);
+
+    return lEventGeneratorList;
+  }
 
   // ////////////////////////////////////////////////////////////////////
+  template<class EventGenerator>
+  bool SEVMGR_Service::hasEventGeneratorList() const {
 
+    // Retrieve the StdAir service
+    const stdair::STDAIR_Service& lSTDAIR_Service =
+      this->getSTDAIR_Service();
+    
+    // Retrieve the event queue object instance
+    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+
+    const bool hasListEventGenerator =
+      stdair::BomManager::hasList<EventGenerator> (lQueue);
+
+    return hasListEventGenerator;
+  }
+
+  // ////////////////////////////////////////////////////////////////////  
+  /**
+   * Explicit template instantiations with the TraDemGen own EventGenerator
+   * type: DemandStream.
+   */
+  template void SEVMGR_Service::
+  addEventGenerator<TRADEMGEN::DemandStream> (TRADEMGEN::DemandStream&) const;
+
+  template TRADEMGEN::DemandStream& SEVMGR_Service::
+  getEventGenerator<TRADEMGEN::DemandStream, stdair::DemandStreamKeyStr_T> (const stdair::DemandStreamKeyStr_T&) const;
+
+  template const std::list<TRADEMGEN::DemandStream*> SEVMGR_Service::
+  getEventGeneratorList<TRADEMGEN::DemandStream> () const;
+
+  template bool SEVMGR_Service::hasEventGeneratorList<TRADEMGEN::DemandStream>() const;
+  // ////////////////////////////////////////////////////////////////////
 
 }
