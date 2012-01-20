@@ -45,6 +45,9 @@ namespace TRADEMGEN {
   std::string BomDisplay::csvDisplay (const SEVMGR::SEVMGR_ServicePtr_T iSEVMGR_ServicePtr) {
     std::ostringstream oStream;
 
+	//
+	assert (iSEVMGR_ServicePtr != NULL);
+
     /**
      * Bom root level (only)
      */
