@@ -17,7 +17,6 @@
 #include <stdair/basic/ProgressStatusSet.hpp>
 #include <stdair/basic/DemandGenerationMethod.hpp>
 #include <stdair/bom/EventStruct.hpp>
-#include <stdair/bom/EventQueue.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/bom/BomDisplay.hpp>
 #include <stdair/service/Logger.hpp>

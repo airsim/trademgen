@@ -29,8 +29,8 @@ namespace TRADEMGEN {
   buildSampleBomStd (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                      stdair::RandomGeneration& ioSharedGenerator,
                      const POSProbabilityMass_T& iPOSProbMass) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
 
     // Key of the demand stream
     const stdair::AirportCode_T lOrigin ("SIN");
@@ -193,8 +193,9 @@ namespace TRADEMGEN {
    const stdair::RandomSeed_T& iRequestDateTimeSeed,
    const stdair::RandomSeed_T& iDemandCharacteristicsSeed,
    const POSProbabilityMass_T& iDefaultPOSProbablityMass) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
 
 	// 
     DemandStream& oDemandStream =
@@ -221,10 +222,10 @@ namespace TRADEMGEN {
                                stdair::RandomGeneration& ioSharedGenerator,
                                const POSProbabilityMass_T& iPOSProbMass,
                                const DemandStruct& iDemand) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
-
-	//
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
+	
+    //
     stdair::BaseGenerator_T& lSharedGenerator =
       ioSharedGenerator.getBaseGenerator();
     
@@ -307,8 +308,8 @@ namespace TRADEMGEN {
                                     const stdair::DemandStreamKeyStr_T& iKey,
                                     stdair::ProgressStatusSet& ioPSS,
                                     const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
     
     // Retrieve the DemandStream which corresponds to the given key.
     const DemandStream& lDemandStream =
@@ -330,8 +331,8 @@ namespace TRADEMGEN {
                        stdair::RandomGeneration& ioGenerator,
                        const stdair::DemandStreamKeyStr_T& iKey,
                        const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
 
     // Retrieve the DemandStream which corresponds to the given key.
     DemandStream& lDemandStream =
@@ -363,8 +364,8 @@ namespace TRADEMGEN {
   generateFirstRequests (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                          stdair::RandomGeneration& ioGenerator,
                          const stdair::DemandGenerationMethod& iDemandGenerationMethod) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
 
     // Actual total number of events to be generated
     stdair::NbOfRequests_T lActualTotalNbOfEvents = 0.0;
@@ -421,8 +422,8 @@ namespace TRADEMGEN {
   // ////////////////////////////////////////////////////////////////////
   void DemandManager::reset (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                              stdair::BaseGenerator_T& ioShareGenerator) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
 
     // TODO: check whether it is really necessary to destroy the
     // objects manually. Indeed, FacSupervisor::cleanAll() should
@@ -467,7 +468,7 @@ namespace TRADEMGEN {
       return false;
     }
     lRandomNumber /= 0.5;
-
+    
     // Hardcode the latest cancellation time.
     const stdair::Time_T lMidNight =
       boost::posix_time::hours (0);
@@ -538,8 +539,8 @@ namespace TRADEMGEN {
   buildSampleBom (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                   stdair::RandomGeneration& ioSharedGenerator,
                   const POSProbabilityMass_T& iPOSProbMass) {
-	// Sanity check
-	assert (ioSEVMGR_ServicePtr != NULL);
+    // Sanity check
+    assert (ioSEVMGR_ServicePtr != NULL);
 
     //
     ArrivalPatternCumulativeDistribution_T lDTDProbDist;

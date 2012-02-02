@@ -14,11 +14,11 @@
 // StdAir
 #include <stdair/basic/BasChronometer.hpp>
 #include <stdair/basic/BasConst_General.hpp>
+#include <stdair/basic/ProgressStatusSet.hpp>
 #include <stdair/bom/BomRoot.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/bom/AirlineStruct.hpp>
 #include <stdair/bom/EventStruct.hpp>
-#include <stdair/bom/EventQueue.hpp>
 #include <stdair/command/DBManagerForAirlines.hpp>
 #include <stdair/service/Logger.hpp>
 #include <stdair/service/DBSessionManager.hpp>
@@ -670,14 +670,14 @@ namespace SEVMGR {
     const stdair::STDAIR_Service& lSTDAIR_Service =
       this->getSTDAIR_Service();
     
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+    // Retrieve the BOM root object instance
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
 
     // Link the DemandStream to its parent (EventQueue)
-    stdair::FacBomManager::linkWithParent (lQueue, iEventGenerator);
+    stdair::FacBomManager::linkWithParent (lBomRoot, iEventGenerator);
     
     // Add the DemandStream to the dedicated list and map
-    stdair::FacBomManager::addToListAndMap (lQueue, iEventGenerator);
+    stdair::FacBomManager::addToListAndMap (lBomRoot, iEventGenerator);
     
   }
   
@@ -687,14 +687,14 @@ namespace SEVMGR {
 
     // Retrieve the StdAir service
     const stdair::STDAIR_Service& lSTDAIR_Service =
-      this->getSTDAIR_Service();
-    
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+      this->getSTDAIR_Service(); 
+
+    // Retrieve the BOM root object instance
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
 
     // Retrieve the DemandStream which corresponds to the given key.
     EventGenerator& lEventGenerator = 
-      stdair::BomManager::getObject<EventGenerator> (lQueue, iKey);
+      stdair::BomManager::getObject<EventGenerator> (lBomRoot, iKey);
 
     return lEventGenerator;
     
@@ -706,14 +706,14 @@ namespace SEVMGR {
 
     // Retrieve the StdAir service
     const stdair::STDAIR_Service& lSTDAIR_Service =
-      this->getSTDAIR_Service();
-    
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+      this->getSTDAIR_Service();   
 
+    // Retrieve the BOM root object instance
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    
     // Retrieve the DemandStream list
     const std::list<EventGenerator*> lEventGeneratorList =
-      stdair::BomManager::getList<EventGenerator> (lQueue);
+      stdair::BomManager::getList<EventGenerator> (lBomRoot);
 
     return lEventGeneratorList;
   }
@@ -725,12 +725,12 @@ namespace SEVMGR {
     // Retrieve the StdAir service
     const stdair::STDAIR_Service& lSTDAIR_Service =
       this->getSTDAIR_Service();
-    
-    // Retrieve the event queue object instance
-    stdair::EventQueue& lQueue = lSTDAIR_Service.getEventQueue();
+
+    // Retrieve the BOM root object instance
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
 
     const bool hasListEventGenerator =
-      stdair::BomManager::hasList<EventGenerator> (lQueue);
+      stdair::BomManager::hasList<EventGenerator> (lBomRoot);
 
     return hasListEventGenerator;
   }
