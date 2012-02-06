@@ -26,7 +26,6 @@
 #include <stdair/factory/FacBomManager.hpp>
 // SEvMgr
 #include <sevmgr/SEVMGR_Service.hpp>
-#include <sevmgr/SEVMGR_Types.hpp>
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/bom/BomDisplay.hpp>
@@ -103,19 +102,20 @@ namespace TRADEMGEN {
   // ////////////////////////////////////////////////////////////////////
   TRADEMGEN_Service::
   TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T ioSTDAIR_Service_ptr,
+		     SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_Service_ptr,
                      const stdair::RandomSeed_T& iRandomSeed)
     : _trademgenServiceContext (NULL) {
 
     // Initialise the service context
-    initServiceContext (iRandomSeed);
+    initServiceContext (iRandomSeed);   
 
     // Add the StdAir service context to the TRADEMGEN service context
     // \note TraDemGen does not own the STDAIR service resources here.
     const bool doesNotOwnStdairService = false;
     addStdAirService (ioSTDAIR_Service_ptr, doesNotOwnStdairService);
 
-    // Initalise the SEvMgr service.
-    initSEVMGRService();
+    //Add the SEvMgr service to the TRADEMGEN service context.
+    addSEVMGRService (ioSEVMGR_Service_ptr);
 
     // Initialise the context
     initTrademgenService();
@@ -155,6 +155,19 @@ namespace TRADEMGEN {
     // Store the STDAIR service object within the (TRADEMGEN) service context
     lTRADEMGEN_ServiceContext.setSTDAIR_Service (ioSTDAIR_Service_ptr,
                                                  iOwnStdairService);
+  } 
+
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::
+  addSEVMGRService (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_Service_ptr) {
+
+    // Retrieve the TraDemGen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Store the STDAIR service object within the (TRADEMGEN) service context
+    lTRADEMGEN_ServiceContext.setSEVMGR_Service (ioSEVMGR_Service_ptr);
   }
   
   // //////////////////////////////////////////////////////////////////////
