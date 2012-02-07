@@ -7,7 +7,8 @@
 // STL
 #include <iosfwd>
 #include <string>
-// TraDemGen
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 
 
 namespace TRADEMGEN {

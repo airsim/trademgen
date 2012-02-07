@@ -12,6 +12,8 @@
 #include <stdair/basic/DemandGenerationMethod.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/bom/EventTypes.hpp>
+// SEvMgr
+#include <sevmgr/SEVMGR_Types.hpp>
 
 // Forward declarations
 namespace stdair {
@@ -28,7 +30,7 @@ namespace stdair {
 namespace TRADEMGEN {
 
   /// Forward declarations
-  class TRADEMGEN_ServiceContext;
+  class TRADEMGEN_ServiceContext; 
   struct DemandStreamKey;
   
   /**
@@ -83,10 +85,13 @@ namespace TRADEMGEN {
      * chain (for instance, when the TRADEMGEN_Service is itself being
      * initialised by another library service such as DSIM_Service).
      *
-     * @param stdair::STDAIR_ServicePtr_T Handler on the STDAIR_Service.
+     * @param stdair::STDAIR_ServicePtr_T Handler on the STDAIR_Service. 
+     * @param SEVMGR::SEVMGR_ServicePtr_T Handler on the SEVMGR_Service.
      * @param const stdair::RandomSeed_T& Seed for the random generation.
      */
-    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T, const stdair::RandomSeed_T&);
+    TRADEMGEN_Service (stdair::STDAIR_ServicePtr_T, 
+		       SEVMGR::SEVMGR_ServicePtr_T, 
+		       const stdair::RandomSeed_T&);
     
     /**
      * Parse the demand input file.
@@ -416,7 +421,14 @@ namespace TRADEMGEN {
      *        service resources.
      */
     void addStdAirService (stdair::STDAIR_ServicePtr_T ioSTDAIR_ServicePtr,
-                           const bool iOwnStdairService);
+                           const bool iOwnStdairService); 
+
+    /**
+     * Attach the SEVMGR service to the TRADEMGEN_Service.
+     *
+     * @param SEVMGR::SEVMGR_ServicePtr_T Reference on the SEVMGR service.
+     */
+    void addSEVMGRService (SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr);
     
     /**
      * Initialise the (TraDemGen) service context (i.e., the
