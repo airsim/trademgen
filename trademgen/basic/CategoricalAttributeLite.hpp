@@ -163,6 +163,8 @@ namespace TRADEMGEN {
           _valueArray.push_back (attribute_value);
         }
       }
+      // Remember the actual array size.
+      _size = _valueArray.size();
     }
   
   private:
