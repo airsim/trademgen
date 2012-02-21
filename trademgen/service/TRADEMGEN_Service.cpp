@@ -300,13 +300,8 @@ namespace TRADEMGEN {
     /**
      * 2. Delegate the complementary building of objects and links by the
      *    appropriate levels/components
-     * 
-     * Let the Event Management Library (i.e., the SEvMgr component) complement
-     * the sample BOM.
+     * \note Nothing to do for now.
      */
-    SEVMGR::SEVMGR_Service& lSEVMGR_Service =
-      lTRADEMGEN_ServiceContext.getSEVMGR_Service();
-    lSEVMGR_Service.buildSampleQueue();
 
     /**
      * 3. Build the complementary objects/links for the current component (here,
