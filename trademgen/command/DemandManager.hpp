@@ -243,6 +243,13 @@ namespace TRADEMGEN {
      * altered, reflecting the random generations made within that
      * method.
      *
+     * /note In the output, the booking request has not been necessarily added
+     * into the queue. Indeed, if the generated booking request date was
+     * posterior to the booking request departure date (which is possible with
+     * the poisson process method), then it has not been added to the queue.
+     * Furthermore, when it occurs, we know the demand stream into question has
+     * been fully generated.
+     *
      * @param SEVMGR::SEVMGR_ServicePtr_T Pointer on the SEvMgr service
      * handler.
      * @param stdair::RandomGeneration& Random generator.
