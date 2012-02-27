@@ -50,7 +50,7 @@ typedef ba::accumulator_set<double,
 /**
  * Default name and location for the log file.
  */
-const stdair::Filename_T K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
+const stdair::Filename_T K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen_generateDemand.log");
 
 /**
  * Default name and location for the (CSV) input file.

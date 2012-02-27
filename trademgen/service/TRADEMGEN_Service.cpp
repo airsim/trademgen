@@ -346,6 +346,28 @@ namespace TRADEMGEN {
     return lSTDAIR_Service.buildSampleBookingRequest (isForCRS);
   }
 
+  // ////////////////////////////////////////////////////////////////////
+  std::string TRADEMGEN_Service::
+  jsonHandler (const stdair::JSONString& iJSONString) const {
+
+    // Retrieve the TraDemGen service context
+    if (_trademgenServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The TraDemGen service has "
+                                                    "not been initialised");
+    }
+    assert (_trademgenServiceContext != NULL);
+    
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+
+    return lSEVMGR_Service_ptr->jsonHandler (iJSONString);
+    
+  }
+
   // //////////////////////////////////////////////////////////////////////
   std::string TRADEMGEN_Service::csvDisplay() const {
 
@@ -365,6 +387,28 @@ namespace TRADEMGEN {
     
     // Delegate the BOM building to the dedicated service
     return BomDisplay::csvDisplay (lSEVMGR_Service_ptr);
+
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  std::string TRADEMGEN_Service::list() const {
+
+    // Retrieve the TraDemGen service context
+    if (_trademgenServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The TraDemGen service has "
+                                                    "not been initialised");
+    }
+    assert (_trademgenServiceContext != NULL);
+
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+    
+    // Delegate the BOM building to the dedicated service
+    return lSEVMGR_Service_ptr->list ();
 
   }
 

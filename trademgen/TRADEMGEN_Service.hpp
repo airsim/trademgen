@@ -8,6 +8,7 @@
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/stdair_demand_types.hpp>
 #include <stdair/stdair_maths_types.hpp>
+#include <stdair/stdair_json.hpp>
 #include <stdair/stdair_service_types.hpp>
 #include <stdair/basic/DemandGenerationMethod.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
@@ -356,7 +357,19 @@ namespace TRADEMGEN {
      * without having to reparse the demand input file.
      */
     void reset() const;
-
+    
+  public:
+    // //////////////// Export support methods /////////////////
+    /**
+     * Dispatch the JSon command string to the SEvMgr service.
+     * (Only SEvMgr has json export commands for now).
+     * 
+     * @param const stdair::JSONString& Input string which contained the JSon
+     *        command string.
+     * @return std::string Output string in which the asking objects are
+     *         logged/dumped with a JSon format.
+     */
+    std::string jsonHandler (const stdair::JSONString&) const;
 
   public:
     // //////////////// Display support methods /////////////////
@@ -368,6 +381,14 @@ namespace TRADEMGEN {
      *        logged/dumped.
      */
     std::string csvDisplay() const;
+
+    /**
+     * Display (dump in the returned string) the event list of the event queue.
+     *
+     * @return std::string Output string in which the events are
+     *        logged/dumped.
+     */
+    std::string list () const;
 
 
   private:

@@ -343,19 +343,31 @@ namespace TRADEMGEN {
       lDemandStream.generateNextRequest (ioGenerator,
                                          iDemandGenerationMethod);
 
-    // Create an event structure
-    stdair::EventStruct lEventStruct (stdair::EventType::BKG_REQ,
-                                      lBookingRequest);
+    const stdair::DateTime_T& lBookingRequestDateTime =
+      lBookingRequest->getRequestDateTime();
+    const stdair::Date_T& lPreferedDepartureDate =
+      lBookingRequest->getPreferedDepartureDate();
+    const  stdair::Duration_T& lPreferedDepartureTime =
+      lBookingRequest->getPreferredDepartureTime();
+    const stdair::DateTime_T lPreferedDepartureDateTime (lPreferedDepartureDate,
+                                                         lPreferedDepartureTime);
 
-    /**
+    if (lPreferedDepartureDateTime > lBookingRequestDateTime) {
+
+      // Create an event structure
+      stdair::EventStruct lEventStruct (stdair::EventType::BKG_REQ,
+                                        lBookingRequest);
+
+      /**
        \note When adding an event in the event queue, the event can be
        altered. That happens when an event already exists, in the
        event queue, with exactly the same date-time stamp. In that
        case, the date-time stamp is altered for the newly added event,
        so that the unicity on the date-time stamp can be guaranteed.
-    */
-    ioSEVMGR_ServicePtr->addEvent (lEventStruct);
-    
+      */
+      ioSEVMGR_ServicePtr->addEvent (lEventStruct);
+    }
+
     return lBookingRequest;
   }
 

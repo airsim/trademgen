@@ -46,8 +46,9 @@ module_library_add_specific (pytrademgen python "na" python/pytrademgen.cpp)
 #  * If specified, the name to be given to the executable. If no such name
 #    is given as parameter, the executable is given the name of the current
 #    module.
-module_binary_add (batches)
+module_binary_add (batches trademgen_generateDemand)
 module_binary_add (batches trademgen_with_db)
+module_binary_add (ui/cmdline trademgen)
 
 ##
 # Installing Python and Shell scripts
