@@ -403,11 +403,6 @@ namespace TRADEMGEN {
       // Retrieve the key of the demand stream
       const DemandStreamKey& lKey = lDemandStream_ptr->getKey();
 
-      // Update the progress status for the given event type (i.e.,
-      // booking request)
-      ioSEVMGR_ServicePtr->updateStatus (stdair::EventType::BKG_REQ,
-                                         lActualNbOfEvents);
-
       // Check whether there are still booking requests to be generated
       const bool stillHavingRequestsToBeGenerated =
         lDemandStream_ptr->stillHavingRequestsToBeGenerated (iDemandGenerationMethod);
@@ -420,9 +415,11 @@ namespace TRADEMGEN {
                              iDemandGenerationMethod);
       }
     }
-
-    // Update the actual total number of events to be generated
-    ioSEVMGR_ServicePtr->setActualTotalNbOfEvents (lActualTotalNbOfEvents);
+    
+    // Update the progress status for the given event type (i.e.,
+    // booking request)
+    ioSEVMGR_ServicePtr->updateStatus (stdair::EventType::BKG_REQ,
+				       lActualTotalNbOfEvents);
 
     // Retrieve the actual total number of events to be generated
     const stdair::Count_T oTotalNbOfEvents = std::floor (lActualTotalNbOfEvents);

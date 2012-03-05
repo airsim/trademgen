@@ -694,6 +694,41 @@ namespace TRADEMGEN {
     // Delegate the call to the dedicated command
     DemandManager::reset (lSEVMGR_Service_ptr,
                           lSharedGenerator.getBaseGenerator());
+  }  
+
+  //////////////////////////////////////////////////////////////////////
+  stdair::ProgressPercentage_T TRADEMGEN_Service::calculateProgress() const {    
+
+    // Retrieve the TraDemGen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+
+    // Delegate the call to the dedicated service
+    return lSEVMGR_Service_ptr->calculateProgress();
+  
+  }
+
+  //////////////////////////////////////////////////////////////////////
+  stdair::ProgressPercentage_T TRADEMGEN_Service::
+  calculateProgress (const stdair::EventType::EN_EventType& iEventType) const {     
+
+    // Retrieve the TraDemGen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+
+    // Delegate the call to the dedicated service
+    return lSEVMGR_Service_ptr->calculateProgress(iEventType);
+  
   }
 }
 

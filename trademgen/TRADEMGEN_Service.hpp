@@ -13,6 +13,7 @@
 #include <stdair/basic/DemandGenerationMethod.hpp>
 #include <stdair/bom/BookingRequestTypes.hpp>
 #include <stdair/bom/EventTypes.hpp>
+#include <stdair/bom/EventStruct.hpp>
 // SEvMgr
 #include <sevmgr/SEVMGR_Types.hpp>
 
@@ -356,7 +357,31 @@ namespace TRADEMGEN {
      * Reset the context of the demand streams for another demand generation
      * without having to reparse the demand input file.
      */
-    void reset() const;
+    void reset() const;  
+
+    /**
+     * Calculate the total progress status.
+     * <br>The progress is status is the ratio of:
+     * <ul>
+     *   <li>the current number of events, summed over all the demand
+     *       streams,</li>
+     *   <li>over the total number of events, also summed over all the demand
+     *       streams.</li>
+     * </ul> 
+     */
+    stdair::ProgressPercentage_T calculateProgress () const; 
+ 
+    /**
+     * Calculate the progress for an event type.
+     * <br>The progress is status is the ratio of:
+     * <ul>
+     *   <li>the current number of events, summed over all the demand
+     *       streams,</li>
+     *   <li>over the total number of events, also summed over all the demand
+     *       streams.</li>
+     * </ul> 
+     */
+    stdair::ProgressPercentage_T calculateProgress (const stdair::EventType::EN_EventType&) const;
     
   public:
     // //////////////// Export support methods /////////////////
