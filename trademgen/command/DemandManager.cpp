@@ -366,6 +366,16 @@ namespace TRADEMGEN {
        so that the unicity on the date-time stamp can be guaranteed.
       */
       ioSEVMGR_ServicePtr->addEvent (lEventStruct);
+
+    } else { 
+      
+      // Update the expected number of eventss for the given event type (i.e.,
+      // booking request)
+      stdair::Count_T lCurrentBRNumber = 
+	ioSEVMGR_ServicePtr->getActualTotalNumberOfEventsToBeGenerated (stdair::EventType::BKG_REQ);
+      lCurrentBRNumber--;
+      ioSEVMGR_ServicePtr->updateStatus (stdair::EventType::BKG_REQ, lCurrentBRNumber); 
+
     }
 
     return lBookingRequest;
@@ -505,7 +515,9 @@ namespace TRADEMGEN {
     const stdair::FareOptionStruct& lChosenFareOption =
       iTravelSolution.getChosenFareOption ();
     const stdair::ClassList_StringList_T& lClassPath =
-      lChosenFareOption.getClassPath();
+      lChosenFareOption.getClassPath(); 
+    const stdair::SegmentPath_T& lSegmentPath =
+      iTravelSolution.getSegmentPath();
     stdair::ClassList_StringList_T::const_iterator itClassKeyList =
       lClassPath.begin();
     for (stdair::ClassObjectIDMapHolder_T::const_iterator itClassObjectIDMap =
@@ -533,7 +545,7 @@ namespace TRADEMGEN {
     // Create the cancellation.
     stdair::CancellationPtr_T lCancellation_ptr =
       stdair::CancellationPtr_T
-      (new stdair::CancellationStruct (lClassIDList, iPartySize,
+      (new stdair::CancellationStruct (lSegmentPath, lClassIDList, iPartySize,
                                        lCancellationTime));
 
     // Create an event structure

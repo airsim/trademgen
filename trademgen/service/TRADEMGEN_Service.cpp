@@ -671,6 +671,19 @@ namespace TRADEMGEN {
     // Add the gerenerated cancellation event into the queue
     lSEVMGR_Service.addEvent (lRefEventStruct);
 
+    // Update the status of cancellation events within the event queue. 
+    const bool hasProgressStatus = 
+      lSEVMGR_Service.hasProgressStatus(stdair::EventType::CX); 
+    if (hasProgressStatus == false) { 
+      const stdair::Count_T lCancellationNumber = 1;
+      lSEVMGR_Service.addStatus (stdair::EventType::CX, lCancellationNumber); 
+    } else { 
+      stdair::Count_T lCurrentCancellationNumber = 
+	lSEVMGR_Service.getActualTotalNumberOfEventsToBeGenerated (stdair::EventType::CX);
+      lCurrentCancellationNumber++;
+      lSEVMGR_Service.updateStatus (stdair::EventType::CX, lCurrentCancellationNumber);
+    }
+
     return hasCancellationBeenGenerated;
 
   }
