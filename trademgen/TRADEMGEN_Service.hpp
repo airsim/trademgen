@@ -318,6 +318,15 @@ namespace TRADEMGEN {
                          const stdair::DemandGenerationMethod&) const;
 
     /**
+     * States whether a demand stream with the given key is used to
+     * generate demand.
+     *
+     * @param const DemandStreamKey& A string identifying uniquely the
+     *   demand stream (e.g., "SIN-HND 2010-Feb-08 Y").
+     */
+    bool hasDemandStream (const stdair::DemandStreamKeyStr_T&) const;
+
+    /**
      * Pop the next coming (in time) event, and remove it from the
      * event queue thanks to the SEvMgr service.
      * <ul>
@@ -414,6 +423,14 @@ namespace TRADEMGEN {
      *        logged/dumped.
      */
     std::string list () const;
+
+    /**
+     * Display (dump in the returned string) the demand streams
+     *
+     * @return std::string Output string in which the demand streams are
+     *        logged/dumped.
+     */
+    std::string displayDemandStream () const;
 
 
   private:
