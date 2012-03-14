@@ -53,11 +53,6 @@ const stdair::Filename_T K_TRADEMGEN_DEFAULT_INPUT_FILENAME (STDAIR_SAMPLE_DIR
                                                              "/demand01.csv");
 
 /**
- * Default name and location for the (CSV) output file.
- */
-const stdair::Filename_T K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME ("request.csv");
-
-/**
  * Default demand generation method: Poisson Process.
  */
 const stdair::DemandGenerationMethod
@@ -107,11 +102,13 @@ struct Command_T {
     NOP = 0,
     QUIT,
     HELP,
-    DISPLAY,
-    LIST,
+    LIST_EVENT,
+    LIST_DEMAND_STREAM,
     RESET,
     NEXT,
-    GENERATE_BR,
+    GENERATE_NEXT_BR,
+    GENERATE_FIRST_BR,
+    GENERATE_ALL_BR,
     JSON_LIST,
     LAST_VALUE
   } Type_T;
@@ -167,7 +164,6 @@ template<class T> std::ostream& operator<< (std::ostream& os,
  */
 int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
                        stdair::RandomSeed_T& ioRandomSeed,
-                       NbOfRuns_T& ioRandomRuns,
                        stdair::Filename_T& ioInputFilename,
                        stdair::Filename_T& ioOutputFilename,
                        stdair::Filename_T& ioLogFilename,
@@ -195,18 +191,12 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
     ("seed,s",
      boost::program_options::value<stdair::RandomSeed_T>(&ioRandomSeed)->default_value(K_TRADEMGEN_DEFAULT_RANDOM_SEED),
      "Seed for the random generation")
-    ("draws,d",
-     boost::program_options::value<NbOfRuns_T>(&ioRandomRuns)->default_value(K_TRADEMGEN_DEFAULT_RANDOM_DRAWS), 
-     "Number of runs for the demand generations")
     ("demandgeneration,G",
      boost::program_options::value< char >(&lDemandGenerationMethodChar)->default_value(K_TRADEMGEN_DEFAULT_DEMAND_GENERATION_METHOD_CHAR),
      "Method used to generate the demand (i.e., the booking requests): Poisson Process (P) or Order Statistics (S)")
     ("input,i",
      boost::program_options::value< std::string >(&ioInputFilename)->default_value(K_TRADEMGEN_DEFAULT_INPUT_FILENAME),
      "(CSV) input file for the demand distributions")
-    ("output,o",
-     boost::program_options::value< std::string >(&ioOutputFilename)->default_value(K_TRADEMGEN_DEFAULT_OUTPUT_FILENAME),
-     "(CSV) output file for the generated requests")
     ("log,l",
      boost::program_options::value< std::string >(&ioLogFilename)->default_value(K_TRADEMGEN_DEFAULT_LOG_FILENAME),
      "Filepath for the logs")
@@ -297,9 +287,6 @@ int readConfiguration (int argc, char* argv[], bool& ioIsBuiltin,
 
   //
   std::cout << "The random generation seed is: " << ioRandomSeed << std::endl;
-
-  //
-  std::cout << "The number of runs is: " << ioRandomRuns << std::endl;
   
   return 0;
 }
@@ -314,10 +301,12 @@ void initReadline (swift::SReadline& ioInputReader) {
   // - "identifiers"
   // - special identifier %file - means to perform a file name completion
   Completers.push_back ("help");
-  Completers.push_back ("display");
-  Completers.push_back ("list");
+  Completers.push_back ("list_event");
+  Completers.push_back ("list_demand_stream");
   Completers.push_back ("reset");
-  Completers.push_back ("generate_br");
+  Completers.push_back ("generate_next_br");
+  Completers.push_back ("generate_first_br");
+  Completers.push_back ("generate_all_br");
   Completers.push_back ("next");
   Completers.push_back ("json_list");
   Completers.push_back ("quit");
@@ -340,20 +329,26 @@ Command_T::Type_T extractCommand (TokenList_T& ioTokenList) {
     if (lCommand == "help") {
       oCommandType = Command_T::HELP;
 
-    } else if (lCommand == "display") {
-      oCommandType = Command_T::DISPLAY;
+    } else if (lCommand == "list_event") {
+      oCommandType = Command_T::LIST_EVENT;
 
-    } else if (lCommand == "list") {
-      oCommandType = Command_T::LIST;
+    } else if (lCommand == "list_demand_stream") {
+      oCommandType = Command_T::LIST_DEMAND_STREAM;
 
     } else if (lCommand == "reset") {
       oCommandType = Command_T::RESET;
 
-    } else if (lCommand == "next") {
+    } else if (lCommand == "delete_first") {
       oCommandType = Command_T::NEXT;
 
-    } else if (lCommand == "generate_br") {
-      oCommandType = Command_T::GENERATE_BR;
+    } else if (lCommand == "generate_first_br") {
+      oCommandType = Command_T::GENERATE_FIRST_BR;
+
+    } else if (lCommand == "generate_next_br") {
+      oCommandType = Command_T::GENERATE_NEXT_BR;
+
+    } else if (lCommand == "generate_all_br") {
+      oCommandType = Command_T::GENERATE_ALL_BR;
 
     } else if (lCommand == "json_list") {
       oCommandType = Command_T::JSON_LIST;
@@ -371,7 +366,7 @@ Command_T::Type_T extractCommand (TokenList_T& ioTokenList) {
   }
 
   return oCommandType;
-}
+}  
 
 // /////////////////////////////////////////////////////////
 std::string toString (const TokenList_T& iTokenList) {
@@ -401,16 +396,13 @@ int main (int argc, char* argv[]) {
   // Default parameters for the interactive session
   stdair::EventStruct lCurrentInteractiveEventStruct; 
   stdair::DateTime_T lCurrentInteractiveDateTime; 
-  stdair::EventType::EN_EventType lCurrentInteractiveEventType;
+  // stdair::EventType::EN_EventType lCurrentInteractiveEventType;
 
   // State whether the BOM tree should be built-in or parsed from an input file
   bool isBuiltin;
 
   // Random generation seed
   stdair::RandomSeed_T lRandomSeed;
-
-  // Number of random draws to be generated (best if greater than 100)
-  NbOfRuns_T lNbOfRuns;
     
   // Input file name
   stdair::Filename_T lInputFilename;
@@ -427,7 +419,7 @@ int main (int argc, char* argv[]) {
 
   // Call the command-line option parser
   const int lOptionParserStatus = 
-    readConfiguration (argc, argv, isBuiltin, lRandomSeed, lNbOfRuns,
+    readConfiguration (argc, argv, isBuiltin, lRandomSeed,
                        lInputFilename, lOutputFilename, lLogFilename,
                        lDemandGenerationMethod);
 
@@ -457,25 +449,6 @@ int main (int argc, char* argv[]) {
     trademgenService.parseAndLoad (lInputFilename);
   }
 
-  // Retrieve the expected (mean value of the) number of events to be
-  // generated
-  const stdair::Count_T& lExpectedNbOfEventsToBeGenerated =
-    trademgenService.getExpectedTotalNumberOfRequestsToBeGenerated();
-
-  // Generate the first event for each demand stream.
-  const stdair::Count_T& lActualNbOfEventsToBeGenerated =
-    trademgenService.generateFirstRequests (lDemandGenerationMethod);
-  
-  // DEBUG
-  std::ostringstream oStatusStream;
-  oStatusStream << "Expected: " << lExpectedNbOfEventsToBeGenerated
-                << ", actual: " << lActualNbOfEventsToBeGenerated;
-  std::cout << oStatusStream.str() << std::endl;
-  STDAIR_LOG_DEBUG (oStatusStream.str());
-
-  // Pop out the first event from the queue.
-  trademgenService.popEvent(lCurrentInteractiveEventStruct);
-
   // DEBUG
   STDAIR_LOG_DEBUG ("====================================================");
   STDAIR_LOG_DEBUG ("=       Beginning of the interactive session       =");
@@ -493,14 +466,14 @@ int main (int argc, char* argv[]) {
   while (lCommandType != Command_T::QUIT && EndOfInput == false) {
 
     // Update the interactive parameters which have not been updated yet
-    lCurrentInteractiveDateTime = lCurrentInteractiveEventStruct.getEventTime ();
-    lCurrentInteractiveEventType = lCurrentInteractiveEventStruct.getEventType ();
+    //lCurrentInteractiveDateTime = lCurrentInteractiveEventStruct.getEventTime ();
+    //lCurrentInteractiveEventType = lCurrentInteractiveEventStruct.getEventType ();
     
     // Prompt
     std::ostringstream oPromptStr;
-    oPromptStr << "trademgen "
-               << stdair::EventType::getTypeLabelAsString(lCurrentInteractiveEventType)
-	       << " / " << lCurrentInteractiveDateTime << "> " ;
+    oPromptStr << "trademgen " << "> " ;
+      // << stdair::EventType::getTypeLabelAsString(lCurrentInteractiveEventType)
+      //     << " / " << lCurrentInteractiveDateTime << "> " ;
     // Call read-line, which will fill the list of tokens
     TokenList_T lTokenListByReadline;
     lUserInput = lReader.GetLine (oPromptStr.str(), lTokenListByReadline,
@@ -524,23 +497,32 @@ int main (int argc, char* argv[]) {
     case Command_T::HELP: {
       std::cout << std::endl;
       std::cout << "Commands: " << std::endl;
-      std::cout << " help" << "\t\t" << "Display this help" << std::endl;
-      std::cout << " quit" << "\t\t" << "Quit the application" << std::endl;
-      std::cout << " display" << "\t"
-                << "Display the current event" << std::endl;
-      std::cout << " list" << "\t\t" << "List events in the queue" << std::endl;
-      std::cout << " reset" << "\t\t" << "Reset the service (including the "
+      std::cout << " help" << "\t\t\t" << "Display this help" << std::endl;
+      std::cout << " quit" << "\t\t\t" << "Quit the application" << std::endl;
+      std::cout << " list_event" << "\t\t" << "List events in the queue" << std::endl;
+      std::cout << " list_demand_stream" << "\t"
+                << "List the streams used to generate demand" << std::endl;
+      std::cout << " reset" << "\t\t\t" << "Reset the service (including the "
                 << "event queue) and generate the first event for each demand "
                 << "stream" << std::endl;
-      std::cout << " generate_br" << "   " << " If there are still "
-                << "events to be generated for the current demand stream (i.e. the "
-                << "stream of the current event),\n\t\tgenerate the next event "
-                << "and add it to the event queue" << std::endl;
-      std::cout << " next" << "\t\t"
-                << "Play the current event and pop the next one from the queue"
+      std::cout << " generate_first_br" << "\t" << "Generate the first booking "
+                << "request for each demand stream and add it to the event queue"
+                << std::endl;
+      std::cout << " generate_next_br" << "\t" << "Generate the next event for "
+                << "the specified demand stream and add it to the event queue"
+                << "\n\t\t\tFor instance:"
+                << "\n\t\t\t  'generate_next_br SIN-BKK 2010-Feb-09 Y'"
+                << std::endl;
+      std::cout << " generate_all_br" << "\t" << "Generate all the events for "
+                << "the specified demand stream and add it to the event queue"
+                << "\n\t\t\tFor instance:"
+                << "\n\t\t\t  'generate_all_br SIN-BKK 2010-Feb-09 Y'"
+                << std::endl;
+      std::cout << " delete_first" << "\t\t"
+                << "Poped the next event in time from the queue"
                 << std::endl;
       std::cout << " \nDebug Commands" << std::endl;
-      std::cout << " json_list" << "\t"
+      std::cout << " json_list" << "\t\t"
                 << "List events in the queue in a JSON format"
                 << std::endl;
       std::cout << std::endl;
@@ -552,28 +534,27 @@ int main (int argc, char* argv[]) {
       break;
     }
 
-      // ////////////////////////////// Display ////////////////////////
-    case Command_T::DISPLAY: {
+      // ////////////////////////////// List /////////////////////////
+    case Command_T::LIST_EVENT: {
       //
-      std::cout << "Display" << std::endl;     
+      std::cout << "List of events" << std::endl;   
 
-      // DEBUG 
-      std::ostringstream oEventStr;
-      oEventStr << lCurrentInteractiveEventStruct.describe(); 
-      std::cout << oEventStr.str() << std::endl;
-      STDAIR_LOG_DEBUG (oEventStr.str());
+      std::ostringstream oEventListStr;
+      oEventListStr << trademgenService.list ();	
+      std::cout << oEventListStr.str() << std::endl;   
+      STDAIR_LOG_DEBUG (oEventListStr.str());
 
       //
       break;
     }
 
       // ////////////////////////////// List /////////////////////////
-    case Command_T::LIST: {
+    case Command_T::LIST_DEMAND_STREAM: {
       //
-      std::cout << "List" << std::endl;   
+      std::cout << "List of demand streams" << std::endl;   
 
       std::ostringstream oEventListStr;
-      oEventListStr << trademgenService.list ();	
+      oEventListStr << trademgenService.displayDemandStream ();	
       std::cout << oEventListStr.str() << std::endl;   
       STDAIR_LOG_DEBUG (oEventListStr.str());
 
@@ -588,42 +569,34 @@ int main (int argc, char* argv[]) {
 
       // Reset the service (including the event queue) for the next run
       trademgenService.reset();
-      
-      // Retrieve the expected (mean value of the) number of events to be
-      // generated
-      const stdair::Count_T& lExpectedNbOfEventsToBeGenerated =
-        trademgenService.getExpectedTotalNumberOfRequestsToBeGenerated();
-      
-      // Generate the first event for each demand stream.
-      const stdair::Count_T& lActualNbOfEventsToBeGenerated =
-        trademgenService.generateFirstRequests (lDemandGenerationMethod);
-  
-      // DEBUG
-      std::ostringstream oStatusStream;
-      oStatusStream << "Expected: " << lExpectedNbOfEventsToBeGenerated
-                    << ", actual: " << lActualNbOfEventsToBeGenerated;
-      std::cout << oStatusStream.str() << std::endl;
-      STDAIR_LOG_DEBUG (oStatusStream.str());
-      
-      // Pop out the first event from the queue.
-      trademgenService.popEvent(lCurrentInteractiveEventStruct);
         
       break;
     }
 
-      // ////////////////////////////// Generate requests ////////////////////////
-    case Command_T::GENERATE_BR: {
-
-      std::cout << "Generate next request" << std::endl;
-
-      // Extract the corresponding demand/booking request
-      const stdair::BookingRequestStruct& lPoppedRequest =
-        lCurrentInteractiveEventStruct.getBookingRequest();
+      // ////////////////////////////// Generate next request ////////////////////////
+    case Command_T::GENERATE_NEXT_BR: {
 
       // Retrieve the corresponding demand stream key
-      const stdair::DemandGeneratorKey_T& lDemandStreamKey =
-        lPoppedRequest.getDemandGeneratorKey();
+      const stdair::DemandGeneratorKey_T lDemandStreamKey =
+        toString(lTokenListByReadline);
 
+      // Check that such demand stream exists
+      const bool hasDemandStream =
+        trademgenService.hasDemandStream(lDemandStreamKey);
+
+      if (hasDemandStream == false) {
+        // DEBUG 
+        std::ostringstream oNoDemandStreamStr;
+        oNoDemandStreamStr << "Wrong demand stream key: '"
+                           << lDemandStreamKey << "'."
+                           << "\nExisting demand streams are:\n"
+                           << trademgenService.displayDemandStream();
+        std::cout << oNoDemandStreamStr.str() << std::endl;
+        STDAIR_LOG_DEBUG (oNoDemandStreamStr.str());
+        break;
+      }
+      assert (hasDemandStream == true);
+      
       stdair::ProgressStatusSet lProgressStatusSet (stdair::EventType::BKG_REQ);
       const bool stillHavingRequestsToBeGenerated =
         trademgenService.stillHavingRequestsToBeGenerated (lDemandStreamKey,
@@ -633,13 +606,13 @@ int main (int argc, char* argv[]) {
         // DEBUG 
         std::ostringstream oNoMoreEventToGenerateStr;
         oNoMoreEventToGenerateStr << "No more events to generate for the demand "
-                                  << "stream: '" << lDemandStreamKey << "'.";
+                                    << "stream: '" << lDemandStreamKey << "'.";
         std::cout << oNoMoreEventToGenerateStr.str() << std::endl;
         STDAIR_LOG_DEBUG (oNoMoreEventToGenerateStr.str());
         break;
       }
       assert (stillHavingRequestsToBeGenerated == true);
-      
+
       trademgenService.generateNextRequest (lDemandStreamKey, lDemandGenerationMethod);
       
       // DEBUG 
@@ -648,7 +621,82 @@ int main (int argc, char* argv[]) {
                                 << "stream: '" << lDemandStreamKey << "'.";
       std::cout << oOneMoreEventGeneratedStr.str() << std::endl;
       STDAIR_LOG_DEBUG (oOneMoreEventGeneratedStr.str());
+    
+      break;
+    }
 
+      // ////////////////////////////// Generate first requests ////////////////////////
+    case Command_T::GENERATE_FIRST_BR: {
+
+      std::cout << "Generate first requests" << std::endl;
+
+      // Generate the first event for each demand stream.
+      trademgenService.generateFirstRequests (lDemandGenerationMethod);
+
+      break;
+    }
+
+      // ////////////////////////////// Generate all requests ////////////////////////
+    case Command_T::GENERATE_ALL_BR: {
+
+      // Retrieve the corresponding demand stream key
+      const stdair::DemandGeneratorKey_T lDemandStreamKey =
+        toString(lTokenListByReadline);
+
+      // Check that such demand stream exists
+      const bool hasDemandStream =
+        trademgenService.hasDemandStream(lDemandStreamKey);
+
+      if (hasDemandStream == false) {
+        // DEBUG 
+        std::ostringstream oNoDemandStreamStr;
+        oNoDemandStreamStr << "Wrong demand stream key: '"
+                           << lDemandStreamKey << "'."
+                           << "\nExisting demand streams are:\n"
+                           << trademgenService.displayDemandStream();
+        std::cout << oNoDemandStreamStr.str() << std::endl;
+        STDAIR_LOG_DEBUG (oNoDemandStreamStr.str());
+        break;
+      }
+      assert (hasDemandStream == true);
+      
+      stdair::ProgressStatusSet lProgressStatusSet (stdair::EventType::BKG_REQ);
+      bool stillHavingRequestsToBeGenerated =
+        trademgenService.stillHavingRequestsToBeGenerated (lDemandStreamKey,
+                                                           lProgressStatusSet,
+                                                           lDemandGenerationMethod);
+      
+
+      if (stillHavingRequestsToBeGenerated == false) {
+        // DEBUG 
+        std::ostringstream oNoMoreEventToGenerateStr;
+        oNoMoreEventToGenerateStr << "No more events to generate for the demand "
+                                    << "stream: '" << lDemandStreamKey << "'.";
+        std::cout << oNoMoreEventToGenerateStr.str() << std::endl;
+        STDAIR_LOG_DEBUG (oNoMoreEventToGenerateStr.str());
+        break;
+      }
+      assert (stillHavingRequestsToBeGenerated == true);
+
+      stdair::Count_T lNumberOfRequests = 0;
+      while (stillHavingRequestsToBeGenerated == true) {
+        lNumberOfRequests++;
+        trademgenService.generateNextRequest (lDemandStreamKey, lDemandGenerationMethod);
+        stillHavingRequestsToBeGenerated =
+          trademgenService.stillHavingRequestsToBeGenerated (lDemandStreamKey,
+                                                             lProgressStatusSet,
+                                                             lDemandGenerationMethod);
+
+
+      }
+      // DEBUG 
+      std::ostringstream oOneMoreEventGeneratedStr;
+      oOneMoreEventGeneratedStr << lNumberOfRequests
+                                << " more event(s) have been generated for the demand "
+                                << "stream: '" << lDemandStreamKey << "'.";
+      std::cout << oOneMoreEventGeneratedStr.str() << std::endl;
+      STDAIR_LOG_DEBUG (oOneMoreEventGeneratedStr.str());
+      
       break;
     }
 

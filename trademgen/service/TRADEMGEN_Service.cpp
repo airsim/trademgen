@@ -743,6 +743,55 @@ namespace TRADEMGEN {
     return lSEVMGR_Service_ptr->calculateProgress(iEventType);
   
   }
+  
+  //////////////////////////////////////////////////////////////////////
+  bool TRADEMGEN_Service::
+  hasDemandStream (const stdair::DemandStreamKeyStr_T& iDemandStreamKey) const {
+
+    // Retrieve the TraDemGen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+
+    // Delegate the call to the dedicated service
+    return lSEVMGR_Service_ptr->hasEventGenerator<DemandStream,
+                                                  stdair::DemandStreamKeyStr_T>(iDemandStreamKey);
+  }
+
+  //////////////////////////////////////////////////////////////////////
+  std::string TRADEMGEN_Service::displayDemandStream () const {
+
+    // Retrieve the TraDemGen service context
+    assert (_trademgenServiceContext != NULL);
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+
+    // Delegate the call to the dedicated service
+    const std::list<DemandStream*> lDemandStreamList =
+      lSEVMGR_Service_ptr->getEventGeneratorList<DemandStream>();
+
+    // Output stream to store the display of demand streams.
+    std::ostringstream  oStream;
+
+    for (std::list<DemandStream*>::const_iterator itDemandStream =
+           lDemandStreamList.begin(); itDemandStream !=
+           lDemandStreamList.end(); itDemandStream++) {
+      DemandStream* lDemandStream_ptr = *itDemandStream;
+      assert (lDemandStream_ptr != NULL);
+      oStream << lDemandStream_ptr->describeKey() << std::endl; 
+      
+    }
+    return oStream.str();
+  }
+
 }
 
 namespace SEVMGR {
@@ -794,6 +843,30 @@ namespace SEVMGR {
   }
   
   // ////////////////////////////////////////////////////////////////////
+  template<class EventGenerator, class Key>
+  bool SEVMGR_Service::hasEventGenerator(const Key& iKey) const {
+
+    bool hasEventGenerator = true;
+
+    // Retrieve the StdAir service
+    const stdair::STDAIR_Service& lSTDAIR_Service =
+      this->getSTDAIR_Service(); 
+
+    // Retrieve the BOM root object instance
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+
+    // Retrieve the DemandStream which corresponds to the given key.
+    EventGenerator* lEventGenerator_ptr = 
+      stdair::BomManager::getObjectPtr<EventGenerator> (lBomRoot, iKey);
+    if (lEventGenerator_ptr == NULL) {
+      hasEventGenerator = false;
+    } 
+
+    return hasEventGenerator;
+    
+  }
+  
+  // ////////////////////////////////////////////////////////////////////
   template<class EventGenerator>
   const std::list<EventGenerator*> SEVMGR_Service::getEventGeneratorList() const {
 
@@ -838,6 +911,9 @@ namespace SEVMGR {
 
   template TRADEMGEN::DemandStream& SEVMGR_Service::
   getEventGenerator<TRADEMGEN::DemandStream, stdair::DemandStreamKeyStr_T> (const stdair::DemandStreamKeyStr_T&) const;
+
+  template bool SEVMGR_Service::
+  hasEventGenerator<TRADEMGEN::DemandStream, stdair::DemandStreamKeyStr_T> (const stdair::DemandStreamKeyStr_T&) const;
 
   template const std::list<TRADEMGEN::DemandStream*> SEVMGR_Service::
   getEventGeneratorList<TRADEMGEN::DemandStream> () const;
