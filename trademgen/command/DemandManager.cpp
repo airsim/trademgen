@@ -483,10 +483,10 @@ namespace TRADEMGEN {
     // The cancellation time will be generated uniformly.
     double lRandomNumber = ioGenerator();
    
-    if (lRandomNumber >= 0.5) {
+    if (lRandomNumber >= 0.05) {
       return false;
     }
-    lRandomNumber /= 0.5;
+    lRandomNumber /= 0.05;
     
     // Hardcode the latest cancellation time.
     const stdair::Time_T lMidNight =
