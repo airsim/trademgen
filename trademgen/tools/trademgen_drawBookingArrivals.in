@@ -106,7 +106,7 @@ def main():
     # Iterate while there are booking requests in the TraDemGen log file
     for line in input_file:
         # The lines of interest contain the "Poped" key-word
-        matchedLine = re.search ("Poped", line)
+        matchedLine = re.search ("BookingRequest", line)
 
         # If there is no match, the loop will continue on to the next line
         if not matchedLine:
