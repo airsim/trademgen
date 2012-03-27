@@ -608,8 +608,8 @@ namespace TRADEMGEN {
                                          lChannelLabel, lTripType,
                                          lStayDuration, lFrequentFlyer,
                                          lPreferredDepartureTime,
-                                         lWTP, lChangeFees, lNonRefundable,
-                                         lValueOfTime));
+                                         lWTP, lValueOfTime, lChangeFees, 
+                                         lNonRefundable));
     
     // DEBUG
     // STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());

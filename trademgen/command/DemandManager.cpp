@@ -5,6 +5,7 @@
 #include <cassert>
 // StdAir
 #include <stdair/basic/ProgressStatusSet.hpp>
+#include <stdair/basic/BasConst_Request.hpp>
 #include <stdair/bom/BomManager.hpp>
 #include <stdair/bom/EventStruct.hpp>
 #include <stdair/bom/BookingRequestStruct.hpp>
@@ -117,24 +118,24 @@ namespace TRADEMGEN {
     //
     PreferredDepartureTimeContinuousDistribution_T lPrefDepTimeProbDist;
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (6, 0));
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (6 * stdair::HOUR_CONVERTED_IN_SECONDS, 0));
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (7,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (7 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.1));
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (9,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (9 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.3));
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (17,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (17 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.4));
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (19,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (19 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.80));
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (20,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (20 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.95));
     lPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (22,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (22 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           1));
     //
     ValueOfTimeContinuousDistribution_T lTimeValueProbDist;
@@ -678,18 +679,18 @@ namespace TRADEMGEN {
     //
     PreferredDepartureTimeContinuousDistribution_T lSINPrefDepTimeProbDist;
     lSINPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (6, 0));
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (6 * stdair::HOUR_CONVERTED_IN_SECONDS, 0));
     lSINPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (8,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (8 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.7));
     lSINPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (10,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (10 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.8));
     lSINPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (12,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (12 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.9));
     lSINPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (14,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (14 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           1.0));    
 
     //
@@ -749,18 +750,18 @@ namespace TRADEMGEN {
     //
     PreferredDepartureTimeContinuousDistribution_T lBKKPrefDepTimeProbDist;
     lBKKPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (8, 0));
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (8 * stdair::HOUR_CONVERTED_IN_SECONDS, 0));
     lBKKPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (10,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (10 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.2));
     lBKKPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (1,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (1 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.6));
     lBKKPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (14,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (14 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           0.8));
     lBKKPrefDepTimeProbDist.
-      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (16,
+      insert (PreferredDepartureTimeContinuousDistribution_T::value_type (16 * stdair::HOUR_CONVERTED_IN_SECONDS,
                                                                           1.0));    
 
     //
