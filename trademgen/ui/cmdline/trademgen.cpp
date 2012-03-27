@@ -50,7 +50,7 @@ const stdair::Filename_T K_TRADEMGEN_DEFAULT_LOG_FILENAME ("trademgen.log");
  * Default name and location for the (CSV) input file.
  */
 const stdair::Filename_T K_TRADEMGEN_DEFAULT_INPUT_FILENAME (STDAIR_SAMPLE_DIR
-                                                             "/demand01.csv");
+                                                             "/rds01/demand05.csv");
 
 /**
  * Default demand generation method: Poisson Process.
