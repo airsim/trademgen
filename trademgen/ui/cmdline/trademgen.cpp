@@ -499,12 +499,12 @@ int main (int argc, char* argv[]) {
       std::cout << "Commands: " << std::endl;
       std::cout << " help" << "\t\t\t" << "Display this help" << std::endl;
       std::cout << " quit" << "\t\t\t" << "Quit the application" << std::endl;
-      std::cout << " list_event" << "\t\t" << "List events in the queue" << std::endl;
+      std::cout << " list_event" << "\t\t"
+                << "List all the events in the queue" << std::endl;
       std::cout << " list_demand_stream" << "\t"
                 << "List the streams used to generate demand" << std::endl;
       std::cout << " reset" << "\t\t\t" << "Reset the service (including the "
-                << "event queue) and generate the first event for each demand "
-                << "stream" << std::endl;
+                << "event queue)" << std::endl;
       std::cout << " generate_first_br" << "\t" << "Generate the first booking "
                 << "request for each demand stream and add it to the event queue"
                 << std::endl;
@@ -519,7 +519,7 @@ int main (int argc, char* argv[]) {
                 << "\n\t\t\t  'generate_all_br SIN-BKK 2010-Feb-09 Y'"
                 << std::endl;
       std::cout << " delete_first" << "\t\t"
-                << "Poped the next event in time from the queue"
+                << "Pop the next event from the queue"
                 << std::endl;
       std::cout << " \nDebug Commands" << std::endl;
       std::cout << " json_list" << "\t\t"
