@@ -29,8 +29,8 @@
 // TraDemGen
 #include <trademgen/basic/BasConst_TRADEMGEN_Service.hpp>
 #include <trademgen/bom/BomDisplay.hpp>
-#include <trademgen/bom/DemandStreamKey.hpp>
 #include <trademgen/bom/DemandStream.hpp>
+#include <trademgen/bom/DemandStreamTypes.hpp>
 #include <trademgen/factory/FacTRADEMGENServiceContext.hpp>
 #include <trademgen/command/DemandParser.hpp>
 #include <trademgen/command/DemandManager.hpp>
@@ -775,13 +775,13 @@ namespace TRADEMGEN {
       lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
 
     // Delegate the call to the dedicated service
-    const std::list<DemandStream*> lDemandStreamList =
+    const DemandStreamList_T lDemandStreamList =
       lSEVMGR_Service_ptr->getEventGeneratorList<DemandStream>();
 
     // Output stream to store the display of demand streams.
     std::ostringstream  oStream;
 
-    for (std::list<DemandStream*>::const_iterator itDemandStream =
+    for (DemandStreamList_T::const_iterator itDemandStream =
            lDemandStreamList.begin(); itDemandStream !=
            lDemandStreamList.end(); itDemandStream++) {
       DemandStream* lDemandStream_ptr = *itDemandStream;
@@ -915,7 +915,7 @@ namespace SEVMGR {
   template bool SEVMGR_Service::
   hasEventGenerator<TRADEMGEN::DemandStream, stdair::DemandStreamKeyStr_T> (const stdair::DemandStreamKeyStr_T&) const;
 
-  template const std::list<TRADEMGEN::DemandStream*> SEVMGR_Service::
+  template const TRADEMGEN::DemandStreamList_T SEVMGR_Service::
   getEventGeneratorList<TRADEMGEN::DemandStream> () const;
 
   template bool SEVMGR_Service::hasEventGeneratorList<TRADEMGEN::DemandStream>() const;
