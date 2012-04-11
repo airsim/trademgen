@@ -346,14 +346,18 @@ namespace TRADEMGEN {
 
     const stdair::DateTime_T& lBookingRequestDateTime =
       lBookingRequest->getRequestDateTime();
+    const stdair::Date_T& lBookingRequestDate =
+      lBookingRequestDateTime.date();
+    const stdair::Duration_T& lBookingRequestTime =
+      lBookingRequestDateTime.time_of_day();
     const stdair::Date_T& lPreferedDepartureDate =
       lBookingRequest->getPreferedDepartureDate();
-    const  stdair::Duration_T& lPreferedDepartureTime =
-      lBookingRequest->getPreferredDepartureTime();
-    const stdair::DateTime_T lPreferedDepartureDateTime (lPreferedDepartureDate,
-                                                         lPreferedDepartureTime);
+    const stdair::Duration_T& lPreferedDepartureTime =
+      lBookingRequest->getPreferredDepartureTime(); 
 
-    if (lPreferedDepartureDateTime > lBookingRequestDateTime) {
+    if ((lPreferedDepartureDate > lBookingRequestDate) ||
+        (lPreferedDepartureDate == lBookingRequestDate &&
+         lPreferedDepartureTime > lBookingRequestTime)) {
 
       // Create an event structure
       stdair::EventStruct lEventStruct (stdair::EventType::BKG_REQ,
@@ -368,14 +372,14 @@ namespace TRADEMGEN {
       */
       ioSEVMGR_ServicePtr->addEvent (lEventStruct);
 
-    } else { 
-      
+    } else {
+
       // Update the expected number of eventss for the given event type (i.e.,
       // booking request)
       stdair::Count_T lCurrentBRNumber = 
 	ioSEVMGR_ServicePtr->getActualTotalNumberOfEventsToBeGenerated (stdair::EventType::BKG_REQ);
       lCurrentBRNumber--;
-      ioSEVMGR_ServicePtr->updateStatus (stdair::EventType::BKG_REQ, lCurrentBRNumber); 
+      ioSEVMGR_ServicePtr->updateStatus (stdair::EventType::BKG_REQ, lCurrentBRNumber);
 
     }
 
