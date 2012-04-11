@@ -16,6 +16,8 @@
 #include <stdair/bom/EventStruct.hpp>
 // SEvMgr
 #include <sevmgr/SEVMGR_Types.hpp>
+// TraDemGen
+#include <trademgen/TRADEMGEN_Types.hpp>
 
 // Forward declarations
 namespace stdair {
@@ -101,9 +103,9 @@ namespace TRADEMGEN {
      * The CSV file, describing the parameters of the demand to be generated
      * for the simulator, is parsed and instantiated in memory accordingly.
      *
-     * @param const stdair::Filename_T& Filename of the input demand file.
+     * @param const DemandFilePath& Filename of the input demand file.
      */
-    void parseAndLoad (const stdair::Filename_T& iDemandInputFilename);
+    void parseAndLoad (const DemandFilePath&);
 
     /**
      * Destructor.

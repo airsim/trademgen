@@ -15,26 +15,28 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   void DemandParser::
-  generateDemand (const stdair::Filename_T& iFilename,
+  generateDemand (const DemandFilePath& iDemandFilename,
                   SEVMGR::SEVMGR_ServicePtr_T ioSEVMGR_ServicePtr,
                   stdair::RandomGeneration& ioSharedGenerator,
                   const POSProbabilityMass_T& iDefaultPOSProbablityMass) {
 
+    const stdair::Filename_T lFilename = iDemandFilename.name();
+
     // Check that the file path given as input corresponds to an actual file
     const bool doesExistAndIsReadable =
-      stdair::BasFileMgr::doesExistAndIsReadable (iFilename);
+      stdair::BasFileMgr::doesExistAndIsReadable (lFilename);
     if (doesExistAndIsReadable == false) {
-      STDAIR_LOG_ERROR ("The demand input file '" << iFilename
+      STDAIR_LOG_ERROR ("The demand input file '" << lFilename
                         << "' does not exist or can not be read");
       
-      throw DemandInputFileNotFoundException ("The demand file '" + iFilename
+      throw DemandInputFileNotFoundException ("The demand file '" + lFilename
                                               + "' does not exist or can not "
                                               "be read");
     }
 
     // Initialise the demand file parser.
     DemandFileParser lDemandParser (ioSEVMGR_ServicePtr, ioSharedGenerator,
-                                    iDefaultPOSProbablityMass, iFilename);
+                                    iDefaultPOSProbablityMass, lFilename);
 
     // Parse the CSV-formatted demand input file, and generate the
     // corresponding DemandCharacteristic objects.

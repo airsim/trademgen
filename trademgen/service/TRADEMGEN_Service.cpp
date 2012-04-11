@@ -238,7 +238,7 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   void TRADEMGEN_Service::
-  parseAndLoad (const stdair::Filename_T& iDemandInputFilename) {
+  parseAndLoad (const DemandFilePath& iDemandFilePath) {
 
     // Retrieve the TraDemGen service context
     assert (_trademgenServiceContext != NULL);
@@ -259,7 +259,7 @@ namespace TRADEMGEN {
 
     // Parse the input file and initialise the demand generators
     stdair::BasChronometer lDemandGeneration; lDemandGeneration.start();
-    DemandParser::generateDemand (iDemandInputFilename, lSEVMGR_Service_ptr,
+    DemandParser::generateDemand (iDemandFilePath, lSEVMGR_Service_ptr,
                                   lSharedGenerator, lDefaultPOSProbabilityMass);
     const double lGenerationMeasure = lDemandGeneration.elapsed();
 

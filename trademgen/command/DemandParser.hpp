@@ -12,6 +12,7 @@
 // SEvMgr
 #include <sevmgr/SEVMGR_Types.hpp>
 // TraDemGen
+#include <trademgen/TRADEMGEN_Types.hpp>
 #include <trademgen/basic/DemandCharacteristicsTypes.hpp>
 
 /// Forward declarations
@@ -33,13 +34,13 @@ namespace TRADEMGEN {
      * The state of the random generator, given as parameter, evolves
      * each time a demand request is generated.
      *
-     * @param const stdair::Filename_T& The file-name of the
+     * @param const DemandFilePath& The file-name of the
               CSV-formatted demand input file.
      * @param SEVMGR::SEVMGR_ServicePtr_T Pointer on the SEvMgr service handler
      * to update the queue with the parsed information.
      * @param stdair::RandomGeneration& Random generator.
      */
-    static void generateDemand (const stdair::Filename_T&,
+    static void generateDemand (const DemandFilePath&,
                                 SEVMGR::SEVMGR_ServicePtr_T,
                                 stdair::RandomGeneration&,
                                 const POSProbabilityMass_T&);

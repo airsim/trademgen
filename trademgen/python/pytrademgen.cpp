@@ -322,7 +322,8 @@ namespace TRADEMGEN {
         } else {
           // Create the DemandStream objects, and insert them within
           // the BOM tree
-          _trademgenService->parseAndLoad (iDemandInputFilename);
+          const DemandFilePath lDemandFilePath (iDemandInputFilename);
+          _trademgenService->parseAndLoad (lDemandFilePath);
         }
 
         // DEBUG
