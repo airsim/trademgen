@@ -470,7 +470,8 @@ int main (int argc, char* argv[]) {
 
   } else {
     // Create the DemandStream objects, and insert them within the BOM tree
-    trademgenService.parseAndLoad (lInputFilename);
+    const TRADEMGEN::DemandFilePath lDemandFilePath (lInputFilename);
+    trademgenService.parseAndLoad (lDemandFilePath);
   }  
 
   // Calculate the expected number of events to be generated.

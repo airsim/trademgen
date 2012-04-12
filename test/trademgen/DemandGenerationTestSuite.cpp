@@ -98,7 +98,8 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
   TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lRandomSeed);
 
   // Create the DemandStream objects, and insert them within the BOM tree
-  BOOST_CHECK_NO_THROW (trademgenService.parseAndLoad (lInputFilename));
+  const TRADEMGEN::DemandFilePath lDemandFilePath (lInputFilename);
+  BOOST_CHECK_NO_THROW (trademgenService.parseAndLoad (lDemandFilePath));
 
   /**
    * Initialise the current number of generated events and the
