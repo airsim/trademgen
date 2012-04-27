@@ -371,28 +371,15 @@ namespace TRADEMGEN {
     void reset() const;  
 
     /**
-     * Calculate the total progress status.
-     * <br>The progress is status is the ratio of:
-     * <ul>
-     *   <li>the current number of events, summed over all the demand
-     *       streams,</li>
-     *   <li>over the total number of events, also summed over all the demand
-     *       streams.</li>
-     * </ul> 
+     * Get the overall progress status (for the whole event queue).
      */
-    stdair::ProgressPercentage_T calculateProgress () const; 
- 
+    const stdair::ProgressStatus& getProgressStatus () const; 
+
     /**
-     * Calculate the progress for an event type.
-     * <br>The progress is status is the ratio of:
-     * <ul>
-     *   <li>the current number of events, summed over all the demand
-     *       streams,</li>
-     *   <li>over the total number of events, also summed over all the demand
-     *       streams.</li>
-     * </ul> 
+     * Get the progress status for the given event type (e.g., booking
+     * request, optimisation notification, schedule change, break point).
      */
-    stdair::ProgressPercentage_T calculateProgress (const stdair::EventType::EN_EventType&) const;
+    const stdair::ProgressStatus& getProgressStatus (const stdair::EventType::EN_EventType&) const;
     
   public:
     // //////////////// Export support methods /////////////////
@@ -425,6 +412,14 @@ namespace TRADEMGEN {
      *        logged/dumped.
      */
     std::string list () const;
+
+    /**
+     * Display (dump in the returned string) the events with the given type
+     *
+     * @return std::string Output string in which the events are
+     *        logged/dumped.
+     */
+    std::string list (const stdair::EventType::EN_EventType&) const;
 
     /**
      * Display (dump in the returned string) the demand streams
