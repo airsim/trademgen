@@ -410,6 +410,29 @@ namespace TRADEMGEN {
     // Delegate the BOM building to the dedicated service
     return lSEVMGR_Service_ptr->list ();
 
+  }  
+
+  // //////////////////////////////////////////////////////////////////////
+  std::string TRADEMGEN_Service::
+  list(const stdair::EventType::EN_EventType& iEventType) const {
+
+    // Retrieve the TraDemGen service context
+    if (_trademgenServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The TraDemGen service has "
+                                                    "not been initialised");
+    }
+    assert (_trademgenServiceContext != NULL);
+
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+
+    // Retrieve the pointer on the SEvMgr service handler.
+    SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
+      lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
+    
+    // Delegate the BOM building to the dedicated service
+    return lSEVMGR_Service_ptr->list (iEventType);
+
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -710,7 +733,7 @@ namespace TRADEMGEN {
   }  
 
   //////////////////////////////////////////////////////////////////////
-  stdair::ProgressPercentage_T TRADEMGEN_Service::calculateProgress() const {    
+  const stdair::ProgressStatus& TRADEMGEN_Service::getProgressStatus() const {    
 
     // Retrieve the TraDemGen service context
     assert (_trademgenServiceContext != NULL);
@@ -722,13 +745,13 @@ namespace TRADEMGEN {
       lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
 
     // Delegate the call to the dedicated service
-    return lSEVMGR_Service_ptr->calculateProgress();
+    return lSEVMGR_Service_ptr->getStatus();
   
   }
 
   //////////////////////////////////////////////////////////////////////
-  stdair::ProgressPercentage_T TRADEMGEN_Service::
-  calculateProgress (const stdair::EventType::EN_EventType& iEventType) const {     
+  const stdair::ProgressStatus& TRADEMGEN_Service::
+  getProgressStatus (const stdair::EventType::EN_EventType& iEventType) const {     
 
     // Retrieve the TraDemGen service context
     assert (_trademgenServiceContext != NULL);
@@ -740,7 +763,7 @@ namespace TRADEMGEN {
       lTRADEMGEN_ServiceContext.getSEVMGR_ServicePtr();
 
     // Delegate the call to the dedicated service
-    return lSEVMGR_Service_ptr->calculateProgress(iEventType);
+    return lSEVMGR_Service_ptr->getStatus(iEventType);
   
   }
   
