@@ -511,6 +511,12 @@ namespace TRADEMGEN {
     // Cancellation time
     const stdair::DateTime_T lCancellationTime =
       lDepartureDateTime - lCancellationTimeToDeparture;
+    const stdair::Duration_T lTimeBetweenCancellationAndTheRequest = 
+      lCancellationTime - iRequestTime;
+
+    if (lTimeBetweenCancellationAndTheRequest.is_negative() == true) { 
+      return false;
+    }
 
     // Build the list of Class ID's.
     stdair::BookingClassIDList_T lClassIDList;
