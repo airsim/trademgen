@@ -396,7 +396,7 @@ int main (int argc, char* argv[]) {
   // Default parameters for the interactive session
   stdair::EventStruct lCurrentInteractiveEventStruct; 
   stdair::DateTime_T lCurrentInteractiveDateTime; 
-  // stdair::EventType::EN_EventType lCurrentInteractiveEventType;
+  std::string lDefaultDemandStreamKey;
 
   // State whether the BOM tree should be built-in or parsed from an input file
   bool isBuiltin;
@@ -443,11 +443,13 @@ int main (int argc, char* argv[]) {
   if (isBuiltin == true) {
     // Create a sample DemandStream object, and insert it within the BOM tree
     trademgenService.buildSampleBom();
+    lDefaultDemandStreamKey = "SIN-BKK 2010-Feb-08 Y";
 
   } else {
     // Create the DemandStream objects, and insert them within the BOM tree
     const TRADEMGEN::DemandFilePath lDemandFilePath (lInputFilename);
     trademgenService.parseAndLoad (lDemandFilePath);
+    lDefaultDemandStreamKey = "SIN-BKK 2009-Feb-09 Y";
   }
 
   // DEBUG
@@ -512,13 +514,13 @@ int main (int argc, char* argv[]) {
       std::cout << " generate_next_br" << "\t" << "Generate the next event for "
                 << "the specified demand stream and add it to the event queue"
                 << "\n\t\t\tFor instance:"
-                << "\n\t\t\t  'generate_next_br SIN-BKK 2010-Feb-09 Y'"
-                << std::endl;
+                << "\n\t\t\t  'generate_next_br " << lDefaultDemandStreamKey 
+		<< "'" << std::endl;
       std::cout << " generate_all_br" << "\t" << "Generate all the events for "
                 << "the specified demand stream and add it to the event queue"
                 << "\n\t\t\tFor instance:"
-                << "\n\t\t\t  'generate_all_br SIN-BKK 2010-Feb-09 Y'"
-                << std::endl;
+                << "\n\t\t\t  'generate_all_br " << lDefaultDemandStreamKey 
+		<< "'" << std::endl;
       std::cout << " delete_first" << "\t\t"
                 << "Pop the next event from the queue"
                 << std::endl;
