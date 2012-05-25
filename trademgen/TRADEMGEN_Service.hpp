@@ -20,7 +20,8 @@
 #include <trademgen/TRADEMGEN_Types.hpp>
 
 // Forward declarations
-namespace stdair {
+namespace stdair {  
+  class BomRoot;
   struct ProgressStatusSet;
   struct BasLogParams;
   struct BasDBParams;
@@ -195,6 +196,17 @@ namespace TRADEMGEN {
      * </ul>
      */
     void buildSampleBom();
+
+    /**
+     * Clone the persistent BOM object.
+     */
+    void clonePersistentBom ();
+
+    /**
+     * Build all the complementary links in the given bom root object.
+     * \note Do nothing for now.
+     */
+    void buildComplementaryLinks (stdair::BomRoot&); 
 
     /**
      * Build a sample booking request structure.

@@ -238,12 +238,29 @@ namespace TRADEMGEN {
 
   // //////////////////////////////////////////////////////////////////////
   void TRADEMGEN_Service::
-  parseAndLoad (const DemandFilePath& iDemandFilePath) {
+  parseAndLoad (const DemandFilePath& iDemandFilePath) { 
 
     // Retrieve the TraDemGen service context
+    if (_trademgenServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The TraDemGen service has "
+                                                    "not been initialised");
+    }
     assert (_trademgenServiceContext != NULL);
+
+    // Retrieve the TraDemGen service context and whether it owns the Stdair
+    // service
     TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
       *_trademgenServiceContext;
+    const bool doesOwnStdairService =
+      lTRADEMGEN_ServiceContext.getOwnStdairServiceFlag();   
+
+    // Retrieve the StdAir service object from the (TRADEMGEN) service context
+    stdair::STDAIR_Service& lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_Service();
+
+    // Retrieve the persistent BOM root object.
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
 
     // Retrieve the pointer on the SEvMgr service handler.
     SEVMGR::SEVMGR_ServicePtr_T lSEVMGR_Service_ptr =
@@ -257,14 +274,36 @@ namespace TRADEMGEN {
     const POSProbabilityMass_T& lDefaultPOSProbabilityMass =
       lTRADEMGEN_ServiceContext.getPOSProbabilityMass();
 
-    // Parse the input file and initialise the demand generators
+    /**
+     * 1. Parse the input file and initialise the demand generators
+     */
     stdair::BasChronometer lDemandGeneration; lDemandGeneration.start();
     DemandParser::generateDemand (iDemandFilePath, lSEVMGR_Service_ptr,
                                   lSharedGenerator, lDefaultPOSProbabilityMass);
-    const double lGenerationMeasure = lDemandGeneration.elapsed();
+    const double lGenerationMeasure = lDemandGeneration.elapsed();  
+
+    /**
+     * 2. Delegate the complementary building of objects and links by the
+     *    appropriate levels/components
+     * \note Nothing to do for now.
+     */  
+
+    /**
+     * 3. Build the complementary links
+     */
+    buildComplementaryLinks (lPersistentBomRoot);
 
     // DEBUG
     STDAIR_LOG_DEBUG ("Demand generation time: " << lGenerationMeasure);
+
+    /**
+     * 4. Have TraDemGen clone the whole persistent BOM tree, only when the StdAir
+     *    service is owned by the current component (TraDemGen here)
+     */
+    if (doesOwnStdairService == true) {
+      //
+      clonePersistentBom ();
+    }
   }
 
   // ////////////////////////////////////////////////////////////////////
@@ -288,6 +327,10 @@ namespace TRADEMGEN {
     stdair::STDAIR_Service& lSTDAIR_Service =
       lTRADEMGEN_ServiceContext.getSTDAIR_Service();
 
+    // Retrieve the persistent BOM root object.
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
+
     /**
      * 1. Have StdAir build the whole BOM tree, only when the StdAir service is
      *    owned by the current component (TraDemGen here)
@@ -301,7 +344,7 @@ namespace TRADEMGEN {
      * 2. Delegate the complementary building of objects and links by the
      *    appropriate levels/components
      * \note Nothing to do for now.
-     */
+     */  
 
     /**
      * 3. Build the complementary objects/links for the current component (here,
@@ -322,6 +365,59 @@ namespace TRADEMGEN {
     // Delegate the BOM building to the dedicated service
     DemandManager::buildSampleBom (lSEVMGR_Service_ptr, lSharedGenerator,
                                    lDefaultPOSProbabilityMass);
+    // Build the complementary links
+    buildComplementaryLinks (lPersistentBomRoot);
+
+    /**
+     * 4. Have TraDemGen clone the whole persistent BOM tree, only when the 
+     *    StdAir service is owned by the current component (TraDemGen here)
+     */
+    if (doesOwnStdairService == true) {
+      //
+      clonePersistentBom ();
+    }
+  }  
+
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::clonePersistentBom () {   
+
+    // Retrieve the TraDemGen service context
+    if (_trademgenServiceContext == NULL) {
+      throw stdair::NonInitialisedServiceException ("The TraDemGen service has "
+                                                    "not been initialised");
+    }
+    assert (_trademgenServiceContext != NULL);
+
+    // Retrieve the TraDemGen service context and whether it owns the Stdair
+    // service
+    TRADEMGEN_ServiceContext& lTRADEMGEN_ServiceContext =
+      *_trademgenServiceContext;
+    const bool doesOwnStdairService =
+      lTRADEMGEN_ServiceContext.getOwnStdairServiceFlag();
+
+    // Retrieve the StdAir service object from the (TraDemGen) service context
+    stdair::STDAIR_Service& lSTDAIR_Service =
+      lTRADEMGEN_ServiceContext.getSTDAIR_Service(); 
+
+    /**
+     * 1. Have StdAir clone the whole persistent BOM tree, only when the StdAir
+     *    service is owned by the current component (TraDemGen here)
+     */
+    if (doesOwnStdairService == true) {
+      //
+      lSTDAIR_Service.clonePersistentBom ();
+    }  
+ 
+    /**
+     * 2. Build the complementary links
+     */
+    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();   
+    buildComplementaryLinks (lBomRoot);
+  } 
+
+  // ////////////////////////////////////////////////////////////////////
+  void TRADEMGEN_Service::buildComplementaryLinks (stdair::BomRoot& ioBomRoot) {
+    // Currently, no more things to do by TRADEMGEN at that stage.
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -830,19 +926,20 @@ namespace SEVMGR {
   // ////////////////////////////////////////////////////////////////////
   template<class EventGenerator>
   void SEVMGR_Service::addEventGenerator (EventGenerator& iEventGenerator) const {
-
     // Retrieve the StdAir service
     const stdair::STDAIR_Service& lSTDAIR_Service =
       this->getSTDAIR_Service();
     
     // Retrieve the BOM root object instance
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
 
     // Link the DemandStream to its parent (EventQueue)
-    stdair::FacBomManager::linkWithParent (lBomRoot, iEventGenerator);
+    stdair::FacBomManager::linkWithParent (lPersistentBomRoot, iEventGenerator);
     
     // Add the DemandStream to the dedicated list and map
-    stdair::FacBomManager::addToListAndMap (lBomRoot, iEventGenerator);
+    stdair::FacBomManager::addToListAndMap (lPersistentBomRoot, 
+					    iEventGenerator);
     
   }
   
@@ -855,11 +952,13 @@ namespace SEVMGR {
       this->getSTDAIR_Service(); 
 
     // Retrieve the BOM root object instance
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
 
     // Retrieve the DemandStream which corresponds to the given key.
     EventGenerator& lEventGenerator = 
-      stdair::BomManager::getObject<EventGenerator> (lBomRoot, iKey);
+      stdair::BomManager::getObject<EventGenerator> (lPersistentBomRoot, 
+						     iKey);
 
     return lEventGenerator;
     
@@ -876,11 +975,13 @@ namespace SEVMGR {
       this->getSTDAIR_Service(); 
 
     // Retrieve the BOM root object instance
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
 
     // Retrieve the DemandStream which corresponds to the given key.
     EventGenerator* lEventGenerator_ptr = 
-      stdair::BomManager::getObjectPtr<EventGenerator> (lBomRoot, iKey);
+      stdair::BomManager::getObjectPtr<EventGenerator> (lPersistentBomRoot, 
+							iKey);
     if (lEventGenerator_ptr == NULL) {
       hasEventGenerator = false;
     } 
@@ -898,11 +999,12 @@ namespace SEVMGR {
       this->getSTDAIR_Service();   
 
     // Retrieve the BOM root object instance
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
     
     // Retrieve the DemandStream list
     const std::list<EventGenerator*> lEventGeneratorList =
-      stdair::BomManager::getList<EventGenerator> (lBomRoot);
+      stdair::BomManager::getList<EventGenerator> (lPersistentBomRoot);
 
     return lEventGeneratorList;
   }
@@ -916,10 +1018,11 @@ namespace SEVMGR {
       this->getSTDAIR_Service();
 
     // Retrieve the BOM root object instance
-    stdair::BomRoot& lBomRoot = lSTDAIR_Service.getBomRoot();
+    stdair::BomRoot& lPersistentBomRoot = 
+      lSTDAIR_Service.getPersistentBomRoot();
 
     const bool hasListEventGenerator =
-      stdair::BomManager::hasList<EventGenerator> (lBomRoot);
+      stdair::BomManager::hasList<EventGenerator> (lPersistentBomRoot);
 
     return hasListEventGenerator;
   }
