@@ -107,10 +107,26 @@ namespace TRADEMGEN {
       void operator() (double iReal) const;
     };
   
+    /** Store the demand change fee disutility. */
+    struct storeDemandChangeFeeDisutility : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDemandChangeFeeDisutility (DemandStruct&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
     /** Store the demand non refundable probability. */
     struct storeDemandNonRefundableProb : public ParserSemanticAction {
       /** Actor Constructor. */
       storeDemandNonRefundableProb (DemandStruct&);
+      /** Actor Function (functor). */
+      void operator() (double iReal) const;
+    };
+  
+    /** Store the demand non refundable disutility. */
+    struct storeDemandNonRefundableDisutility : public ParserSemanticAction {
+      /** Actor Constructor. */
+      storeDemandNonRefundableDisutility (DemandStruct&);
       /** Actor Function (functor). */
       void operator() (double iReal) const;
     };
@@ -304,6 +320,10 @@ namespace TRADEMGEN {
         Trip type(RO=outbound of round-trip,RI=inbound of round-trip,OW=one way)
         Stay duration (number of days)
         Frequent flyer (P=Platinum, G=Gold, S=Silver, M=Member, N=None)
+        Change fees restriction. 'True' for accepting the restriction (for hard-restriction custumer choice model)
+        Change fees disutility (for disutility custumer choice model)
+        Non refundable restriction. 'True' for accepting the restriction (for hard-restriction custumer choice model)
+        Non refundable disutility (for disutility custumer choice model)
       Continuous cumulative distribution:
         Preferred departure time (hh:mm:ss)
         Preferred arrival date (equal to prefered departure date)

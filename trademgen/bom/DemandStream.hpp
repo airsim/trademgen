@@ -106,6 +106,16 @@ namespace TRADEMGEN {
       return _randomGenerationContext.getNumberOfRequestsGeneratedSoFar();
     }
 
+    /** Get the change fee disutility. */
+    const stdair::Disutility_T& getChangeFeeDisutility() const {
+      return _demandCharacteristics._changeFeeDisutility;
+    }
+
+    /** Get the non refundable disutility. */
+    const stdair::Disutility_T& getNonRefundableDisutility() const {
+      return _demandCharacteristics._nonRefundableDisutility;
+    }
+
     /**
      * Get the default POS probablity mass, used when "row" (rest of
      * the world) is drawn.
@@ -136,7 +146,9 @@ namespace TRADEMGEN {
                               const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
                               const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
                               const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+                              const stdair::Disutility_T& iChangeFeeDisutility,
                               const stdair::NonRefundableRatio_T& iNonRefundableProb,
+                              const stdair::Disutility_T& iNonRefundableDisutility,
                               const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
                               const stdair::WTP_T& iMinWTP,
                               const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution) {
@@ -144,7 +156,8 @@ namespace TRADEMGEN {
         DemandCharacteristics (iArrivalPattern, iPOSProbMass,
                                iChannelProbMass, iTripTypeProbMass,
                                iStayDurationProbMass, iFrequentFlyerProbMass,
-                               iChangeFeeProb, iNonRefundableProb,
+                               iChangeFeeProb, iChangeFeeDisutility,
+                               iNonRefundableProb, iNonRefundableDisutility,
                                iPreferredDepartureTimeContinuousDistribution,
                                iMinWTP, iValueOfTimeContinuousDistribution);
     }
@@ -182,7 +195,9 @@ namespace TRADEMGEN {
                  const StayDurationProbabilityMassFunction_T&,
                  const FrequentFlyerProbabilityMassFunction_T&,
                  const stdair::ChangeFeesRatio_T&,
+                 const stdair::Disutility_T&,
                  const stdair::NonRefundableRatio_T&,
+                 const stdair::Disutility_T&,
                  const PreferredDepartureTimeContinuousDistribution_T&,
                  const stdair::WTP_T&,
                  const ValueOfTimeContinuousDistribution_T&,

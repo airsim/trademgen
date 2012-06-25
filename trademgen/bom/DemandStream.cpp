@@ -31,7 +31,7 @@ namespace TRADEMGEN {
                               TripTypeProbabilityMassFunction_T(),
                               StayDurationProbabilityMassFunction_T(),
                               FrequentFlyerProbabilityMassFunction_T(),
-                              0.5, 0.5,
+                              0.5, 50, 0.5, 50,
                               PreferredDepartureTimeContinuousDistribution_T(),
                               0.0,
                               ValueOfTimeContinuousDistribution_T()),
@@ -51,7 +51,7 @@ namespace TRADEMGEN {
                               TripTypeProbabilityMassFunction_T(),
                               StayDurationProbabilityMassFunction_T(),
                               FrequentFlyerProbabilityMassFunction_T(),
-                              0.5, 0.5,
+                              0.5, 50, 0.5, 50,
                               PreferredDepartureTimeContinuousDistribution_T(),
                               0.0,
                               ValueOfTimeContinuousDistribution_T()),
@@ -85,7 +85,9 @@ namespace TRADEMGEN {
           const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
           const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
           const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+          const stdair::Disutility_T& iChangeFeeDisutility,
           const stdair::NonRefundableRatio_T& iNonRefundableProb,
+          const stdair::Disutility_T& iNonRefundableDisutility,
           const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
           const stdair::WTP_T& iMinWTP,
           const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
@@ -98,7 +100,8 @@ namespace TRADEMGEN {
     setDemandCharacteristics (iArrivalPattern, iPOSProbMass,
                               iChannelProbMass, iTripTypeProbMass,
                               iStayDurationProbMass, iFrequentFlyerProbMass,
-                              iChangeFeeProb, iNonRefundableProb,
+                              iChangeFeeProb, iChangeFeeDisutility,
+                              iNonRefundableProb, iNonRefundableDisutility,
                               iPreferredDepartureTimeContinuousDistribution,
                               iMinWTP, iValueOfTimeContinuousDistribution);
 
@@ -576,8 +579,14 @@ namespace TRADEMGEN {
     const stdair::FrequentFlyer_T lFrequentFlyer = generateFrequentFlyer();
     // Change fees
     const stdair::ChangeFees_T lChangeFees = generateChangeFees();
+    // Change fee disutility
+    const stdair::Disutility_T lChangeFeeDisutility =
+      _demandCharacteristics._changeFeeDisutility;
     // Non refundable
     const stdair::NonRefundable_T lNonRefundable = generateNonRefundable();
+    // Non refundable disutility
+    const stdair::Disutility_T lNonRefundableDisutility =
+      _demandCharacteristics._nonRefundableDisutility;
     // Preferred departure time.
     const stdair::Duration_T lPreferredDepartureTime =
       generatePreferredDepartureTime();
@@ -608,8 +617,9 @@ namespace TRADEMGEN {
                                          lChannelLabel, lTripType,
                                          lStayDuration, lFrequentFlyer,
                                          lPreferredDepartureTime,
-                                         lWTP, lValueOfTime, lChangeFees, 
-                                         lNonRefundable));
+                                         lWTP, lValueOfTime, lChangeFees,
+                                         lChangeFeeDisutility, lNonRefundable,
+                                         lNonRefundableDisutility));
     
     // DEBUG
     // STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());

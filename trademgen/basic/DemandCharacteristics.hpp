@@ -54,7 +54,9 @@ namespace TRADEMGEN {
                            const StayDurationProbabilityMassFunction_T&,
                            const FrequentFlyerProbabilityMassFunction_T&,
                            const stdair::ChangeFeesRatio_T&,
+                           const stdair::Disutility_T&, 
                            const stdair::NonRefundableRatio_T&,
+                           const stdair::Disutility_T&,
                            const PreferredDepartureTimeContinuousDistribution_T&,
                            const stdair::WTP_T&,
                            const ValueOfTimeContinuousDistribution_T&);
@@ -115,9 +117,19 @@ namespace TRADEMGEN {
     stdair::ChangeFeesRatio_T _changeFeeProb;
 
     /**
+     * Change fee disutility.
+     */
+    stdair::Disutility_T _changeFeeDisutility;
+
+    /**
      * Non refundable restriction acceptation probability.
      */
     stdair::NonRefundableRatio_T _nonRefundableProb;
+
+    /**
+     * Non refundable disutility.
+     */
+    stdair::Disutility_T _nonRefundableDisutility;
 
     /**
      * Preferred departure time cumulative distribution.
