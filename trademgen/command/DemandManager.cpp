@@ -147,7 +147,9 @@ namespace TRADEMGEN {
     //
     const stdair::WTP_T lWTP (1000.0);
     const stdair::ChangeFeesRatio_T lChangeFees (0.5);
+    const stdair::Disutility_T lChangeFeeDisutility (50);
     const stdair::NonRefundableRatio_T lNonRefundable (0.5);
+    const stdair::Disutility_T lNonRefundableDisutility (50);
 
 
     // Delegate the call to the dedicated command
@@ -155,7 +157,8 @@ namespace TRADEMGEN {
       createDemandStream (ioSEVMGR_ServicePtr, lDemandStreamKey, lDTDProbDist,
                           lPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist,
-                          lChangeFees, lNonRefundable,
+                          lChangeFees, lChangeFeeDisutility,
+                          lNonRefundable, lNonRefundableDisutility,
                           lPrefDepTimeProbDist,
                           lWTP, lTimeValueProbDist, lDemandDistribution,
                           ioSharedGenerator.getBaseGenerator(),
@@ -185,7 +188,9 @@ namespace TRADEMGEN {
    const StayDurationProbabilityMassFunction_T& iStayDurationProbMass,
    const FrequentFlyerProbabilityMassFunction_T& iFrequentFlyerProbMass,
    const stdair::ChangeFeesRatio_T& iChangeFeeProb,
+   const stdair::Disutility_T& iChangeFeeDisutility,
    const stdair::NonRefundableRatio_T& iNonRefundableProb,
+   const stdair::Disutility_T& iNonRefundableDisutility,
    const PreferredDepartureTimeContinuousDistribution_T& iPreferredDepartureTimeContinuousDistribution,
    const stdair::WTP_T& iMinWTP,
    const ValueOfTimeContinuousDistribution_T& iValueOfTimeContinuousDistribution,
@@ -205,7 +210,8 @@ namespace TRADEMGEN {
     oDemandStream.setAll (iArrivalPattern, iPOSProbMass,
                           iChannelProbMass, iTripTypeProbMass,
                           iStayDurationProbMass, iFrequentFlyerProbMass,
-                          iChangeFeeProb, iNonRefundableProb,
+                          iChangeFeeProb, iChangeFeeDisutility,
+                          iNonRefundableProb, iNonRefundableDisutility,
                           iPreferredDepartureTimeContinuousDistribution,
                           iMinWTP, iValueOfTimeContinuousDistribution,
                           iDemandDistribution, ioSharedGenerator,
@@ -271,7 +277,9 @@ namespace TRADEMGEN {
                               iDemand._tripProbDist,
                               iDemand._stayProbDist, iDemand._ffProbDist,
                               iDemand._changeFeeProb,
+                              iDemand._changeFeeDisutility,
                               iDemand._nonRefundableProb,
+                              iDemand._nonRefundableDisutility,
                               iDemand._prefDepTimeProbDist,
                               iDemand._minWTP,
                               iDemand._timeValueProbDist,
@@ -706,7 +714,9 @@ namespace TRADEMGEN {
     //
     const stdair::WTP_T lSINBKKWTP (400.0);
     const stdair::ChangeFeesRatio_T lChangeFees (0.5);
+    const stdair::Disutility_T lChangeFeeDisutility (50);
     const stdair::NonRefundableRatio_T lNonRefundable (0.5);
+    const stdair::Disutility_T lNonRefundableDisutility (50);
 
 
     // Delegate the call to the dedicated command
@@ -714,7 +724,8 @@ namespace TRADEMGEN {
       createDemandStream (ioSEVMGR_ServicePtr, lSINBKKDemandStreamKey, lDTDProbDist,
                           lSINBKKPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist,
-                          lChangeFees, lNonRefundable,
+                          lChangeFees, lChangeFeeDisutility,
+                          lNonRefundable, lNonRefundableDisutility,
                           lSINPrefDepTimeProbDist,
                           lSINBKKWTP, lTimeValueProbDist,
                           lSINBKKDemandDistribution,
@@ -783,7 +794,8 @@ namespace TRADEMGEN {
       createDemandStream (ioSEVMGR_ServicePtr, lBKKHKGDemandStreamKey, lDTDProbDist,
                           lBKKHKGPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist,
-                          lChangeFees, lNonRefundable,
+                          lChangeFees, lChangeFeeDisutility,
+                          lNonRefundable, lNonRefundableDisutility,
                           lBKKPrefDepTimeProbDist,
                           lBKKHKGWTP, lTimeValueProbDist,
                           lBKKHKGDemandDistribution,
@@ -833,7 +845,8 @@ namespace TRADEMGEN {
       createDemandStream (ioSEVMGR_ServicePtr, lSINHKGDemandStreamKey, lDTDProbDist,
                           lSINHKGPOSProbDist, lChannelProbDist, lTripProbDist,
                           lStayProbDist, lFFProbDist, 
-                          lChangeFees, lNonRefundable,
+                          lChangeFees, lChangeFeeDisutility,
+                          lNonRefundable, lNonRefundableDisutility,
                           lSINPrefDepTimeProbDist,
                           lSINHKGWTP, lTimeValueProbDist, lSINHKGDemandDistribution,
                           ioSharedGenerator.getBaseGenerator(),

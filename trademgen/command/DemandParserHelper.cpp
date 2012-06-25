@@ -147,6 +147,17 @@ namespace TRADEMGEN {
     }
 
     // //////////////////////////////////////////////////////////////////
+    storeDemandChangeFeeDisutility::storeDemandChangeFeeDisutility (DemandStruct& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDemandChangeFeeDisutility::operator() (double iReal) const { 
+      _demand._changeFeeDisutility = iReal; 
+      //STDAIR_LOG_DEBUG ("Demand change fee disutility: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
     storeDemandNonRefundableProb::
     storeDemandNonRefundableProb (DemandStruct& ioDemand)
       : ParserSemanticAction (ioDemand) {
@@ -156,6 +167,18 @@ namespace TRADEMGEN {
     void storeDemandNonRefundableProb::operator() (double iReal) const { 
       _demand._nonRefundableProb = iReal; 
       //STDAIR_LOG_DEBUG ("Demand non refundable prob: " << iReal);
+    }
+
+    // //////////////////////////////////////////////////////////////////
+    storeDemandNonRefundableDisutility::
+    storeDemandNonRefundableDisutility (DemandStruct& ioDemand)
+      : ParserSemanticAction (ioDemand) {
+    }
+    
+    // //////////////////////////////////////////////////////////////////
+    void storeDemandNonRefundableDisutility::operator() (double iReal) const { 
+      _demand._nonRefundableDisutility = iReal; 
+      //STDAIR_LOG_DEBUG ("Demand non refundable disutility: " << iReal);
     }
 
     // //////////////////////////////////////////////////////////////////
@@ -698,10 +721,12 @@ namespace TRADEMGEN {
 
       change_fees =
         (bsc::ureal_p)[storeDemandChangeFeeProb(self._demand)]
+        >> ';' >> (bsc::ureal_p)[storeDemandChangeFeeDisutility(self._demand)]
         ;
 
       non_refundable =
         (bsc::ureal_p)[storeDemandNonRefundableProb(self._demand)]
+        >> ';' >> (bsc::ureal_p)[storeDemandNonRefundableDisutility(self._demand)]
         ;
       
       pref_dep_time_dist =
