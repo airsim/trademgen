@@ -518,8 +518,6 @@ namespace TRADEMGEN {
     const stdair::DayDuration_T lAPInDays = lAP.days();
 
     stdair::RealNumber_T lProb = -lAPInDays;
-      //1 - lAPInDays / DEFAULT_MAX_ADVANCE_PURCHASE;
-    if (lProb < 0.0) { lProb = 0.0; }
     stdair::RealNumber_T lFrat5Coef =
       _demandCharacteristics._frat5Pattern.getValue (lProb);
 
