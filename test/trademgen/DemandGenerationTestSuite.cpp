@@ -57,49 +57,31 @@ typedef std::pair<stdair::Count_T, stdair::Count_T> NbOfEventsPair_T;
 typedef std::map<const stdair::DemandStreamKeyStr_T,
                  NbOfEventsPair_T> NbOfEventsByDemandStreamMap_T;
 
-
-// /////////////// Main: Unit Test Suite //////////////
-
-// Set the UTF configuration (re-direct the output to a specific file)
-BOOST_GLOBAL_FIXTURE (UnitTestConfig);
-
-// Start the test suite
-BOOST_AUTO_TEST_SUITE (master_test_suite)
-
+// //////////////////////////////////////////////////////////////////////
 /**
- * Test a simple simulation
+ * Generate booking requests using demand streams.
  */
-BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
+void testDemandGenerationHelper (const unsigned short iTestFlag,
+                                 const stdair::Filename_T& iDemandInputFilename,  
+                                 const bool isBuiltin) {
 
   // Seed for the random generation
-  const stdair::RandomSeed_T lRandomSeed = stdair::DEFAULT_RANDOM_SEED;  
-
-// Input file name
-  const stdair::Filename_T lInputFilename (STDAIR_SAMPLE_DIR "/demand01.csv");
-
-  // Check that the file path given as input corresponds to an actual file
-  const bool doesExistAndIsReadable =
-    stdair::BasFileMgr::doesExistAndIsReadable (lInputFilename);
-  BOOST_CHECK_MESSAGE (doesExistAndIsReadable == true,
-                       "The '" << lInputFilename
-                       << "' input file can not be open and read");
+  const stdair::RandomSeed_T lRandomSeed = stdair::DEFAULT_RANDOM_SEED;
   
   // Output log File
-  const stdair::Filename_T lLogFilename ("DemandGenerationTestSuite.log");
-  
+  std::ostringstream oStr;
+  oStr << "DemandGenerationTestSuite_" << iTestFlag << ".log";
+  const stdair::Filename_T lLogFilename (oStr.str());
+
   // Set the log parameters
   std::ofstream logOutputFile;
-  // open and clean the log outputfile
+  // Open and clean the log outputfile
   logOutputFile.open (lLogFilename.c_str());
   logOutputFile.clear();
-  
+
   // Initialise the TraDemGen service object
   const stdair::BasLogParams lLogParams (stdair::LOG::DEBUG, logOutputFile);
   TRADEMGEN::TRADEMGEN_Service trademgenService (lLogParams, lRandomSeed);
-
-  // Create the DemandStream objects, and insert them within the BOM tree
-  const TRADEMGEN::DemandFilePath lDemandFilePath (lInputFilename);
-  BOOST_CHECK_NO_THROW (trademgenService.parseAndLoad (lDemandFilePath));
 
   /**
    * Initialise the current number of generated events and the
@@ -111,20 +93,54 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
    * for each demand stream.
    */
   NbOfEventsByDemandStreamMap_T lNbOfEventsMap;
-  lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
-                         value_type ("SIN-HND 2010-Feb-08 Y",
-                                     NbOfEventsPair_T (1, 10)));
-  lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
-                         value_type ("SIN-HND 2010-Feb-09 Y",
-                                     NbOfEventsPair_T (1, 10)));
-  lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
-                         value_type ("SIN-BKK 2010-Feb-08 Y",
-                                     NbOfEventsPair_T (1, 10)));
-  lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
-                         value_type ("SIN-BKK 2010-Feb-09 Y",
-                                     NbOfEventsPair_T (1, 10)));
-  // Total number of events, for all the demand streams: 3
-  stdair::Count_T lRefExpectedNbOfEvents (40);
+  
+  // Total number of events
+  stdair::Count_T lRefExpectedNbOfEvents (0);
+  stdair::Count_T lRefActualNbOfEvents (0);
+
+  // Check whether or not a (CSV) input file should be read
+  if (isBuiltin == true) {
+
+    // Build the default sample BOM tree (filled with demand streams) for TraDemGen
+    trademgenService.buildSampleBom();
+
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("SIN-BKK 2010-Feb-08 Y",
+                                       NbOfEventsPair_T (4, 60)));
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("BKK-HKG 2010-Feb-08 Y",
+                                       NbOfEventsPair_T (4, 60)));
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("SIN-HKG 2010-Feb-08 Y",
+                                       NbOfEventsPair_T (4, 60)));
+
+    // Total number of events, for the 3 demand streams: 180
+    lRefExpectedNbOfEvents = 180;
+    lRefActualNbOfEvents = 186;
+
+  } else {
+
+    // Create the DemandStream objects, and insert them within the BOM tree
+    const TRADEMGEN::DemandFilePath lDemandFilePath (iDemandInputFilename);
+    trademgenService.parseAndLoad (lDemandFilePath);
+
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("SIN-HND 2010-Feb-08 Y",
+                                       NbOfEventsPair_T (1, 10)));
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("SIN-HND 2010-Feb-09 Y",
+                                       NbOfEventsPair_T (1, 10)));
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("SIN-BKK 2010-Feb-08 Y",
+                                       NbOfEventsPair_T (1, 10)));
+    lNbOfEventsMap.insert (NbOfEventsByDemandStreamMap_T::
+                           value_type ("SIN-BKK 2010-Feb-09 Y",
+                                       NbOfEventsPair_T (1, 10)));
+
+    // Total number of events, for the 4 demand streams: 40
+    lRefExpectedNbOfEvents = 40;
+    lRefActualNbOfEvents = 40;
+  }
   
   // Retrieve the expected (mean value of the) number of events to be
   // generated
@@ -149,10 +165,6 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
    * Initialisation step.
    *
    * Generate the first event for each demand stream.
-   *
-   * \note For that demand (CSV) file (i.e., demand01.csv), the
-   *       expected and actual numbers of events to be generated are
-   *       the same (and equal to 40).
    */
   const stdair::Count_T& lActualNbOfEventsToBeGenerated =
     trademgenService.generateFirstRequests(lDemandGenerationMethod);
@@ -162,8 +174,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
                     << lExpectedNbOfEventsToBeGenerated << ", actual: "
                     << lActualNbOfEventsToBeGenerated);
   
-  // Total number of events, for all the demand streams: 40
-  const stdair::Count_T lRefActualNbOfEvents (40);
+  // Total number of events, for all the demand streams:
   BOOST_CHECK_EQUAL (lRefActualNbOfEvents, lActualNbOfEventsToBeGenerated);
   
   BOOST_CHECK_MESSAGE (lRefActualNbOfEvents == lActualNbOfEventsToBeGenerated,
@@ -176,8 +187,7 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
   /** Is the queue empty? */
   const bool isQueueDone = trademgenService.isQueueDone();
   BOOST_REQUIRE_MESSAGE (isQueueDone == false,
-                         "The event queue should not be empty. You may check "
-                         << "the input file: '" << lInputFilename << "'");
+                         "The event queue should not be empty.");
 
   /**
      Main loop.
@@ -324,6 +334,45 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
 
   // Close the log file
   logOutputFile.close();
+
+}
+
+
+// /////////////// Main: Unit Test Suite //////////////
+
+// Set the UTF configuration (re-direct the output to a specific file)
+BOOST_GLOBAL_FIXTURE (UnitTestConfig);
+
+// Start the test suite
+BOOST_AUTO_TEST_SUITE (master_test_suite)
+
+/**
+ * Test a simple demand generation
+ */
+BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
+
+  // Input file name
+  const stdair::Filename_T lInputFilename (STDAIR_SAMPLE_DIR "/demand01.csv");
+  
+  // State whether the BOM tree should be built-in or parsed from an input file
+  const bool isBuiltin = false;
+  BOOST_CHECK_NO_THROW (testDemandGenerationHelper(0,
+                                                   lInputFilename,
+                                                   isBuiltin));
+  
+}
+
+/**
+ * Test a simple demand generation with the default BOM tree
+ */
+BOOST_AUTO_TEST_CASE (trademgen_default_bom_simulation_test) {
+  
+  // State whether the BOM tree should be built-in or parsed from an input file
+  const bool isBuiltin = true;
+  BOOST_CHECK_NO_THROW (testDemandGenerationHelper(1,
+                                                   " " ,
+                                                   isBuiltin));
+  
 }
 
 // End the test suite
