@@ -26,6 +26,7 @@
 #include <stdair/bom/BookingRequestStruct.hpp>
 #include <stdair/service/Logger.hpp>
 // TraDemGen
+#include <trademgen/TRADEMGEN_Exceptions.hpp>
 #include <trademgen/TRADEMGEN_Service.hpp>
 #include <trademgen/bom/DemandStreamKey.hpp>
 #include <trademgen/config/trademgen-paths.hpp>
@@ -62,7 +63,8 @@ typedef std::map<const stdair::DemandStreamKeyStr_T,
  * Generate booking requests using demand streams.
  */
 void testDemandGenerationHelper (const unsigned short iTestFlag,
-                                 const stdair::Filename_T& iDemandInputFilename,  
+                                 const stdair::Filename_T& iDemandInputFilename,
+                                 const stdair::DemandGenerationMethod& iDemandGenerationMethod,
                                  const bool isBuiltin) {
 
   // Seed for the random generation
@@ -158,16 +160,13 @@ void testDemandGenerationHelper (const unsigned short iTestFlag,
                        << std::floor (lExpectedNbOfEventsToBeGenerated)
                        << "). Reference value: " << lRefExpectedNbOfEvents);
 
-  // Generate the date time of the requests with the statistic order method.
-  stdair::DemandGenerationMethod lDemandGenerationMethod (stdair::DemandGenerationMethod::STA_ORD);
-
   /**
    * Initialisation step.
    *
    * Generate the first event for each demand stream.
    */
   const stdair::Count_T& lActualNbOfEventsToBeGenerated =
-    trademgenService.generateFirstRequests(lDemandGenerationMethod);
+    trademgenService.generateFirstRequests(iDemandGenerationMethod);
 
   // DEBUG
   STDAIR_LOG_DEBUG ("Expected number of events: "
@@ -241,7 +240,7 @@ void testDemandGenerationHelper (const unsigned short iTestFlag,
     // Assess whether more events should be generated for that demand stream
     const bool stillHavingRequestsToBeGenerated = trademgenService.
       stillHavingRequestsToBeGenerated (lDemandStreamKey, lPPS,
-                                        lDemandGenerationMethod);
+                                        iDemandGenerationMethod);
 
     /**
        The first time an event is popped from the queue for that demand stream,
@@ -280,7 +279,7 @@ void testDemandGenerationHelper (const unsigned short iTestFlag,
     if (stillHavingRequestsToBeGenerated == true) {
       const stdair::BookingRequestPtr_T lNextRequest_ptr =
         trademgenService.generateNextRequest (lDemandStreamKey,
-                                              lDemandGenerationMethod);
+                                              iDemandGenerationMethod);
       assert (lNextRequest_ptr != NULL);
 
       /**
@@ -318,12 +317,15 @@ void testDemandGenerationHelper (const unsigned short iTestFlag,
   }
   // Compensate for the last iteration
   --idx;
-  //
-  BOOST_CHECK_EQUAL (idx, lRefActualNbOfEvents);
-  BOOST_CHECK_MESSAGE (idx == lRefActualNbOfEvents,
-                       "The total actual number of events is "
-                       << lRefActualNbOfEvents << ", but " << idx
-                       << " events have been generated");
+
+  if (iDemandGenerationMethod == stdair::DemandGenerationMethod::STA_ORD) {
+    //
+    BOOST_CHECK_EQUAL (idx, lRefActualNbOfEvents);
+    BOOST_CHECK_MESSAGE (idx == lRefActualNbOfEvents,
+                         "The total actual number of events is "
+                         << lRefActualNbOfEvents << ", but " << idx
+                         << " events have been generated");
+  }
   
   /** Reset the context of the demand streams for another demand generation
       without having to reparse the demand input file. */
@@ -353,12 +355,37 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
 
   // Input file name
   const stdair::Filename_T lInputFilename (STDAIR_SAMPLE_DIR "/demand01.csv");
+
+  // Generate the date time of the requests with the statistic order method.
+  const stdair::DemandGenerationMethod lDemandGenerationMethod (stdair::DemandGenerationMethod::STA_ORD);
   
   // State whether the BOM tree should be built-in or parsed from an input file
   const bool isBuiltin = false;
   BOOST_CHECK_NO_THROW (testDemandGenerationHelper(0,
                                                    lInputFilename,
+                                                   lDemandGenerationMethod,
                                                    isBuiltin));
+  
+}
+
+/**
+ * Test a simple error case: the demand input file is missing
+ */
+BOOST_AUTO_TEST_CASE (trademgen_missing_input_file_test) {
+
+  // Input file name
+  const stdair::Filename_T lInputFilename (STDAIR_SAMPLE_DIR "/missingFile.csv");
+
+  // Generate the date time of the requests with the statistic order method.
+  const stdair::DemandGenerationMethod lDemandGenerationMethod (stdair::DemandGenerationMethod::STA_ORD);
+  
+  // State whether the BOM tree should be built-in or parsed from an input file
+  const bool isBuiltin = false;
+  BOOST_CHECK_THROW (testDemandGenerationHelper(1,
+                                                lInputFilename,
+                                                lDemandGenerationMethod,
+                                                isBuiltin),
+                     TRADEMGEN::DemandInputFileNotFoundException);
   
 }
 
@@ -367,10 +394,31 @@ BOOST_AUTO_TEST_CASE (trademgen_simple_simulation_test) {
  */
 BOOST_AUTO_TEST_CASE (trademgen_default_bom_simulation_test) {
   
+  // Generate the date time of the requests with the statistic order method.
+  const stdair::DemandGenerationMethod lDemandGenerationMethod (stdair::DemandGenerationMethod::STA_ORD);
+  
   // State whether the BOM tree should be built-in or parsed from an input file
   const bool isBuiltin = true;
-  BOOST_CHECK_NO_THROW (testDemandGenerationHelper(1,
+  BOOST_CHECK_NO_THROW (testDemandGenerationHelper(2,
                                                    " " ,
+                                                   lDemandGenerationMethod,
+                                                   isBuiltin));
+  
+}
+
+/**
+ * Test a simple demand generation with the default BOM tree
+ */
+BOOST_AUTO_TEST_CASE (trademgen_poisson_process_test) {
+  
+  // Generate the date time of the requests with the poisson process.
+  const stdair::DemandGenerationMethod lDemandGenerationMethod (stdair::DemandGenerationMethod::POI_PRO);
+  
+  // State whether the BOM tree should be built-in or parsed from an input file
+  const bool isBuiltin = true;
+  BOOST_CHECK_NO_THROW (testDemandGenerationHelper(3,
+                                                   " " ,
+                                                   lDemandGenerationMethod,
                                                    isBuiltin));
   
 }
