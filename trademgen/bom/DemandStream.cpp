@@ -594,30 +594,24 @@ namespace TRADEMGEN {
     const stdair::WTP_T lWTP = generateWTP (ioGenerator,lPreferredDepartureDate,
                                             lDateTimeThisRequest,lStayDuration);
 
-    // TODO 1: understand why the following form does not work, knowing
-    // that:
-    // typedef boost::shared_ptr<stdair::BookingRequestStruct> stdair::BookingRequestPtr_T
-    // stdair::BookingRequestPtr_T oBookingRequest_ptr =
-    //   boost::make_shared<stdair::BookingRequestStruct> ();
-
-
-    // TODO 2: move the creation of the structure out of the BOM layer
+    // TODO: move the creation of the structure out of the BOM layer
     //  (into the command layer, e.g., within the DemandManager command).
     
     // Create the booking request
+    stdair::BookingRequestStruct lBookingRequestStruct (describeKey(), lOrigin,
+                                                        lDestination, lPOS,
+                                                        lPreferredDepartureDate,
+                                                        lDateTimeThisRequest,
+                                                        lPreferredCabin, lPartySize,
+                                                        lChannelLabel, lTripType,
+                                                        lStayDuration, lFrequentFlyer,
+                                                        lPreferredDepartureTime,
+                                                        lWTP, lValueOfTime, lChangeFees,
+                                                        lChangeFeeDisutility, lNonRefundable,
+                                                        lNonRefundableDisutility);
+  
     stdair::BookingRequestPtr_T oBookingRequest_ptr =
-      stdair::BookingRequestPtr_T
-      (new stdair::BookingRequestStruct (describeKey(), lOrigin,
-                                         lDestination, lPOS,
-                                         lPreferredDepartureDate,
-                                         lDateTimeThisRequest,
-                                         lPreferredCabin, lPartySize,
-                                         lChannelLabel, lTripType,
-                                         lStayDuration, lFrequentFlyer,
-                                         lPreferredDepartureTime,
-                                         lWTP, lValueOfTime, lChangeFees,
-                                         lChangeFeeDisutility, lNonRefundable,
-                                         lNonRefundableDisutility));
+      boost::make_shared<stdair::BookingRequestStruct>  (lBookingRequestStruct);
     
     // DEBUG
     // STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());

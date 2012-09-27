@@ -3,6 +3,8 @@
 // //////////////////////////////////////////////////////////////////////
 // STL
 #include <cassert>
+// Boost
+#include <boost/make_shared.hpp>
 // StdAir
 #include <stdair/basic/ProgressStatusSet.hpp>
 #include <stdair/basic/BasConst_Request.hpp>
@@ -559,13 +561,18 @@ namespace TRADEMGEN {
       const stdair::BookingClassID_T& lClassID = itClassID->second;
 
       lClassIDList.push_back (lClassID);
+
+      
     }
     
     // Create the cancellation.
+    stdair::CancellationStruct lCancellationStruct (lSegmentPath,
+                                                    lClassIDList,
+                                                    iPartySize,
+                                                    lCancellationTime);
+    
     stdair::CancellationPtr_T lCancellation_ptr =
-      stdair::CancellationPtr_T
-      (new stdair::CancellationStruct (lSegmentPath, lClassIDList, iPartySize,
-                                       lCancellationTime));
+      boost::make_shared<stdair::CancellationStruct> (lCancellationStruct);
 
     // Create an event structure
     stdair::EventStruct lEventStruct (stdair::EventType::CX, lCancellation_ptr);
