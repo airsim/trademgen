@@ -1,9 +1,3 @@
-* 2012-12-11:
-- Open source release.
-- [Dev] Events no longer stored in the StdAir BOM root: new module SEvMgr
-  handling events through an event queue.
-- [Dev] Services dedicated to JSON export of events.
-- [Build] Test coverage option with gcov.
 
 * 2011-12-18:
 - Version 0.2.3
