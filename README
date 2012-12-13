@@ -46,6 +46,7 @@ Then, as usual:
 * To configure the project, type something like:
   mkdir build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_BASEDIR}/trademgen-1.00.0 \
+   -DWITH_SEVMGR_PREFIX=${INSTALL_BASEDIR}/sevmgr-stable \
    -DWITH_STDAIR_PREFIX=${INSTALL_BASEDIR}/stdair-stable \
    -DCMAKE_BUILD_TYPE:STRING=Debug -DINSTALL_DOC:BOOL=ON -DENABLE_TEST:BOOL=ON \
    ${LIBSUFFIX_4_CMAKE} ..
