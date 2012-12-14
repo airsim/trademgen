@@ -88,7 +88,7 @@ namespace TRADEMGEN {
      * that the StdAir log service has already been initialised with
      * the proper log output stream by some other methods in the calling
      * chain (for instance, when the TRADEMGEN_Service is itself being
-     * initialised by another library service such as DSIM_Service).
+     * initialised by another library service such as TVLSIM_Service).
      *
      * @param stdair::STDAIR_ServicePtr_T Handler on the STDAIR_Service. 
      * @param SEVMGR::SEVMGR_ServicePtr_T Handler on the SEVMGR_Service.
