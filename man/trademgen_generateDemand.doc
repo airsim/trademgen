@@ -1,6 +1,6 @@
 /*!
 \page trademgen
-      Interactive command-line utility for the C++ Simulated Travel Demand Generation Library
+      Command-line utility for the C++ Simulated Travel Demand Generation Library
 
 \section sec_synopsis SYNOPSIS
 
@@ -8,7 +8,7 @@
 
 \section sec_description DESCRIPTION
 
-\e trademgen is a small interactive program showing how to use the TraDemGen library.
+\e trademgen is a small program showing how to use the TraDemGen library.
 
 \e trademgen accepts the following options:
 
