@@ -17,8 +17,8 @@ stand-alone mode.
 
 Building the library and test binary from Git repository:
 ----------------------------------------------------------------
-The Sourceforge Git repository may be cloned as following:
-git clone ssh://trademgen.git.sourceforge.net/gitroot/trademgen/trademgen trademgengit
+The GitHub repository may be cloned as following:
+git clone http://github.com/airsim/trademgen.git trademgengit
 cd trademgengit
 git checkout trunk
 

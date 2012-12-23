@@ -1,16 +1,16 @@
 /*!
-\page trademgen
+\page trademgen_generateDemand
       Command-line utility for the C++ Simulated Travel Demand Generation Library
 
 \section sec_synopsis SYNOPSIS
 
-<b>trademgen</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
+<b>trademgen_generateDemand</b> <tt>[--prefix] [-v|--version] [-h|--help] [-b|--builtin] [-i|--input <path-to-input>] [-l|--log <path-to-output-log-file>]</tt>
 
 \section sec_description DESCRIPTION
 
-\e trademgen is a small program showing how to use the TraDemGen library.
+\e trademgen_generateDemand is a small program showing how to use the TraDemGen library.
 
-\e trademgen accepts the following options:
+\e trademgen_generateDemand accepts the following options:
 
  \b --prefix<br>
     Show the TraDemGen installation prefix.
@@ -47,21 +47,21 @@
  \b -l, \b --log <path-to-output-log-file><br>
     Path (absolute or relative) of the output log file.
 
-See the output of the <tt>`trademgen --help'</tt> command for default options.
+See the output of the <tt>`trademgen_generateDemand --help'</tt> command for default options.
 
 
 \section sec_see_also SEE ALSO
-\b trademgen_with_db(1), \b pytrademgen(1), \b trademgen-config(1), \b trademgen-library(3)
+\b trademgen(1), \b trademgen_with_db(1), \b pytrademgen(1), \b trademgen-config(1), \b trademgen-library(3)
 
 
 \section sec_support SUPPORT
 
-Please report any bugs to https://sourceforge.net/apps/trac/trademgen/report
+Please report any bugs to http://github.com/airsim/trademgen/issues
 
 
 \section sec_copyright COPYRIGHT
 
-Copyright © 2009-2011 Denis Arnaud
+Copyright © 2009-2013 Denis Arnaud
 
 See the COPYING file for more information on the (LGPLv2+) license, or
 directly on Internet:<br>
