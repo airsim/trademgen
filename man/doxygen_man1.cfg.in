@@ -613,6 +613,7 @@ WARN_LOGFILE           =
 INPUT                  = @srcdir@/trademgen-config.doc \
 					     @srcdir@/trademgen.doc \
 					     @srcdir@/trademgen_with_db.doc \
+						 @srcdir@/trademgen_generateDemand.doc \
 					     @srcdir@/pytrademgen.doc \
 					     @srcdir@/trademgen_drawBookingArrivals.doc \
 					     @srcdir@/trademgen_extractBookingRequests.doc
