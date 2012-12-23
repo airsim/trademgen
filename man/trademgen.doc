@@ -51,17 +51,17 @@ See the output of the <tt>`trademgen --help'</tt> command for default options.
 
 
 \section sec_see_also SEE ALSO
-\b trademgen_with_db(1), \b pytrademgen(1), \b trademgen-config(1), \b trademgen-library(3)
+\b trademgen_generateDemand(1), \b trademgen_with_db(1), \b pytrademgen(1), \b trademgen-config(1), \b trademgen-library(3)
 
 
 \section sec_support SUPPORT
 
-Please report any bugs to https://sourceforge.net/apps/trac/trademgen/report
+Please report any bugs to http://github.com/airsim/trademgen/issues
 
 
 \section sec_copyright COPYRIGHT
 
-Copyright © 2009-2011 Denis Arnaud
+Copyright © 2009-2013 Denis Arnaud
 
 See the COPYING file for more information on the (LGPLv2+) license, or
 directly on Internet:<br>
