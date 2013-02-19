@@ -613,8 +613,10 @@ namespace TRADEMGEN {
     stdair::BookingRequestPtr_T oBookingRequest_ptr =
       boost::make_shared<stdair::BookingRequestStruct>  (lBookingRequestStruct);
     
-    // DEBUG
-    // STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
+    // DEBUG  
+    // Be careful: this specific display is mandatory to retrieve the booking 
+    // requests when parsing the demand generation log with python scripts.
+    STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
     
     return oBookingRequest_ptr;
   }

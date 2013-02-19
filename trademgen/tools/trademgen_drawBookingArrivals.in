@@ -106,7 +106,7 @@ def main():
     # Iterate while there are booking requests in the TraDemGen log file
     for line in input_file:
         # The lines of interest contain the "Poped" key-word
-        matchedLine = re.search ("BookingRequest", line)
+        matchedLine = re.search ("BKG", line)
 
         # If there is no match, the loop will continue on to the next line
         if not matchedLine:
@@ -164,10 +164,15 @@ def main():
         #print "BookingRequest[" + str(bkgIdx) + "]: ", bookingRequest,"\n"
 
     # Calculate the colors
-    # Note that xFF == 256
+    # Note that xFF == 256  
     nbOfStreams = len (OnDStatsHolder)
-    colorIncrementList = [0xFF / nbOfStreams, 0xFF / nbOfStreams, 
-                          0xFF / nbOfStreams]
+    if (nbOfStreams > 0):
+        colorIncrementList = [0xFF / nbOfStreams, 0xFF / nbOfStreams, 
+                              0xFF / nbOfStreams]
+    else:
+        print ("No stream in the '"+ input_file.name + "' file.")
+        quit()  
+         
     colorIdxList = [0, 0, 0]
     colorIdx = 0
 
