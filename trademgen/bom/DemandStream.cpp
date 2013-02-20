@@ -616,7 +616,7 @@ namespace TRADEMGEN {
     // DEBUG  
     // Be careful: this specific display is mandatory to retrieve the booking 
     // requests when parsing the demand generation log with python scripts.
-    STDAIR_LOG_DEBUG ("\n[BKG] " << oBookingRequest_ptr->describe());
+    STDAIR_LOG_NOTIFICATION ("\n[BKG] " << oBookingRequest_ptr->describe());
     
     return oBookingRequest_ptr;
   }
