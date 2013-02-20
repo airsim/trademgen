@@ -166,13 +166,13 @@ def main():
     # Calculate the colors
     # Note that xFF == 256  
     nbOfStreams = len (OnDStatsHolder)
-    if (nbOfStreams > 0):
-        colorIncrementList = [0xFF / nbOfStreams, 0xFF / nbOfStreams, 
-                              0xFF / nbOfStreams]
-    else:
-        print ("No stream in the '"+ input_file.name + "' file.")
+    if (nbOfStreams == 0):
+        print ("No booking request information found in the '"+ input_file.name + "' file.")
         quit()  
-         
+        
+    assert (nbOfStreams != 0)
+    colorIncrementList = [0xFF / nbOfStreams, 0xFF / nbOfStreams, 
+                          0xFF / nbOfStreams] 
     colorIdxList = [0, 0, 0]
     colorIdx = 0
 
