@@ -1,3 +1,7 @@
+2015-06-14:
+- Version 1.00.1
+- The CMake helper files are now aligned with those of StdAir.
+
 * 2012-12-11:
 - Open source release.
 - [Dev] Events no longer stored in the StdAir BOM root: new module SEvMgr
