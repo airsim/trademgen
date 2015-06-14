@@ -25,10 +25,14 @@ set_project_options (on on off)
 #####################################
 #
 packaging_init (${PROJECT_NAME})
-packaging_set_summary ("${PROJECT_NAME} aims at providing a clean API, and the corresponding C++ implementation, able to generate demand for travel solutions (e.g., from JFK to PEK on 25-05-2009) according to characteristics (e.g., Willingness-To-Pay, preferred airline, etc).
+packaging_set_summary (
+"${PROJECT_NAME} aims at providing a clean API, and the corresponding
+C++ implementation, able to generate demand for travel solutions (e.g.,
+from JFK to PEK on 25-05-2009) according to characteristics (e.g.,
+Willingness-To-Pay, preferred airline, etc).
 
-${PROJECT_NAME} makes an extensive use of existing open-source libraries for
-increased functionality, speed and accuracy. In particular the
+${PROJECT_NAME} makes an extensive use of existing open-source libraries
+for increased functionality, speed and accuracy. In particular the
 Boost (C++ Standard Extensions: http://www.boost.org) library is used")
 packaging_set_contact ("Denis Arnaud <denis_arnaud - at - users dot sourceforge dot net>")
 packaging_set_vendor ("Denis Arnaud")
@@ -42,7 +46,7 @@ packaging_set_other_options (TBZ2 "TBZ2;TGZ")
 ########################################
 #
 get_external_libs (git "python 2.6" "boost 1.41" "mysql 5.0" "soci 3.0"
-	"zeromq 2.0" readline curses "doxygen 1.4" "gcov 4.6.3" "lcov 1.9"
+	readline curses "doxygen 1.4" "gcov 4.6.3" "lcov 1.9"
 	"stdair 1.00.0" "sevmgr 1.00.0")
 
 
