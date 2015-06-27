@@ -23,6 +23,6 @@ include ("@TRADEMGEN_CMAKE_DIR@/trademgen-library-depends.cmake")
 
 # These are the TraDemGen IMPORTED targets, created by
 # trademgen-library-depends.cmake
-set (TRADEMGEN_LIBRARIES trademgenlib pytrademgenlib)
+set (TRADEMGEN_LIBRARIES trademgenlib)
 set (TRADEMGEN_EXECUTABLES trademgen pytrademgen
   trademgen_drawBookingArrivals trademgen_extractBookingRequests)
