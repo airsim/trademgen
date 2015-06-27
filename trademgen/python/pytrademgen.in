@@ -46,13 +46,10 @@ def handle_opt():
 		sys.exit (2)
 
 	# Log file-path
-	logFilename = "trademgen.log"
+	logFilename = "trademgen_generateDemand.log"
 
 	# (CSV) input file specifying the parameters of demand streams
 	inputFilename = "@STDAIR_SAMPLE_DIR@/demand01.csv"
-
-	# Log file-path.
-	logFilename = "trademgen.log"
 
 	# Whether or not the demand streams are specified internally or by
 	# an input file.
