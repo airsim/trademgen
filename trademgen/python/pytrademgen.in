@@ -120,5 +120,5 @@ if __name__ == '__main__':
 	print "You may want to plot the booking requests with a command like:"
 	print "%s/trademgen_drawBookingArrivals -p " % os.path.dirname (sys.argv[0]), logFilename
 	print "or even extract the list of requested origin and destinations:"
-	print "%s/trademgen_extractBookingRequests -i " % os.path.dirname (sys.argv[0]), logFilename
+	print "trademgen_extractBookingRequests -i " % os.path.dirname (sys.argv[0]), logFilename
 	print ""
