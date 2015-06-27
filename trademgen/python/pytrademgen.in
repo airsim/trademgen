@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import sys, getopt, os
-sys.path.append ('@INSTALL_LIB_DIR@')
+#sys.path.append ('@INSTALL_LIB_DIR@')
+#sys.path.append ('@INSTALL_PY_LIB_DIR@')
 
 # Usage
 def usage (script_name):

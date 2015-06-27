@@ -53,7 +53,8 @@ module_binary_add (ui/cmdline trademgen)
 ##
 # Installing Python and Shell scripts
 module_script_add (python/pytrademgen)
-module_script_add (tools/trademgen_drawBookingArrivals)
+python_module_add (python/__init__.py)
+module_script_add (python/trademgen_drawBookingArrivals)
 module_script_add (tools/trademgen_extractBookingRequests)
 
 ##
