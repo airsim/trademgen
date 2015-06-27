@@ -94,6 +94,7 @@ Then, as usual:
   ./trademgen/trademgen -b
 * To run the installed version:
   ${INSTALL_BASEDIR}/trademgen-$TDG_VER/bin/trademgen -b
+  ${INSTALL_BASEDIR}/trademgen-$TDG_VER/bin/trademgen_generateDemand
 
 Denis Arnaud (June 2015)
 
