@@ -497,7 +497,7 @@ macro (get_python)
 	message (STATUS "Found PythonLibs ${PYTHONLIBS_VERSION}")
 
 	# Set the Python installation directory
-	set (INSTALL_PY_LIB_DIR ${LIBDIR}/python${PYTHONLIBS_VERSION}/site-packages/libpy${PROJECT_NAME}
+	set (INSTALL_PY_LIB_DIR ${INSTALL_LIB_DIR}/python${PYTHONLIBS_VERSION}/site-packages/libpy${PROJECT_NAME}
 	  CACHE PATH "Installation directory for Python libraries")
 
 	# Update the list of include directories for the project
