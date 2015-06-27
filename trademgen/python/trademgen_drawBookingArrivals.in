@@ -6,7 +6,8 @@ import re
 import math
 import matplotlib.pyplot as plt
 
-sys.path.append('@INSTALL_LIB_DIR@')
+#sys.path.append ('@INSTALL_LIB_DIR@')
+#sys.path.append ('@INSTALL_PY_LIB_DIR@')
 
 #------------------------------------------------------------------------------	
 def usage (script_name):

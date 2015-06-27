@@ -4,6 +4,8 @@
 #  TRADEMGEN_BINARY_DIRS  - binary directories for TraDemGen
 #  TRADEMGEN_INCLUDE_DIRS - include directories for TraDemGen
 #  TRADEMGEN_LIBRARY_DIRS - library directories for TraDemGen (normally not used!)
+#  TRADEMGEN_PY_LIB_DIR   - library directory for TraDemGen Python libraries
+#  TRADEMGEN_LIBEXEC_DIR  - internal exec directory for TraDemGen
 #  TRADEMGEN_LIBRARIES    - libraries to link against
 #  TRADEMGEN_EXECUTABLES  - the TraDemGen binaries/executables
 
@@ -11,7 +13,9 @@
 set (TRADEMGEN_VERSION "@PACKAGE_VERSION@")
 set (TRADEMGEN_BINARY_DIRS "@TRADEMGEN_BIN_DIR@")
 set (TRADEMGEN_INCLUDE_DIRS "@TRADEMGEN_INCLUDE_DIRS@")
-set (TRADEMGEN_LIBRARY_DIRS "@TRADEMGEN_LIB_DIR@")
+set (TRADEMGEN_PY_LIB_DIR "@TRADEMGEN_PY_LIB_DIR@")
+set (TRADEMGEN_LIBRARY_DIRS "@TRADEMGEN_LIB_DIR@:@TRADEMGEN_PY_LIB_DIR@")
+set (TRADEMGEN_LIBEXEC_DIR "@TRADEMGEN_LIBEXEC_DIR@")
 
 # Library dependencies for TraDemGen (contains definitions for the TraDemGen
 # IMPORTED targets)
@@ -19,6 +23,6 @@ include ("@TRADEMGEN_CMAKE_DIR@/trademgen-library-depends.cmake")
 
 # These are the TraDemGen IMPORTED targets, created by
 # trademgen-library-depends.cmake
-set (TRADEMGEN_LIBRARIES trademgenlib)
+set (TRADEMGEN_LIBRARIES trademgenlib pytrademgenlib)
 set (TRADEMGEN_EXECUTABLES trademgen pytrademgen
   trademgen_drawBookingArrivals trademgen_extractBookingRequests)
