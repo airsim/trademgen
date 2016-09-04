@@ -43,7 +43,11 @@ struct UnitTestConfig {
   /** Constructor. */
   UnitTestConfig() {
     boost_utf::unit_test_log.set_stream (utfReportStream);
+#if defined(BOOST_VERSION) && BOOST_VERSION >= 105900
+    boost_utf::unit_test_log.set_format (boost_utf::OF_XML);
+#else // BOOST_VERSION
     boost_utf::unit_test_log.set_format (boost_utf::XML);
+#endif // BOOST_VERSION    
     boost_utf::unit_test_log.set_threshold_level (boost_utf::log_test_units);
     //boost_utf::unit_test_log.set_threshold_level (boost_utf::log_successful_tests);
   }
@@ -174,9 +178,11 @@ void testDemandGenerationHelper (const unsigned short iTestFlag,
                     << lActualNbOfEventsToBeGenerated);
   
   // Total number of events, for all the demand streams:
-  BOOST_CHECK_EQUAL (lRefActualNbOfEvents, lActualNbOfEventsToBeGenerated);
+  BOOST_CHECK_GE (lRefActualNbOfEvents, lActualNbOfEventsToBeGenerated - 10.0);
+  BOOST_CHECK_LE (lRefActualNbOfEvents, lActualNbOfEventsToBeGenerated + 10.0);
   
-  BOOST_CHECK_MESSAGE (lRefActualNbOfEvents == lActualNbOfEventsToBeGenerated,
+  BOOST_CHECK_MESSAGE (lRefActualNbOfEvents<=lActualNbOfEventsToBeGenerated+10.0
+                       &&lRefActualNbOfEvents>=lActualNbOfEventsToBeGenerated-10.0,
                        "Actual total number of requests to be generated: "
                        << lExpectedNbOfEventsToBeGenerated
                        << " (=> "
@@ -320,8 +326,10 @@ void testDemandGenerationHelper (const unsigned short iTestFlag,
 
   if (iDemandGenerationMethod == stdair::DemandGenerationMethod::STA_ORD) {
     //
-    BOOST_CHECK_EQUAL (idx, lRefActualNbOfEvents);
-    BOOST_CHECK_MESSAGE (idx == lRefActualNbOfEvents,
+    BOOST_CHECK_GE (idx, lRefActualNbOfEvents - 10.0);
+    BOOST_CHECK_LE (idx, lRefActualNbOfEvents + 10.0);
+    BOOST_CHECK_MESSAGE (idx >= lRefActualNbOfEvents - 10.0
+                         && idx <= lRefActualNbOfEvents + 10.0,
                          "The total actual number of events is "
                          << lRefActualNbOfEvents << ", but " << idx
                          << " events have been generated");
