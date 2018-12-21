@@ -72,11 +72,6 @@ const stdair::RandomSeed_T K_TRADEMGEN_DEFAULT_RANDOM_SEED =
   stdair::DEFAULT_RANDOM_SEED;
 
 /**
- * Default number of random draws to be generated (best if over 100).
- */
-const NbOfRuns_T K_TRADEMGEN_DEFAULT_RANDOM_DRAWS = 1;
-
-/**
  * Default for the input type. It can be either built-in or provided by an
  * input file. That latter must then be given with the -i option.
  */
