@@ -19,7 +19,7 @@
 
 // Forward declarations
 namespace stdair {
-  class EventStruct;
+  struct EventStruct;
   struct ProgressStatusSet;
   struct TravelSolutionStruct;
 }
