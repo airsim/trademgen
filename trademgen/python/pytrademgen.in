@@ -105,8 +105,8 @@ if __name__ == '__main__':
 	print ""
 
 	# Initialise the TraDemGen C++ library wrapper
-	import libpytrademgen
-	trademgenLibrary = libpytrademgen.Trademgener()
+	import pytrademgen
+	trademgenLibrary = pytrademgen.Trademgener()
 	trademgenLibrary.init (logFilename, randomSeed, isBuiltin, 
 			       inputFilename)
 
