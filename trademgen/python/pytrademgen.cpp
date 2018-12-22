@@ -1,14 +1,11 @@
+// Boost Python
+#include <boost/python.hpp>
 // STL
 #include <cassert>
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
 #include <string>
-// Boost Date-Time
-#include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-// Boost Python
-#include <boost/python.hpp>
 // Boost Accumulators
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
@@ -352,7 +349,7 @@ namespace TRADEMGEN {
 }
 
 // /////////////////////////////////////////////////////////////
-BOOST_PYTHON_MODULE(libpytrademgen) {
+BOOST_PYTHON_MODULE(pytrademgen) {
   boost::python::class_<TRADEMGEN::Trademgener> ("Trademgener")
     .def ("trademgen", &TRADEMGEN::Trademgener::trademgen)
     .def ("init", &TRADEMGEN::Trademgener::init);

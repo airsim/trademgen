@@ -1,1 +1,1 @@
-from libpytrademgen import *
+from pytrademgen import *
