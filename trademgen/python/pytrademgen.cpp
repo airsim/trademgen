@@ -8,7 +8,14 @@
 #include <string>
 // Boost Accumulators
 #include <boost/accumulators/accumulators.hpp>
-#include <boost/accumulators/statistics.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
+#include <boost/accumulators/statistics/moment.hpp>
+#include <boost/accumulators/statistics/min.hpp>
+#include <boost/accumulators/statistics/max.hpp>
+#include <boost/accumulators/statistics/variance.hpp>
+// Boost Timer (progress display)
+#include <boost/timer/progress_display.hpp>
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/basic/ProgressStatusSet.hpp>
@@ -112,7 +119,7 @@ namespace TRADEMGEN {
           _trademgenService->getExpectedTotalNumberOfRequestsToBeGenerated();
 
         // Initialise the (Boost) progress display object
-        boost::progress_display
+        boost::timer::progress_display
           lProgressDisplay (lExpectedNbOfEventsToBeGenerated * iNbOfRuns);
 
         for (NbOfRuns_T runIdx = 1; runIdx <= iNbOfRuns; ++runIdx) {

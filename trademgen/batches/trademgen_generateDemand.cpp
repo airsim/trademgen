@@ -16,8 +16,8 @@
 // Boost Accumulators
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics.hpp>
-// Boost Progress
-//#include <boost/progress.hpp>
+// Boost Timer (progress display)
+#include <boost/timer/progress_display.hpp>
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/basic/BasConst_General.hpp>
@@ -292,8 +292,9 @@ void generateDemand (TRADEMGEN::TRADEMGEN_Service& ioTrademgenService,
     ioTrademgenService.getExpectedTotalNumberOfRequestsToBeGenerated();
 
   // Initialise the (Boost) progress display object
-  boost::progress_display lProgressDisplay (lExpectedNbOfEventsToBeGenerated
-                                            * iNbOfRuns);
+  boost::timer::progress_display
+	  lProgressDisplay (lExpectedNbOfEventsToBeGenerated
+                            * iNbOfRuns);
   
   for (NbOfRuns_T runIdx = 1; runIdx <= iNbOfRuns; ++runIdx) {
     // /////////////////////////////////////////////////////
