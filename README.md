@@ -3,7 +3,7 @@ Summary:
 ---------
 TraDemGen aims at providing a clean API, and the corresponding C++
 implementation, able to generate demand for travel solutions (e.g.,
-from JFK to PEK on 25-05-2009) according to characteristics (e.g.,
+from JFK to PEK on 25-05-2019) according to characteristics (e.g.,
 Willingness-To-Pay, preferred airline, etc).
 
 TraDemGen makes an extensive use of existing open-source libraries for
@@ -64,10 +64,10 @@ found on GitHub: http://github.com/airsim/trademgen/releases
 To customise the following to your environment, you can alter the path
 to the installation directory:
 ```bash
-export INSTALL_BASEDIR=/home/user/dev/deliveries
-export TDG_VER=1.00.4
-if [ -d /usr/lib64 ]; then LIBSUFFIX=64; fi
-export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=$LIBSUFFIX"
+export INSTALL_BASEDIR="/home/user/dev/deliveries"
+export TDG_VER="1.00.4"
+if [ -d /usr/lib64 ]; then LIBSUFFIX="64"; fi
+export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=${LIBSUFFIX}"
 ```
 Then, as usual:
 * To configure the project, type something like:
@@ -87,7 +87,7 @@ Then, as usual:
 ```bash
   make check
 ```
-* To install the library (libtrademgen*.so*) and the binary (trademgen),
+* To install the library (`libtrademgen*.so*`) and the binary (trademgen),
   just type:
 ```bash
   make install
@@ -117,8 +117,12 @@ Then, as usual:
 ```
 * To run the installed version:
 ```bash
-  ${INSTALL_BASEDIR}/trademgen-$TDG_VER/bin/trademgen -b
-  ${INSTALL_BASEDIR}/trademgen-$TDG_VER/bin/trademgen_generateDemand
+  ${INSTALL_BASEDIR}/trademgen-${TDG_VER}/bin/trademgen -b
+  ${INSTALL_BASEDIR}/trademgen-${TDG_VER}/bin/pytrademgen
+  ${INSTALL_BASEDIR}/trademgen-${TDG_VER}/bin/trademgen_generateDemand
+  ${INSTALL_BASEDIR}/trademgen-${TDG_VER}/bin/trademgen_extractBookingRequests
+  ${INSTALL_BASEDIR}/trademgen-${TDG_VER}/bin/trademgen_drawBookingArrivals
+  ${INSTALL_BASEDIR}/trademgen-${TDG_VER}/bin/trademgen_with_db
 ```
 
 Denis Arnaud (June 2015)

@@ -1,3 +1,7 @@
+* 2019-11-11:
+- Version 1.00.5
+- CMake helper files for newer versions of Boost
+
 * 2019-07-11:
 - Version 1.00.4
 - CMake support files updated for Python 3.8
