@@ -1,3 +1,6 @@
+* Sat May 30 2020 Denis Arnaud <denis.arnaud_fedora at m4x.org> - 1.00.6
+- Removed dependency on Python
+
 * Mon Nov 11 2019 Denis Arnaud <denis_arnaud at users dot sourceforge dot net> - 1.00.5
 - CMake helper files for newer versions of Boost
 
@@ -17,7 +20,7 @@
 * Tue Dec 11 2012 Denis Arnaud <denis_arnaud at users dot sourceforge dot net> 1.00.0
 - Open source release.
 - [Dev] Events no longer stored in the StdAir BOM root: new module SEvMgr
-  handling events through an event queue.
+handling events through an event queue.
 - [Dev] Services dedicated to JSON export of events.
 - [Build] Test coverage option with gcov.
 

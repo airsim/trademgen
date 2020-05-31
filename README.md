@@ -1,41 +1,40 @@
+C++ Simulated Travel Demand Generation Library
+==============================================
 
-Summary:
----------
-TraDemGen aims at providing a clean API, and the corresponding C++
-implementation, able to generate demand for travel solutions (e.g.,
-from JFK to PEK on 25-05-2019) according to characteristics (e.g.,
-Willingness-To-Pay, preferred airline, etc).
+# Summary
+TraDemGen aims at providing a clean API, and the corresponding
+C++ implementation, able to generate demand for travel solutions
+(_e.g._, from JFK to PEK on 25-05-2019) according to characteristics
+(_e.g._, Willingness-To-Pay, preferred airline, etc).
 
 TraDemGen makes an extensive use of existing open-source libraries for
 increased functionality, speed and accuracy. In particular the 
-Boost (C++ Standard Extensions: http://www.boost.org) library is used.
+Boost (C++ Standard Extensions: https://www.boost.org) library is used.
 
 TraDemGen is the one of the components of the Travel Market Simulator
-(http://www.travel-market-simulator). However, it may be used in a
+(https://travel-sim.org). However, it may be used in a
 stand-alone mode.
 
+# Installation
 
-Getting and installing from the Fedora/CentOS/RedHat distribution:
-------------------------------------------------------------------
-Just use Yum:
+## On Fedora/CentOS/RedHat distribution
+Just use DNF (or Yum on older distributions):
 ```bash
-yum -y install trademgen-devel trademgen-doc
+$ dnf -y install trademgen-devel trademgen-doc
 ```
 
 You can also get the RPM packages (which may work on Linux
 distributions like Suse and Mandriva) from the Fedora repository
-(_e.g._, for Fedora 30, 
-http://fr2.rpmfind.net/linux/fedora/releases/30/Everything/)
+(_e.g._, for Fedora 32, 
+https://fr2.rpmfind.net/linux/RPM/fedora/32/x86_64/)
 
 
-Building the library and test binary from Git repository:
-----------------------------------------------------------------
+## Building the library and test binary from Git repository
 The Git repository may be cloned as following:
 ```bash
 $ git clone git@github.com:airsim/trademgen.git trademgengit # through SSH
 $ git clone https://github.com/airsim/trademgen.git # if the firewall filters SSH
-cd trademgengit
-git checkout trunk
+$ cd trademgengit
 ```
 
 Then, you need the following packages (Fedora/RedHat/CentOS names here, 
@@ -56,16 +55,15 @@ but names may vary according to distributions):
 * rpm-build (optional)
 
 
-Building the library and test binary from the tarball:
-------------------------------------------------------
+## Building the library and test binary from the tarball
 The latest stable source tarball (`trademgen*.tar.gz` or `.bz2`) can be found here:
-found on GitHub: http://github.com/airsim/trademgen/releases
+found on GitHub: https://github.com/airsim/trademgen/releases
 
 To customise the following to your environment, you can alter the path
 to the installation directory:
 ```bash
 export INSTALL_BASEDIR="/home/user/dev/deliveries"
-export TDG_VER="1.00.4"
+export TDG_VER="1.00.6"
 if [ -d /usr/lib64 ]; then LIBSUFFIX="64"; fi
 export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=${LIBSUFFIX}"
 ```

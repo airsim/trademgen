@@ -1,3 +1,7 @@
+* 2020-05-30:
+- Version 1.00.6
+- Removed dependency on Python
+
 * 2019-11-11:
 - Version 1.00.5
 - CMake helper files for newer versions of Boost
