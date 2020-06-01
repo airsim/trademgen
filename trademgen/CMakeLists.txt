@@ -57,8 +57,3 @@ python_module_add (python/__init__.py)
 module_script_add (python/trademgen_drawBookingArrivals)
 module_script_add (tools/trademgen_extractBookingRequests)
 
-##
-# Install the CMake import helper, so that third party projects can refer to it
-# (for libraries, header files and binaries)
-module_export_install ()
-

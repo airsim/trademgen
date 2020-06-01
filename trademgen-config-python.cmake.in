@@ -1,0 +1,20 @@
+#
+# Config file for the TraDemGen Python package.
+# It defines the following variables:
+#  TRADEMGEN_PY_LIBRARY_DIRS - Python library directories for TraDemGen
+#  TRADEMGEN_PY_LIBRARIES    - Python libraries to link against
+#  TRADEMGEN_PY_EXECUTABLES  - Python binaries/executables
+
+# Tell the user project where to find TraDemGen Python libraries
+set (TRADEMGEN_PY_LIBRARY_DIRS "@TRADEMGEN_PY_LIB_DIR@")
+
+# Library dependencies for TraDemGen (contains definitions for the TraDemGen
+# IMPORTED targets)
+include ("@TRADEMGEN_CMAKE_DIR@/trademgen-library-depends.cmake")
+include ("@TRADEMGEN_CMAKE_DIR@/trademgen-python-library-depends.cmake")
+
+# These are the TraDemGen IMPORTED targets, created by
+# trademgen-python-library-depends.cmake
+set (TRADEMGEN_PY_LIBRARIES pytrademgenlib)
+set (TRADEMGEN_PY_EXECUTABLES pytrademgen)
+
