@@ -15,7 +15,11 @@
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
 // Boost Timer (progress display)
+#if BOOST_VERSION_MACRO >= 107200
 #include <boost/timer/progress_display.hpp>
+#else // BOOST_VERSION_MACRO >= 107200
+#include <boost/progress.hpp>
+#endif // BOOST_VERSION_MACRO >= 107200
 // StdAir
 #include <stdair/stdair_basic_types.hpp>
 #include <stdair/basic/ProgressStatusSet.hpp>
@@ -119,7 +123,11 @@ namespace TRADEMGEN {
           _trademgenService->getExpectedTotalNumberOfRequestsToBeGenerated();
 
         // Initialise the (Boost) progress display object
+#if BOOST_VERSION_MACRO >= 107200
         boost::timer::progress_display
+#else  // BOOST_VERSION_MACRO >= 107200
+        boost::progress_display
+#endif // BOOST_VERSION_MACRO >= 107200
           lProgressDisplay (lExpectedNbOfEventsToBeGenerated * iNbOfRuns);
 
         for (NbOfRuns_T runIdx = 1; runIdx <= iNbOfRuns; ++runIdx) {
