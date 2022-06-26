@@ -57,8 +57,7 @@ but names may vary according to distributions):
 
 ## Building the library and test binary from the tarball
 The latest stable source tarball (`trademgen*.tar.gz` or `.bz2`) can be
-found on GitHub: https://github.com/airsim/trademgen/tags, _e.g._,
-https://github.com/airsim/trademgen/archive/trademgen-1.00.7.tar.gz
+found on GitHub: https://github.com/airsim/trademgen/tags
 
 As TraDemGen depends on other
 [Travel Market Simulator (TvlSim/AirSim)](https://github.com/airsim/)
@@ -74,7 +73,7 @@ If MetaSim is not used, in order to customise the following to your
 environment, you can alter the path to the installation directory:
 ```bash
 export INSTALL_BASEDIR="/home/user/dev/deliveries"
-export TDG_VER="1.00.7"
+export TDG_VER="1.00.8"
 if [ -d /usr/lib64 ]; then LIBSUFFIX="64"; fi
 export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=${LIBSUFFIX}"
 ```
