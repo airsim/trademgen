@@ -390,7 +390,7 @@ int main (int argc, char* argv[]) {
 
   // Default parameters for the interactive session
   stdair::EventStruct lCurrentInteractiveEventStruct; 
-  stdair::DateTime_T lCurrentInteractiveDateTime; 
+  //stdair::DateTime_T lCurrentInteractiveDateTime; 
   std::string lDefaultDemandStreamKey;
 
   // State whether the BOM tree should be built-in or parsed from an input file
