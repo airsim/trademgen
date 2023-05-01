@@ -25,8 +25,8 @@ $ dnf -y install trademgen-devel trademgen-doc
 
 You can also get the RPM packages (which may work on Linux
 distributions like Suse and Mandriva) from the Fedora repository
-(_e.g._, for Fedora 32, 
-https://fr2.rpmfind.net/linux/RPM/fedora/32/x86_64/)
+(_e.g._, for Fedora 38, 
+https://fr2.rpmfind.net/linux/RPM/fedora/38/x86_64/)
 
 
 ## Building the library and test binary from Git repository
@@ -73,7 +73,7 @@ If MetaSim is not used, in order to customise the following to your
 environment, you can alter the path to the installation directory:
 ```bash
 export INSTALL_BASEDIR="/home/user/dev/deliveries"
-export TDG_VER="1.00.8"
+export TDG_VER="1.00.9"
 if [ -d /usr/lib64 ]; then LIBSUFFIX="64"; fi
 export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=${LIBSUFFIX}"
 ```
@@ -160,8 +160,8 @@ $ python3 setup.py --build-type=Debug build sdist bdist_wheel
 ```bash
 $ ls -lFh dist/
 total 7832
--rw-r--r--  1 darnaud  staff   3.4M Jun  1 17:25 trademgen-1.0.6.post1-cp38-cp38-macosx_10_15_x86_64.whl
--rw-r--r--  1 darnaud  staff   441K Jun  1 17:25 trademgen-1.0.6.post1.tar.gz
+-rw-r--r--  1 darnaud  staff   3.4M Jun  1 17:25 trademgen-1.0.9.post1-cp38-cp38-macosx_10_15_x86_64.whl
+-rw-r--r--  1 darnaud  staff   441K Jun  1 17:25 trademgen-1.0.9.post1.tar.gz
 ```
 
 * Updload the TraDemGen Python extension onto PyPi:
