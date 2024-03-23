@@ -25,8 +25,8 @@ $ dnf -y install trademgen-devel trademgen-doc
 
 You can also get the RPM packages (which may work on Linux
 distributions like Suse and Mandriva) from the Fedora repository
-(_e.g._, for Fedora 38, 
-https://fr2.rpmfind.net/linux/RPM/fedora/38/x86_64/)
+(_e.g._, for Fedora Rawhide, 
+https://fr2.rpmfind.net/linux/RPM/fedora/devel/rawhide/x86_64/)
 
 
 ## Building the library and test binary from Git repository
@@ -73,7 +73,7 @@ If MetaSim is not used, in order to customise the following to your
 environment, you can alter the path to the installation directory:
 ```bash
 export INSTALL_BASEDIR="/home/user/dev/deliveries"
-export TDG_VER="1.00.9"
+export TDG_VER="1.00.10"
 if [ -d /usr/lib64 ]; then LIBSUFFIX="64"; fi
 export LIBSUFFIX_4_CMAKE="-DLIB_SUFFIX=${LIBSUFFIX}"
 ```
