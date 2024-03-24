@@ -5,11 +5,7 @@
 
 # Extract the version information
 if (DOXYGEN_FOUND STREQUAL "YES")
-  execute_process (
-	COMMAND ${DOXYGEN_EXECUTABLE} --version
-	OUTPUT_VARIABLE MY_TMP
-	OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
+  execute_process (COMMAND ${DOXYGEN_EXECUTABLE} --version OUTPUT_VARIABLE MY_TMP)
   set (DOXYGEN_VERSION ${MY_TMP})
 
   # Check the version requirement only
