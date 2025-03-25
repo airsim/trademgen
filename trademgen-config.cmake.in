@@ -1,3 +1,5 @@
+@PACKAGE_INIT@
+
 #
 # Config file for the TraDemGen package. It defines the following variables:
 #  TRADEMGEN_VERSION         - version of TraDemGen
@@ -10,14 +12,14 @@
 
 # Tell the user project where to find TraDemGen headers and libraries
 set (TRADEMGEN_VERSION "@PACKAGE_VERSION@")
-set (TRADEMGEN_BINARY_DIRS "@TRADEMGEN_BIN_DIR@")
-set (TRADEMGEN_INCLUDE_DIRS "@TRADEMGEN_INCLUDE_DIRS@")
-set (TRADEMGEN_LIBRARY_DIRS "@TRADEMGEN_LIB_DIR@")
-set (TRADEMGEN_LIBEXEC_DIR "@TRADEMGEN_LIBEXEC_DIR@")
+set (TRADEMGEN_BINARY_DIRS "@PACKAGE_TRADEMGEN_BIN_DIR@")
+set (TRADEMGEN_INCLUDE_DIRS "@PACKAGE_TRADEMGEN_INCLUDE_DIRS@")
+set (TRADEMGEN_LIBRARY_DIRS "@PACKAGE_TRADEMGEN_LIB_DIR@")
+set (TRADEMGEN_LIBEXEC_DIR "@PACKAGE_TRADEMGEN_LIBEXEC_DIR@")
 
 # Library dependencies for TraDemGen (contains definitions for the TraDemGen
 # IMPORTED targets)
-include ("@TRADEMGEN_CMAKE_DIR@/trademgen-library-depends.cmake")
+include ("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-library-depends.cmake")
 
 # These are the TraDemGen IMPORTED targets, created by
 # trademgen-library-depends.cmake
