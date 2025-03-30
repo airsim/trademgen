@@ -73,7 +73,7 @@ If MetaSim is not used, in order to customise the following to your
 environment, you can alter the path to the installation directory:
 ```bash
 export INSTALL_BASEDIR="/home/user/dev/deliveries"
-export TDG_VER="1.00.12"
+export TDG_VER="1.00.13"
 ```
 
 Then, as usual:
