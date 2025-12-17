@@ -32,7 +32,7 @@
    \b trademgen_generateDemand utility.
    If blank, the default log file is 'trademgen_generateDemand.log'.<br>
 
-See the output of the <tt>`trademgen_extractBookingRequests --help'</tt> command
+See the output of the <tt>trademgen_extractBookingRequests --help</tt> command
 for default options.
 
 

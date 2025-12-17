@@ -60,7 +60,7 @@
  \b -m, \b --dbname <database-name><br>
     SQL database name (e.g., sim_dsim).<br>
 
-See the output of the <tt>`trademgen_with_db --help'</tt> command for 
+See the output of the <tt>trademgen_with_db --help</tt> command for 
 default options.
 
 
